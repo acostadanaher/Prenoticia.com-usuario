@@ -238,10 +238,10 @@
             text-decoration: none;
         }
 
-        /* ================= HEADER Y SIDEBAR (MENÚ DE CUENTA) ================= */
+/* ================= HEADER Y SIDEBAR (MENÚ DE CUENTA) ================= */
         header {
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border-color);
+            background: #f68e02;
+            border-bottom: 1px solid #d97b00;
             position: sticky;
             top: 0;
             z-index: 90;
@@ -260,21 +260,29 @@
             gap: 10px;
         }
 
-        .header-profile-avatar, .sidebar-profile-avatar {
-            width: 38px;
-            height: 38px;
+        .header-brand-logo-link {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .header-brand-logo-img {
+            height: 36px;
+            max-width: 190px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        .sidebar-profile-avatar {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             object-fit: cover;
             object-position: center top;
             border: 2px solid var(--primary);
             flex-shrink: 0;
-        }
-
-        .brand-logo {
-            font-size: 17px;
-            font-weight: 800;
-            color: var(--text-color);
-            text-decoration: none;
         }
 
         .user-nav-area {
@@ -287,8 +295,8 @@
             width: 38px;
             height: 38px;
             border-radius: 10px;
-            border: 1px solid var(--border-color);
-            background: #f8fafc;
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            background: rgba(255, 255, 255, 0.18);
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -299,12 +307,12 @@
         .header-icon-btn svg {
             width: 20px;
             height: 20px;
-            fill: var(--text-color);
+            fill: #ffffff;
         }
 
         .header-icon-btn:hover, .header-icon-btn.active {
-            background: var(--primary-light);
-            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.34);
+            border-color: #ffffff;
         }
 
         #menu-backdrop {
@@ -1604,13 +1612,13 @@
 
         <div id="menu-backdrop"></div>
 
-        <!-- Header Superior -->
+<!-- Header Superior -->
         <header>
             <div class="container header-content">
                 <div class="brand-logo-group">
-                    <img id="header-profile-avatar" class="header-profile-avatar" src="" alt="Foto de perfil">
-                    <a href="#" class="brand-logo" id="header-greeting-title">Hola, Usuario</a>
-                    <span id="header-premium-star" class="premium-star-pro header-premium-star-only hidden" title="Miembro Premium"><i class="fas fa-star"></i></span>
+                    <a href="#destacado" id="header-brand-logo-link" class="header-brand-logo-link" title="Ir a Destacado">
+                        <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjmzy0U6QZyMHA1Y82KR_tasxfrNOR5QmP8ST_rIIPiJT5KjHVBvhy5PQY1Lxic6XPfcL675Kwuwm95lcSKwsz6XtniBqTqwwm5u4R3_ToWMI6qwEq8BiWpabcQUl8Aw1SxgqKxUf4N0rzbURCH4VO6lzUBrt0anTzyVPPzRgLNpOj1iFpiXTclwfK54Spd=s1600" alt="Prenoticia" class="header-brand-logo-img">
+                    </a>
                 </div>
                 <div class="user-nav-area">
                     <button class="header-icon-btn" id="menu-toggle-btn" aria-label="Menú principal" title="Menú de cuenta">
@@ -1628,7 +1636,8 @@
             <div class="sidebar-header">
                 <div class="sidebar-header-title-wrap">
                     <img id="sidebar-profile-avatar" class="sidebar-profile-avatar" src="" alt="Foto de perfil">
-                    <h3>Menú de Cuenta</h3>
+                    <h3 id="sidebar-greeting-title" style="font-size: 16px; font-weight: 800;">Hola, Usuario</h3>
+                    <span id="header-premium-star" class="premium-star-pro header-premium-star-only hidden" title="Miembro Premium"><i class="fas fa-star"></i></span>
                 </div>
                 <button class="close-sidebar" id="close-sidebar-btn">&times;</button>
             </div>
@@ -1641,6 +1650,22 @@
                     </p>
                 </div>
 
+                <div class="sidebar-actions" style="margin-top: 0;">
+                    <button type="button" class="btn-sidebar-action" id="nav-my-account" style="display:flex; align-items:center; justify-content:space-between; background:#f8fafc;">
+                        <span><i class="fas fa-user-circle" style="color:var(--primary); margin-right:8px;"></i> Mi cuenta</span>
+                        <i class="fas fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+                    </button>
+                    <button type="button" id="sidebar-upgrade-btn" class="btn-sidebar-action btn-upgrade-sidebar hidden">Mejorar a Usuario Premium ($2.990/mes)</button>
+                    <button class="btn-sidebar-action hidden" id="nav-downgrade-basic">Cambiar a plan Básico</button>
+                    <button class="btn-sidebar-action" id="nav-update-data">Actualizar o modificar datos</button>
+                    <button class="btn-sidebar-action" id="nav-delete-account">Eliminar cuenta</button>
+                    <button class="btn-sidebar-action btn-logout" id="btn-logout">Cerrar sesión</button>
+                </div>
+            </div>
+
+            <div id="sidebar-my-account-view" class="account-subview">
+                <button class="btn-back-account" id="back-from-my-account">&larr; Volver atrás</button>
+                <h4 style="margin-bottom: 12px; font-size: 16px; font-weight: 800;">Mi cuenta</h4>
                 <div class="account-details">
                     <p><strong>Nombre:</strong> <span id="acc-name"></span></p>
                     <p><strong>Apellido:</strong> <span id="acc-lastname"></span></p>
@@ -1655,14 +1680,6 @@
                     </div>
 
                     <p><strong>Estado de la cuenta:</strong> <span id="acc-status-box"></span></p>
-                </div>
-
-                <div class="sidebar-actions">
-                    <button type="button" id="sidebar-upgrade-btn" class="btn-sidebar-action btn-upgrade-sidebar hidden">Mejorar a Usuario Premium ($2.990/mes)</button>
-                    <button class="btn-sidebar-action hidden" id="nav-downgrade-basic">Cambiar a plan Básico</button>
-                    <button class="btn-sidebar-action" id="nav-update-data">Actualizar o modificar datos</button>
-                    <button class="btn-sidebar-action" id="nav-delete-account">Eliminar cuenta</button>
-                    <button class="btn-sidebar-action btn-logout" id="btn-logout">Cerrar sesión</button>
                 </div>
             </div>
 
@@ -3179,20 +3196,14 @@ const btnAccept = document.getElementById('btn-accept-promo-banner');
                 const isPremium = esUsuarioPremium(user);
                 const fotoUrl = user.fotoPerfil || generarAvatarFallback(user.nombre, user.apellido);
 
-                const headerAvatarEl = document.getElementById('header-profile-avatar');
-                if (headerAvatarEl) {
-                    headerAvatarEl.src = fotoUrl;
-                    headerAvatarEl.onerror = function() { this.src = generarAvatarFallback(user.nombre, user.apellido); };
-                }
-
-                const sidebarAvatarEl = document.getElementById('sidebar-profile-avatar');
+const sidebarAvatarEl = document.getElementById('sidebar-profile-avatar');
                 if (sidebarAvatarEl) {
                     sidebarAvatarEl.src = fotoUrl;
                     sidebarAvatarEl.onerror = function() { this.src = generarAvatarFallback(user.nombre, user.apellido); };
                 }
 
-                const greetingEl = document.getElementById('header-greeting-title');
-                if (greetingEl) greetingEl.textContent = `Hola, ${user.nombre}`;
+                const sidebarGreetingEl = document.getElementById('sidebar-greeting-title');
+                if (sidebarGreetingEl) sidebarGreetingEl.textContent = `Hola, ${user.nombre}`;
 
                 const headerPremiumStar = document.getElementById('header-premium-star');
                 if (headerPremiumStar) {
@@ -3360,17 +3371,32 @@ const btnAccept = document.getElementById('btn-accept-promo-banner');
                 });
             }
 
+const headerBrandLogoLink = document.getElementById('header-brand-logo-link');
+            if (headerBrandLogoLink) {
+                headerBrandLogoLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    closeMenu();
+                    cerrarBuscador();
+                    const btnDestacado = document.querySelector('.tab-btn[data-target="tab-destacado"]');
+                    if (btnDestacado) {
+                        btnDestacado.click();
+                    }
+                });
+            }
+
             const menuToggleBtn = document.getElementById('menu-toggle-btn');
             const closeSidebarBtn = document.getElementById('close-sidebar-btn');
             const sidebarMenu = document.getElementById('sidebar-menu');
             const menuBackdrop = document.getElementById('menu-backdrop');
             const sidebarMainView = document.getElementById('sidebar-main-view');
+            const sidebarMyAccountView = document.getElementById('sidebar-my-account-view');
             const sidebarDowngradeView = document.getElementById('sidebar-downgrade-view');
             const sidebarUpdateView = document.getElementById('sidebar-update-view');
             const sidebarDeleteView = document.getElementById('sidebar-delete-view');
 
             function resetSidebarViews() {
                 if (sidebarMainView) sidebarMainView.classList.remove('hidden');
+                if (sidebarMyAccountView) sidebarMyAccountView.classList.remove('active');
                 if (sidebarDowngradeView) sidebarDowngradeView.classList.remove('active');
                 if (sidebarUpdateView) sidebarUpdateView.classList.remove('active');
                 if (sidebarDeleteView) sidebarDeleteView.classList.remove('active');
@@ -3398,12 +3424,21 @@ const btnAccept = document.getElementById('btn-accept-promo-banner');
                 });
             }
 
+            const navMyAccount = document.getElementById('nav-my-account');
             const navDowngradeBasic = document.getElementById('nav-downgrade-basic');
             const navUpdateData = document.getElementById('nav-update-data');
             const navDeleteAccount = document.getElementById('nav-delete-account');
+            const backFromMyAccount = document.getElementById('back-from-my-account');
             const backFromDowngrade = document.getElementById('back-from-downgrade');
             const backFromUpdate = document.getElementById('back-from-update');
             const backFromDelete = document.getElementById('back-from-delete');
+
+            if (navMyAccount) {
+                navMyAccount.addEventListener('click', () => {
+                    if (sidebarMainView) sidebarMainView.classList.add('hidden');
+                    if (sidebarMyAccountView) sidebarMyAccountView.classList.add('active');
+                });
+            }
 
             if (navDowngradeBasic) {
                 navDowngradeBasic.addEventListener('click', () => {
@@ -3426,6 +3461,7 @@ const btnAccept = document.getElementById('btn-accept-promo-banner');
                 });
             }
 
+            if (backFromMyAccount) backFromMyAccount.addEventListener('click', resetSidebarViews);
             if (backFromDowngrade) backFromDowngrade.addEventListener('click', resetSidebarViews);
             if (backFromUpdate) backFromUpdate.addEventListener('click', resetSidebarViews);
             if (backFromDelete) backFromDelete.addEventListener('click', resetSidebarViews);
