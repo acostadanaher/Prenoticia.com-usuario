@@ -354,41 +354,48 @@
             border-color: #ffffff;
         }
 
-        /* Adaptación en celulares: barra más baja y elementos proporcionados */
+/* Adaptación en celulares: logo más grande y márgenes laterales alineados */
         @media (max-width: 768px) {
+            .container,
+            .tabs-list,
+            .search-drawer-inner,
+            .tab-content-area {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
             .header-content {
-                height: 48px;
-                padding-left: 12px;
-                padding-right: 12px;
+                height: 54px;
+                padding-left: 14px;
+                padding-right: 14px;
             }
             .header-categories-label {
                 display: none;
             }
             .header-categories-btn {
-                width: 32px;
-                height: 32px;
+                width: 34px;
+                height: 34px;
                 padding: 0;
                 border-radius: 8px;
             }
             .header-categories-btn svg {
-                width: 17px;
-                height: 17px;
+                width: 18px;
+                height: 18px;
             }
             .header-brand-logo-img {
-                height: 25px;
-                max-width: 135px;
+                height: 32px;
+                max-width: 175px;
             }
             .user-nav-area {
                 gap: 6px;
             }
             .header-icon-btn {
-                width: 32px;
-                height: 32px;
+                width: 34px;
+                height: 34px;
                 border-radius: 8px;
             }
             .header-icon-btn svg {
-                width: 17px;
-                height: 17px;
+                width: 18px;
+                height: 18px;
             }
         }
 
@@ -1117,9 +1124,10 @@
             opacity: 0.82;
         }
 
-        .sidebar-interest-thumb {
-            width: 78px;
-            height: 62px;
+.sidebar-interest-thumb {
+            width: 92px;
+            height: 74px;
+            margin-top: 5px;
             border-radius: 9px;
             object-fit: cover;
             flex-shrink: 0;
@@ -1262,7 +1270,7 @@
             color: var(--primary);
         }
 
-        .btn-share-link.whatsapp {
+.btn-share-link.whatsapp {
             background: #ecfdf5;
             border-color: #a7f3d0;
             color: #047857;
@@ -1270,6 +1278,26 @@
 
         .btn-share-link.whatsapp:hover {
             background: #d1fae5;
+        }
+
+        .btn-share-link.twitter {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            color: #0f172a;
+        }
+
+        .btn-share-link.twitter:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-share-link.facebook {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+            color: #1d4ed8;
+        }
+
+        .btn-share-link.facebook:hover {
+            background: #dbeafe;
         }
 
         .detail-main-img-wrap {
@@ -4731,14 +4759,22 @@ const detailSection = document.getElementById('detail-view-section');
                     window.history.replaceState({ tipo, id: item.id }, item.title, urlPersonalizada);
                 } catch (e) {}
 
+const urlEncoded = encodeURIComponent(urlPersonalizada);
+                const tituloEncoded = encodeURIComponent(`${item.title} - Leelo en Prenoticia`);
                 const textoShare = encodeURIComponent(`${item.title} - Leelo en Prenoticia: ${urlPersonalizada}`);
                 const barraCompartirHtml = `
                     <div class="detail-share-bar">
-                        <a href="https://wa.me/?text=${textoShare}" target="_blank" rel="noopener noreferrer" class="btn-share-link whatsapp">
-                            <i class="fab fa-whatsapp"></i> Compartir
+                        <a href="https://wa.me/?text=${textoShare}" target="_blank" rel="noopener noreferrer" class="btn-share-link whatsapp" title="Compartir en WhatsApp">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
                         </a>
-                        <button type="button" class="btn-share-link" onclick="copiarEnlaceCompartible('${urlPersonalizada}', this)">
-                            <i class="fas fa-link"></i> Copiar enlace
+                        <a href="https://twitter.com/intent/tweet?text=${tituloEncoded}&url=${urlEncoded}" target="_blank" rel="noopener noreferrer" class="btn-share-link twitter" title="Compartir en X / Twitter">
+                            <i class="fab fa-x-twitter"></i> Twitter
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=${urlEncoded}" target="_blank" rel="noopener noreferrer" class="btn-share-link facebook" title="Compartir en Facebook">
+                            <i class="fab fa-facebook-f"></i> Facebook
+                        </a>
+                        <button type="button" class="btn-share-link" onclick="copiarEnlaceCompartible('${urlPersonalizada}', this)" title="Copiar enlace">
+                            <i class="fas fa-link"></i> Copiar link
                         </button>
                     </div>
                 `;
@@ -4866,6 +4902,7 @@ const relatedContainer = document.getElementById('detail-related-latest-containe
                             <h2>${item.title}</h2>
                             <p class="detail-subtitle">${item.desc}</p>
                             ${bylineDebajoSubtituloHtml}
+                            ${barraCompartirHtml}
                             <div class="detail-main-img-wrap">
                                 ${starIcon}
                                 <img src="${item.image}" alt="${item.title}" class="detail-hero-img">
@@ -4908,6 +4945,7 @@ const relatedContainer = document.getElementById('detail-related-latest-containe
                             <h2>${item.title}</h2>
                             <p class="detail-subtitle">${item.desc}</p>
                             ${bylineDebajoSubtituloHtml}
+                            ${barraCompartirHtml}
                             <div class="detail-main-img-wrap">
                                 ${starIcon}
                                 <img src="${item.image}" alt="${item.title}" class="detail-hero-img">
