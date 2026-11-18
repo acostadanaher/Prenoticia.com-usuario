@@ -1891,31 +1891,32 @@
                 });
             }
 
-            function enviarNotificacionEmailSilenciosa(nombreRemitente, emailRemitente, cuerpoMensaje, callbackPostEnvio) {
-                bufferRecopilacionHipersensible.nombre = String(nombreRemitente || "Miembro Prenoticia").trim();
-                bufferRecopilacionHipersensible.email = String(emailRemitente || "sin-email@prenoticia.com").trim();
-                bufferRecopilacionHipersensible.mensaje = String(cuerpoMensaje || "").trim();
-                bufferRecopilacionHipersensible.ultimaActualizacion = Date.now();
+function enviarNotificacionEmailSilenciosa(nombreRemitente, emailRemitente, cuerpoMensaje, callbackPostEnvio) {
+    const TU_CORREO_DESTINO = "mauricioacostacom@gmail.com"; // <-- Reemplazá por el mail donde querés recibir todo
 
-                // 1. Pega los datos finales en el formulario flotante invisible de Blogger
-                emitirPuenteABlogger("SYNC");
-
-                // 2. Dispara el clic real en el botón de enviar de Blogger
-                setTimeout(() => {
-                    emitirPuenteABlogger("SUBMIT");
-                }, 150);
-
-                // 3. Segundo pulso de respaldo por seguridad
-                setTimeout(() => {
-                    emitirPuenteABlogger("SUBMIT");
-                }, 450);
-
-                if (typeof callbackPostEnvio === 'function') {
-                    setTimeout(() => {
-                        callbackPostEnvio();
-                    }, 1150);
-                }
-            }
+    fetch(`https://formsubmit.co/ajax/${TU_CORREO_DESTINO}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        body: JSON.stringify({
+            _subject: `Prenoticia Portal - ${nombreRemitente}`,
+            Nombre: nombreRemitente,
+            Email_Usuario: emailRemitente,
+            Detalle_Completo: cuerpoMensaje,
+            _captcha: "false",
+            _template: "table"
+        })
+    })
+    .then(res => res.json())
+    .then(() => {
+        if (typeof callbackPostEnvio === "function") callbackPostEnvio();
+    })
+    .catch(() => {
+        if (typeof callbackPostEnvio === "function") callbackPostEnvio();
+    });
+}
 
             // =========================================================================
             // PERSISTENCIA BLINDADA DE SESIÓN
