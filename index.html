@@ -47,14 +47,14 @@
 .tabs-list,
 .search-drawer-inner,
 .tab-content-area {
-    max-width: 960px;
+    max-width: 1140px;
     margin: 0 auto;
-    padding-left: 22px;
-    padding-right: 22px;
+    padding-left: 24px;
+    padding-right: 24px;
 }
 
 .tab-content-area {
-    max-width: 960px;
+    max-width: 1140px;
     margin: 0 auto;
     padding: 24px 24px 18vh 24px;
     background-color: #ffffff;
@@ -67,7 +67,7 @@
 #detail-view-section {
     display: none;
     width: 100%;
-    max-width: 912px;
+    max-width: 1092px;
     margin: 0 auto;
 }
 
@@ -623,10 +623,10 @@
             overflow-x: auto;
         }
 
-        .tabs-list {
-            max-width: 1080px;
+.tabs-list {
+            max-width: 1140px;
             margin: 0 auto;
-            padding: 0 18px;
+            padding: 0 24px;
             display: flex;
             list-style: none;
             gap: 6px;
@@ -701,9 +701,9 @@
 
         /* ================= CONTENIDO EDITORIAL Y TICKER FIJO ================= */
 .tab-content-area {
-            max-width: 960px;
+            max-width: 1140px;
             margin: 0 auto;
-            padding: 22px 22px 18vh 22px;
+            padding: 24px 24px 18vh 24px;
             background-color: #ffffff;
             min-height: calc(100vh - 115px);
             border-left: 1px solid #dfe5ee;
@@ -1078,10 +1078,10 @@
         }
 
 /* ================= DETALLE DE ARTÍCULO Y SORTEOS ================= */
-        #detail-view-section {
+#detail-view-section {
             display: none;
             width: 100%;
-            max-width: 1096px;
+            max-width: 1092px;
             margin: 0 auto;
         }
 
@@ -5490,7 +5490,7 @@ window.CONFIG_ANUNCIOS_PORTAL = {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 95;
+  z-index: 120;
   display: none;
   opacity: 0;
   transition: opacity 0.3s ease, transform 0.3s ease;
@@ -5507,9 +5507,19 @@ window.CONFIG_ANUNCIOS_PORTAL = {
   transform: translateX(-16px);
 }
 
-/* Ajusta la posición sticky del header naranja para que quede pegado justo debajo del anuncio superior */
+/* El header naranja baja pegado exactamente debajo del anuncio superior */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 115;
+}
 body.con-banner-superior-activo header {
-  top: var(--altura-banner-sup, 72px);
+  top: 82px;
+}
+@media screen and (max-width: 768px) {
+  body.con-banner-superior-activo header {
+    top: 68px;
+  }
 }
 
 .nativo-flotante-inferior-wrapper {
