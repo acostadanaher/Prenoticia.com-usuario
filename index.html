@@ -4063,7 +4063,25 @@ const btnAccept = document.getElementById('btn-accept-promo-banner');
                            </div>`
                         : '';
 
-                    const comentariosHtml = construirBloqueComentariosHtml(item);
+const comentariosHtml = construirBloqueComentariosHtml(item);
+
+                    const cfgAnuncios = window.CONFIG_ANUNCIOS_PORTAL || { mostrarEnBasico: true, mostrarEnPremium: false };
+                    const habilitarAnuncioEnEstaNota = isPremiumUser ? Boolean(cfgAnuncios.mostrarEnPremium) : Boolean(cfgAnuncios.mostrarEnBasico);
+                    const tagsAnuncio = (item.anuncioEtiquetas || item.tags || []).join(", ");
+                    const palabrasAnuncio = (item.anuncioPalabras || item.tags || []).join(", ");
+
+                    const bloqueSlotAnuncioBasicoHtml = habilitarAnuncioEnEstaNota
+                        ? `
+                            <div class="motor-contexto-nota"
+                                 data-etiquetas="${escaparHtml(tagsAnuncio)}"
+                                 data-palabras="${escaparHtml(palabrasAnuncio)}"
+                                 hidden></div>
+                            <div class="slot-anuncio-nativo-articulo"
+                                 data-etiquetas="${escaparHtml(tagsAnuncio)}"
+                                 data-palabras="${escaparHtml(palabrasAnuncio)}">
+                            </div>
+                          `
+                        : '';
 
                     if (bloqueadoPorMembresia) {
                         const primerParrafo = item.paragraphs[0] || item.desc;
@@ -4078,6 +4096,7 @@ const btnAccept = document.getElementById('btn-accept-promo-banner');
                                 <img src="${item.image}" alt="${item.title}" class="detail-hero-img">
                             </div>
                             <p>${primerParrafo}</p>
+                            ${bloqueSlotAnuncioBasicoHtml}
                             <div class="paywall-fade-wrapper">
                                 <div class="paywall-blurred-preview">
                                     <p>${segundoParrafoPreview}</p>
@@ -4099,6 +4118,7 @@ const btnAccept = document.getElementById('btn-accept-promo-banner');
                             if (idx === 1) {
                                 if (videoHtml) cuerpoParrafos += videoHtml;
                                 if (secondImageHtml) cuerpoParrafos += secondImageHtml;
+                                if (bloqueSlotAnuncioBasicoHtml) cuerpoParrafos += bloqueSlotAnuncioBasicoHtml;
                             }
                         });
 
@@ -4114,6 +4134,10 @@ const btnAccept = document.getElementById('btn-accept-promo-banner');
                             ${etiquetasPie}
                             ${comentariosHtml}
                         `;
+                    }
+
+                    if (typeof window.ejecutarMotorAnuncioInArticle === "function") {
+                        window.ejecutarMotorAnuncioInArticle(item, isPremiumUser);
                     }
                 } else {
                     const asignacion = currentUser ? obtenerAsignacionManual(currentUser.usuario, item.id) : null;
