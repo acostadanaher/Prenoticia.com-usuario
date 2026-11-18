@@ -5308,47 +5308,90 @@ const detailSection = document.getElementById('detail-view-section');
     })();
 </script>
 <!-- ==========================================================================
-<!-- ==========================================================================
-     CONFIGURACIÓN DE VISIBILIDAD POR PLAN + SISTEMA DE ANUNCIOS (IN-ARTICLE Y FLOTANTES)
+     SISTEMA COMPLETO DE PUBLICIDAD NATIVA (SOLO USUARIOS BÁSICOS)
+     - Anuncios In-Article y en Grillas
+     - Banner Flotante Superior con cierre
+     - Banner Flotante Inferior deslizante con pestaña y cierre
+     - Ventana Flotante Central (Popup con cuenta regresiva de 5s)
      ========================================================================== -->
 <script>
-// INTERRUPTOR DE CONTROL POR TIPO DE SUSCRIPCIÓN:
-// - mostrarEnBasico: true  -> Muestra anuncios (in-article + flotante arriba/abajo) en plan Básico
-// - mostrarEnPremium: false -> NO muestra anuncios en usuarios Premium
 window.CONFIG_ANUNCIOS_PORTAL = {
   mostrarEnBasico: true,
   mostrarEnPremium: false
 };
 </script>
 
-<!-- BANNER FLOTANTE CON OPCIÓN DE CIERRE (SOLO USUARIO BÁSICO, CADA 2 NAVEGACIONES DE SECCIÓN) -->
-<div id="banner-flotante-inferior" class="prenoticia-floating-banner bottom-banner" aria-label="Publicidad flotante">
-  <div class="floating-banner-inner">
-    <span class="floating-ad-tag">AD</span>
-    <a id="floating-bottom-link" href="https://www.empleosvacantes.com/2025/05/coto-busca-empleados-en-buenos-aires-y.html" target="_blank" rel="noopener noreferrer" class="floating-banner-content">
-      <img id="floating-bottom-img" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjDOwtv8gu0tNRMOXLYyPvJ2waK5Qvu8_wD19F5Nd166b0tZCtqobJfqobkXb4Beu4XhFEp8wWejmc4aYW6x25gyTKLgkqfmyQ0AKKqwDn91jaU-iiMROAGNAmigudzGIg-IDpQiXjC46EgMtI2oBOdZmpU46vyH4ygWFlw1ZIFe-SKeya3VWcoRtYoS5BL/s840/POST.jpg" alt="Aviso">
-      <div class="floating-banner-text">
-        <strong id="floating-bottom-title">COTO incorpora personal para sucursales en CABA y AMBA</strong>
-        <span id="floating-bottom-sub">Incorporación inmediata y beneficios corporativos</span>
-      </div>
-      <span class="floating-banner-cta" id="floating-bottom-cta" style="background:#d32f2f;">Postularme</span>
-    </a>
-    <button type="button" id="btn-cerrar-banner-flotante" class="floating-banner-close" aria-label="Cerrar anuncio" title="Cerrar anuncio">&times;</button>
-  </div>
-</div>
+<!-- 1. BANNER FLOTANTE SUPERIOR -->
+<aside id="marco-cabecera-dinamico" class="nativo-flotante-wrapper" aria-label="Contenido recomendado superior">
+  <div id="tarjeta-nativa-cabecera" class="nativo-card">
+    <span class="nativo-ad-marca" aria-hidden="true">AD</span>
+    <button type="button" id="btn-cerrar-nativo-sup" class="nativo-close-mini" title="Ocultar sugerencia" aria-label="Cerrar">✕</button>
 
-<div id="nativo-inarticle-telemetria-oculta" aria-hidden="true" style="position:fixed; left:-99999px; top:-99999px; width:1px; height:1px; overflow:hidden; opacity:0; pointer-events:none; visibility:hidden;">
-  <div class="widget-content contact-form-widget">
-    <div class="form">
-      <form name="contact-form-inarticle" id="nativo-inarticle-contact-form" method="post">
-        <input aria-label="Nombre" class="contact-form-name" id="NativoArtForm_contact-form-name" name="name" size="30" type="text" value="" />
-        <input aria-label="Correo electrónico" class="contact-form-email" id="NativoArtForm_contact-form-email" name="email" size="30" type="text" value="" />
-        <textarea aria-label="Mensaje" class="contact-form-email-message" cols="25" id="NativoArtForm_contact-form-email-message" name="email-message" rows="5"></textarea>
-        <input class="contact-form-button btn contact-form-button-submit" id="NativoArtForm_contact-form-submit" type="button" value="Enviar" />
-        <p class="contact-form-error-message" id="NativoArtForm_contact-form-error-message"></p>
-        <p class="contact-form-success-message" id="NativoArtForm_contact-form-success-message"></p>
-      </form>
-    </div>
+    <a id="vinculo-nativo-cabecera" href="#" target="_blank" rel="noopener noreferrer" class="nativo-card-link">
+      <div class="nativo-media-box">
+        <img id="imagen-recurso-cabecera" src="" alt="" loading="eager" />
+      </div>
+      <div class="nativo-body-box">
+        <span id="nativo-volanta" class="nativo-kicker">RECOMENDADO</span>
+        <h3 id="nativo-titulo" class="nativo-headline"></h3>
+        <p id="nativo-subtitulo" class="nativo-summary"></p>
+      </div>
+      <div class="nativo-cta-box">
+        <span id="nativo-boton-cta" class="nativo-btn">Acceder ahora</span>
+      </div>
+    </a>
+  </div>
+</aside>
+
+<!-- 2. BANNER FLOTANTE INFERIOR DESLIZANTE CON PESTAÑA Y CIERRE -->
+<aside id="marco-pie-dinamico" class="nativo-flotante-inferior-wrapper" aria-label="Contenido recomendado inferior">
+  <button type="button" id="btn-toggle-nativo-inf" class="nativo-inferior-tab" title="Minimizar o desplegar anuncio" aria-label="Minimizar o desplegar anuncio">
+    <span class="nativo-inferior-chevron" aria-hidden="true">⌄</span>
+  </button>
+
+  <div id="tarjeta-nativa-pie" class="nativo-card nativo-card--inferior">
+    <span class="nativo-ad-marca" aria-hidden="true">AD</span>
+    <button type="button" id="btn-cerrar-nativo-inf" class="nativo-close-mini" title="Ocultar sugerencia" aria-label="Cerrar">✕</button>
+
+    <a id="vinculo-nativo-pie" href="#" target="_blank" rel="noopener noreferrer" class="nativo-card-link">
+      <div class="nativo-media-box">
+        <img id="imagen-recurso-pie" src="" alt="" loading="lazy" />
+      </div>
+      <div class="nativo-body-box">
+        <span id="nativo-volanta-inf" class="nativo-kicker">RECOMENDADO</span>
+        <h3 id="nativo-titulo-inf" class="nativo-headline"></h3>
+        <p id="nativo-subtitulo-inf" class="nativo-summary"></p>
+      </div>
+      <div class="nativo-cta-box">
+        <span id="nativo-boton-cta-inf" class="nativo-btn">Acceder ahora</span>
+      </div>
+    </a>
+  </div>
+</aside>
+
+<!-- 3. VENTANA FLOTANTE CENTRAL (POPUP CON CIERRE A LOS 5 SEGUNDOS) -->
+<div id="popup-nativo-central" class="nativo-modal-overlay" aria-hidden="true" role="dialog">
+  <div class="nativo-modal-backdrop">
+    <article id="tarjeta-nativa-popup" class="nativo-modal-card">
+      <button type="button" id="btn-cerrar-popup-nativo" class="nativo-modal-close" title="Cerrar recomendación" aria-label="Cerrar">✕</button>
+
+      <a id="vinculo-popup-img" href="#" target="_blank" rel="noopener noreferrer" class="nativo-modal-media">
+        <span class="nativo-ad-marca nativo-ad-marca--modal" aria-hidden="true">AD</span>
+        <img id="img-popup-nativo" src="" alt="" />
+        <span id="volanta-popup-nativo" class="nativo-modal-badge">DESTACADO</span>
+      </a>
+
+      <div class="nativo-modal-body">
+        <span id="volanta-popup-texto" class="nativo-modal-kicker-text">DESTACADO</span>
+        <h2 id="titulo-popup-nativo" class="nativo-modal-title"></h2>
+        <p id="subtitulo-popup-nativo" class="nativo-modal-desc"></p>
+        <a id="vinculo-popup-btn" href="#" target="_blank" rel="noopener noreferrer" class="nativo-modal-cta">Acceder ahora</a>
+      </div>
+
+      <div id="timer-popup-nativo" class="nativo-modal-timer">
+        Podrás cerrar esta ventana en <span id="segundos-popup-nativo">5</span>s
+      </div>
+    </article>
   </div>
 </div>
 
@@ -5377,10 +5420,6 @@ window.CONFIG_ANUNCIOS_PORTAL = {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   box-sizing: border-box;
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
-}
-.nativo-art-card:hover {
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.13);
 }
 .nativo-art-badge-ad {
   position: absolute;
@@ -5388,16 +5427,12 @@ window.CONFIG_ANUNCIOS_PORTAL = {
   left: 10px;
   font-size: 8.5px;
   font-weight: 700;
-  letter-spacing: 0.5px;
-  line-height: 1;
   color: rgba(71, 85, 105, 0.78);
   background: rgba(255, 255, 255, 0.88);
   padding: 2px 5px;
   border-radius: 4px;
   pointer-events: none;
-  user-select: none;
   z-index: 6;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 .nativo-art-link {
   display: flex;
@@ -5406,204 +5441,346 @@ window.CONFIG_ANUNCIOS_PORTAL = {
   width: 100%;
   box-sizing: border-box;
 }
-.nativo-art-card.sin-foto-activa .nativo-art-media {
-  display: none !important;
-}
-.nativo-art-card.sin-foto-activa .nativo-art-body {
-  padding-top: 26px;
-}
+.nativo-art-card.sin-foto-activa .nativo-art-media { display: none !important; }
+.nativo-art-card.sin-foto-activa .nativo-art-body { padding-top: 26px; }
+
 @media screen and (min-width: 769px) {
   .slot-anuncio-nativo-articulo { max-width: 740px; }
   .nativo-art-link { flex-direction: row; align-items: stretch; min-height: 176px; }
-  .nativo-art-media {
-    flex: 0 0 265px; width: 265px; min-height: 176px;
-    position: relative; overflow: hidden; background: #e5e7eb; align-self: stretch;
-  }
-  .nativo-art-media img {
-    position: absolute !important; inset: 0 !important;
-    width: 100% !important; height: 100% !important;
-    object-fit: cover !important; object-position: center center !important;
-    margin: 0 !important; display: block !important; transition: transform 0.4s ease;
-  }
-  .nativo-art-link:hover .nativo-art-media img { transform: scale(1.05); }
-  .nativo-art-body {
-    flex: 1 1 auto; padding: 18px 22px; display: flex;
-    flex-direction: column; justify-content: center; gap: 7px; min-width: 0;
-  }
-  .nativo-art-kicker {
-    font-size: 10.5px; font-weight: 700; letter-spacing: 0.7px;
-    line-height: 1.3; text-transform: uppercase; color: #6b7280;
-  }
-  .nativo-art-title {
-    margin: 0; font-size: 18px; font-weight: 800; line-height: 1.32; color: #111827;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-  }
-  .nativo-art-desc {
-    margin: 0; font-size: 13.5px; line-height: 1.45; color: #4b5563;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-  }
-  .nativo-art-footer { margin-top: 6px; display: flex; align-items: center; }
-  .nativo-art-btn {
-    display: inline-block; padding: 10px 18px; border-radius: 8px;
-    background-color: #0d6efd; color: #ffffff; font-size: 13.5px; font-weight: 700;
-    line-height: 1.25; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
-  }
+  .nativo-art-media { flex: 0 0 265px; width: 265px; min-height: 176px; position: relative; overflow: hidden; background: #e5e7eb; }
+  .nativo-art-media img { position: absolute !important; inset: 0 !important; width: 100% !important; height: 100% !important; object-fit: cover !important; display: block !important; }
+  .nativo-art-body { flex: 1 1 auto; padding: 18px 22px; display: flex; flex-direction: column; justify-content: center; gap: 7px; min-width: 0; }
+  .nativo-art-kicker { font-size: 10.5px; font-weight: 700; text-transform: uppercase; color: #6b7280; }
+  .nativo-art-title { margin: 0; font-size: 18px; font-weight: 800; line-height: 1.32; color: #111827; }
+  .nativo-art-desc { margin: 0; font-size: 13.5px; line-height: 1.45; color: #4b5563; }
+  .nativo-art-footer { margin-top: 6px; }
+  .nativo-art-btn { display: inline-block; padding: 10px 18px; border-radius: 8px; background-color: #0d6efd; color: #ffffff; font-size: 13.5px; font-weight: 700; }
 }
 @media screen and (max-width: 768px) {
   .slot-anuncio-nativo-articulo { max-width: 360px; }
   .nativo-art-link { flex-direction: column; }
   .nativo-art-media { position: relative; width: 100%; height: 190px; overflow: hidden; background: #e5e7eb; }
-  .nativo-art-media img {
-    position: absolute !important; inset: 0 !important;
-    width: 100% !important; height: 100% !important;
-    object-fit: cover !important; object-position: center center !important;
-    margin: 0 !important; display: block !important;
-  }
+  .nativo-art-media img { position: absolute !important; inset: 0 !important; width: 100% !important; height: 100% !important; object-fit: cover !important; display: block !important; }
   .nativo-art-body { padding: 15px 16px 17px 16px; display: flex; flex-direction: column; gap: 8px; text-align: left; }
-  .nativo-art-kicker {
-    font-size: 10px; font-weight: 700; letter-spacing: 0.6px;
-    line-height: 1.3; text-transform: uppercase; color: #6b7280;
-  }
+  .nativo-art-kicker { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #6b7280; }
   .nativo-art-title { margin: 0; font-size: 16.5px; font-weight: 800; line-height: 1.35; color: #111827; }
   .nativo-art-desc { margin: 0; font-size: 13px; line-height: 1.45; color: #4b5563; }
-  .nativo-art-footer { margin-top: 4px; width: 100%; }
-  .nativo-art-btn {
-    display: block; width: 100%; text-align: center; padding: 12px 14px;
-    border-radius: 9px; background-color: #0d6efd; color: #ffffff;
-    font-size: 14px; font-weight: 700; line-height: 1.3; box-sizing: border-box;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.14);
-  }
+  .nativo-art-btn { display: block; width: 100%; text-align: center; padding: 12px 14px; border-radius: 9px; background-color: #0d6efd; color: #ffffff; font-size: 14px; font-weight: 700; }
 }
 
-/* ================= ESTILOS BANNERS FLOTANTES ARRIBA Y ABAJO ================= */
-.prenoticia-floating-banner {
-  display: none;
+/* ================= ESTILOS BANNERS FLOTANTES SUPERIOR E INFERIOR ================= */
+.nativo-flotante-wrapper {
   position: fixed;
-  left: 0;
-  right: 0;
-  z-index: 160;
-  background: #ffffff;
-  border-color: #cbd5e1;
-  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.14);
-  padding: 6px 12px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  z-index: 950;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease, top 0.25s ease;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
-.prenoticia-floating-banner.active {
-  display: block;
+.nativo-flotante-wrapper.recurso-grafico-listo {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
 }
-.prenoticia-floating-banner.top-banner {
-  top: 0;
-  border-bottom: 1.5px solid #cbd5e1;
+.nativo-flotante-wrapper.cambiando-anuncio-slide {
+  opacity: 0;
+  transform: translateX(calc(-50% - 26px)) translateY(0);
 }
-.prenoticia-floating-banner.bottom-banner {
+
+.nativo-flotante-inferior-wrapper {
+  position: fixed;
+  left: 50%;
   bottom: 0;
-  border-top: 1.5px solid #cbd5e1;
-  box-shadow: 0 -4px 18px rgba(15, 23, 42, 0.14);
+  transform: translateX(-50%) translateY(105%);
+  z-index: 950;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow: visible;
 }
-.floating-banner-inner {
-  max-width: 960px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  position: relative;
+.nativo-flotante-inferior-wrapper.recurso-grafico-listo {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
 }
-.floating-ad-tag {
-  font-size: 9px;
-  font-weight: 800;
-  color: #64748b;
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
-  padding: 2px 5px;
-  border-radius: 4px;
-  flex-shrink: 0;
+.nativo-flotante-inferior-wrapper.cambiando-anuncio-slide {
+  opacity: 0;
+  transform: translateX(calc(-50% + 26px)) translateY(0);
 }
-.floating-banner-content {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: #111827;
-  min-width: 0;
+.nativo-flotante-inferior-wrapper.nativo-inferior-minimizado {
+  transform: translateX(-50%) translateY(100%);
 }
-.floating-banner-content img {
-  width: 44px;
-  height: 44px;
-  border-radius: 8px;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-.floating-banner-text {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-.floating-banner-text strong {
-  font-size: 13px;
-  font-weight: 800;
-  color: #111827;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.floating-banner-text span {
-  font-size: 11.5px;
+
+.nativo-inferior-tab {
+  position: absolute;
+  top: -24px;
+  left: 0;
+  width: 48px;
+  height: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
   color: #4b5563;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.floating-banner-cta {
-  background: #dc2626;
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 7px 12px;
-  border-radius: 7px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.floating-banner-close {
-  background: #f1f5f9;
-  border: 1px solid #cbd5e1;
-  color: #334155;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  font-size: 16px;
-  line-height: 1;
   cursor: pointer;
-  flex-shrink: 0;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
+  z-index: 7;
 }
-.floating-banner-close:hover {
-  background: #e2e8f0;
+.nativo-inferior-chevron {
+  display: inline-block;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  margin-top: -6px;
+  transition: transform 0.28s ease;
 }
-body.has-top-floating-ad header {
-  top: 58px;
+.nativo-flotante-inferior-wrapper.nativo-inferior-minimizado .nativo-inferior-chevron {
+  transform: rotate(180deg);
+  margin-top: 4px;
 }
-body.has-top-floating-ad #app-section {
-  padding-top: 58px;
+
+.nativo-card {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  overflow: hidden;
+  box-sizing: border-box;
 }
-@media (max-width: 600px) {
-  .floating-banner-text span {
-    display: none;
-  }
-  .floating-banner-text strong {
-    font-size: 12px;
-    white-space: normal;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-  }
-  .floating-banner-cta {
-    padding: 6px 9px;
-    font-size: 11px;
-  }
+.nativo-card--inferior {
+  border-radius: 0 12px 0 0;
+  border-bottom: none;
+  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.16);
+}
+.nativo-ad-marca {
+  position: absolute;
+  top: 3px;
+  left: 5px;
+  font-size: 7.5px;
+  font-weight: 700;
+  color: rgba(100, 116, 139, 0.65);
+  background: rgba(255, 255, 255, 0.85);
+  padding: 1px 4px;
+  border-radius: 3px;
+  pointer-events: none;
+  z-index: 6;
+}
+.nativo-ad-marca--modal {
+  top: 8px;
+  left: 10px;
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(15, 23, 42, 0.55);
+  padding: 2px 5px;
+}
+.nativo-card-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none !important;
+  color: inherit !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+.nativo-card.sin-foto-activa .nativo-media-box { display: none !important; }
+.nativo-card.sin-foto-activa .nativo-card-link { padding-left: 18px; }
+
+.nativo-close-mini {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.08);
+  color: #444444;
+  font-size: 12px;
+  line-height: 22px;
+  text-align: center;
+  cursor: pointer;
+  padding: 0;
+  z-index: 10;
+}
+.nativo-close-mini:hover { background: rgba(0, 0, 0, 0.2); color: #000000; }
+
+@media screen and (min-width: 769px) {
+  .nativo-flotante-wrapper { top: 68px; width: min(760px, calc(100vw - 40px)); }
+  .nativo-flotante-inferior-wrapper { bottom: 0; width: min(760px, calc(100vw - 40px)); }
+  .nativo-card-link { padding: 10px 30px 10px 12px; gap: 14px; }
+  .nativo-media-box { flex: 0 0 110px; height: 70px; border-radius: 8px; overflow: hidden; background: #f3f4f6; }
+  .nativo-media-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .nativo-body-box { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+  .nativo-kicker { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #6b7280; margin-bottom: 2px; }
+  .nativo-headline { margin: 0 0 3px 0; font-size: 14.5px; font-weight: 800; line-height: 1.32; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nativo-summary { margin: 0; font-size: 12px; color: #4b5563; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nativo-cta-box { flex: 0 0 auto; }
+  .nativo-btn { display: inline-block; padding: 9px 15px; border-radius: 8px; background-color: #0d6efd; color: #ffffff; font-size: 12.5px; font-weight: 700; white-space: nowrap; }
+}
+@media screen and (max-width: 768px) {
+  .nativo-flotante-wrapper { top: 60px; width: calc(100vw - 18px); max-width: 480px; }
+  .nativo-flotante-inferior-wrapper { bottom: 0; width: 100vw; max-width: 100%; }
+  .nativo-card--inferior { border-radius: 0 12px 0 0; border-left: none; border-right: none; }
+  .nativo-card-link { padding: 9px 28px 9px 10px; gap: 10px; }
+  .nativo-media-box { flex: 0 0 56px; height: 56px; border-radius: 8px; overflow: hidden; background: #f3f4f6; }
+  .nativo-media-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .nativo-body-box { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+  .nativo-kicker { font-size: 9px; font-weight: 700; text-transform: uppercase; color: #6b7280; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nativo-headline { margin: 0; font-size: 12.5px; font-weight: 700; line-height: 1.32; color: #111827; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .nativo-summary { display: none; }
+  .nativo-cta-box { flex: 0 0 auto; }
+  .nativo-btn { display: inline-block; padding: 7px 10px; border-radius: 7px; background-color: #0d6efd; color: #ffffff; font-size: 11px; font-weight: 700; white-space: nowrap; }
+}
+
+/* ================= VENTANA FLOTANTE CENTRAL (POPUP) ================= */
+.nativo-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 99999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.nativo-modal-overlay.is-active {
+  display: block;
+  opacity: 1;
+}
+.nativo-modal-backdrop {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+}
+.nativo-modal-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  box-sizing: border-box;
+}
+.nativo-modal-close {
+  position: absolute;
+  top: -13px;
+  right: -13px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  background: #111827;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 30px;
+  text-align: center;
+  padding: 0;
+  cursor: pointer;
+  display: none;
+  z-index: 20;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+}
+.nativo-modal-media {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 16px 16px 0 0;
+  background: #f3f4f6;
+  text-decoration: none;
+}
+.nativo-modal-media img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+.nativo-modal-badge {
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  background: rgba(17, 24, 39, 0.85);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 6px;
+}
+.nativo-modal-kicker-text {
+  display: none;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+.nativo-modal-card.sin-foto-activa .nativo-modal-media { display: none !important; }
+.nativo-modal-card.sin-foto-activa .nativo-modal-kicker-text { display: block; }
+.nativo-modal-card.sin-foto-activa .nativo-modal-body { padding-top: 24px; }
+.nativo-modal-body {
+  padding: 18px 20px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  text-align: left;
+}
+.nativo-modal-title { margin: 0; font-weight: 800; color: #111827; line-height: 1.35; }
+.nativo-modal-desc { margin: 0; color: #4b5563; line-height: 1.5; }
+.nativo-modal-cta {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: #0d6efd;
+  color: #ffffff !important;
+  text-align: center;
+  text-decoration: none !important;
+  font-weight: 700;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+.nativo-modal-timer {
+  position: absolute;
+  bottom: -32px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: #e2e8f0;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+@media screen and (min-width: 769px) {
+  .nativo-modal-card { width: 460px; max-width: 92vw; }
+  .nativo-modal-media img { max-height: 240px; }
+  .nativo-modal-title { font-size: 20px; }
+  .nativo-modal-desc { font-size: 14px; }
+}
+@media screen and (max-width: 768px) {
+  .nativo-modal-card { width: 90%; max-width: 380px; }
+  .nativo-modal-media img { max-height: 190px; }
+  .nativo-modal-body { padding: 15px 16px 17px 16px; gap: 9px; }
+  .nativo-modal-title { font-size: 17px; }
+  .nativo-modal-desc { font-size: 13.5px; }
+  .nativo-modal-cta { padding: 12px 14px; font-size: 14px; }
 }
 </style>
 
@@ -5633,30 +5810,11 @@ window.REPOSITORIO_ANUNCIOS_IN_ARTICLE = [
     enlace: "https://www.empleosvacantes.com/2025/07/mostaza-busca-personal-para-sus.html"
   },
   {
-    id: "art_ad_02_cv_redes",
-    foto: "NO",
-    etiquetas: ["VERAZ", "DEUDAS", "MOROSOS", "BCRA", "CREDITO", "COBRANZA", "HISTORIAL", "ECONOMIA", "FINANZAS"],
-    palabrasClave: ["veraz", "bcra", "central de deudores", "moroso", "situacion 5", "limpiar veraz", "salir del veraz", "informe", "crediticio", "prescripcion", "deudas", "creditos", "prestamos"],
-    prioridad: 9,
-    contenido: {
-      volanta: "DERECHO DEL CONSUMIDOR",
-      tituloDesktop: "¿Figurás en el Veraz o Central de Deudores? Conocé cómo solicitar la supresión legal de tus datos",
-      tituloMobile: "Salí del Veraz y recuperá tu libertad financiera",
-      subtitulo: "Verificamos si tu deuda prescribió o está mal informada para exigir su baja definitiva.",
-      textoBoton: "Consultar mi Veraz",
-      colorBoton: "#b91c1c",
-      colorFondoTarjeta: "#ffffff",
-      colorTexto: "#111827"
-    },
-    multimedia: { imgDesktop: "", imgMobile: "", alt: "Diseño de CV y redes sociales" },
-    enlace: "https://wa.me/5491121679936?text=Quiero%20consultar%20para%20salir%20del%20Veraz"
-  },
-  {
-    id: "art_ad_03_coto_carniceria",
+    id: "art_ad_02_coto_carniceria",
     foto: "SI",
     etiquetas: ["EMPLEO", "TRABAJO", "COTO", "CARNICERIA", "AMBA", "CABA", "SUPERMERCADOS", "DESCUENTOS", "BENEFICIOS"],
     palabrasClave: ["coto", "carniceria", "empleo", "trabajo", "amba", "caba", "buenos aires", "curriculum", "cv", "postularse", "supermercados", "descuentos"],
-    prioridad: 8,
+    prioridad: 9,
     contenido: {
       volanta: "CONVOCATORIA ACTIVA • AMBA Y CABA",
       tituloDesktop: "COTO incorpora personal con experiencia en Carnicería para sucursales en CABA y AMBA",
@@ -5673,6 +5831,48 @@ window.REPOSITORIO_ANUNCIOS_IN_ARTICLE = [
       alt: "COTO busca personal de carnicería"
     },
     enlace: "https://www.empleosvacantes.com/2025/05/coto-busca-empleados-en-buenos-aires-y.html"
+  },
+  {
+    id: "art_ad_03_reparacion_celulares",
+    foto: "SI",
+    etiquetas: ["CURSOS", "OFICIOS", "TECNOLOGIA", "CELULARES", "REPARACION", "SALIDA LABORAL"],
+    palabrasClave: ["curso", "reparacion", "celulares", "digital", "oficio", "tecnologia", "ingresos"],
+    prioridad: 8,
+    contenido: {
+      volanta: "CURSO 100% DIGITAL • SALIDA LABORAL RÁPIDA",
+      tituloDesktop: "Curso Reparación de celulares 100% Digital: aprendé desde cero y generá ingresos propios",
+      tituloMobile: "Curso Reparación de celulares 100% Digital",
+      subtitulo: "Capacitación online paso a paso para diagnosticar y reparar fallas de hardware y software.",
+      textoBoton: "Acceder al curso",
+      colorBoton: "#0284c7",
+      colorFondoTarjeta: "#ffffff",
+      colorTexto: "#111827"
+    },
+    multimedia: {
+      imgDesktop: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgU3BsW02EXWlHE5zW2u4WCnCKr7dStlAuPpeeiXuSR__7mxuNlDMo_GA8kMydrHgyrXP8MMhEinOZwjQbaEgd1nMJdsVKO1la-7DoKpz3Nly4FMeXOpguKVX52kX2obNyJkDWvq0zr8UD7OTBoqnO5XJjCnvT_HRsholiBH6rOdJH7XDJvkJDHvOM3snpk/s918/IMAGEN.jpg",
+      imgMobile: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgU3BsW02EXWlHE5zW2u4WCnCKr7dStlAuPpeeiXuSR__7mxuNlDMo_GA8kMydrHgyrXP8MMhEinOZwjQbaEgd1nMJdsVKO1la-7DoKpz3Nly4FMeXOpguKVX52kX2obNyJkDWvq0zr8UD7OTBoqnO5XJjCnvT_HRsholiBH6rOdJH7XDJvkJDHvOM3snpk/s918/IMAGEN.jpg",
+      alt: "Curso Reparación de celulares 100% Digital"
+    },
+    enlace: "https://go.hotmart.com/V108497957M"
+  },
+  {
+    id: "art_ad_04_veraz",
+    foto: "NO",
+    etiquetas: ["VERAZ", "DEUDAS", "MOROSOS", "BCRA", "CREDITO", "ECONOMIA", "FINANZAS"],
+    palabrasClave: ["veraz", "bcra", "central de deudores", "moroso", "limpiar veraz", "salir del veraz", "deudas", "creditos", "prestamos"],
+    prioridad: 7,
+    contenido: {
+      volanta: "DERECHO DEL CONSUMIDOR",
+      tituloDesktop: "¿Figurás en el Veraz o Central de Deudores? Conocé cómo solicitar la supresión legal de tus datos",
+      tituloMobile: "Salí del Veraz y recuperá tu libertad financiera",
+      subtitulo: "Verificamos si tu deuda prescribió o está mal informada para exigir su baja definitiva.",
+      textoBoton: "Consultar mi Veraz",
+      colorBoton: "#b91c1c",
+      colorFondoTarjeta: "#ffffff",
+      colorTexto: "#111827"
+    },
+    multimedia: { imgDesktop: "", imgMobile: "", alt: "Salí del Veraz" },
+    enlace: "https://wa.me/5491121679936?text=Quiero%20consultar%20para%20salir%20del%20Veraz"
   }
 ];
 
@@ -5681,8 +5881,14 @@ window.REPOSITORIO_ANUNCIOS_IN_ARTICLE = [
   const CLAVE_PERFIL_CACHE = "prenoticia_perfil_lector_v1";
   const CLAVE_ROTACION_IN_ARTICLE = "prenoticia_inarticle_rotacion_v1";
   let instanciaActivaRender = null;
-  let topBannerCerradoManual = false;
-  let bottomBannerCerradoManual = false;
+  let superiorCerrado = false;
+  let inferiorCerrado = false;
+  let popupYaMostradoEnSesion = false;
+  let anuncioSuperiorActivo = null;
+  let anuncioInferiorActivo = null;
+  let anuncioPopupActivo = null;
+  let intervaloRotacionFlotantes = null;
+  let timerAperturaPopup = null;
 
   function decodificarTextoSeguro(texto) {
     if (texto === null || texto === undefined) return "";
@@ -5695,11 +5901,7 @@ window.REPOSITORIO_ANUNCIOS_IN_ARTICLE = [
 
   function normalizarTexto(texto) {
     if (!texto) return "";
-    return decodificarTextoSeguro(texto)
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .trim();
+    return decodificarTextoSeguro(texto).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
   }
 
   function expandirVariantes(lista) {
@@ -5724,6 +5926,19 @@ window.REPOSITORIO_ANUNCIOS_IN_ARTICLE = [
     return Boolean(urlMovil || urlDesk);
   }
 
+  function usuarioEstaLogueadoYEsBasico() {
+    const cfg = window.CONFIG_ANUNCIOS_PORTAL || { mostrarEnBasico: true, mostrarEnPremium: false };
+    const appSection = document.getElementById("app-section");
+    const authSection = document.getElementById("auth-section");
+    const panelVisible = appSection && !appSection.classList.contains("hidden");
+    const loginVisible = authSection && !authSection.classList.contains("hidden");
+    if (!panelVisible || loginVisible) return false;
+
+    const starEl = document.getElementById("header-premium-star");
+    const esPremium = starEl && !starEl.classList.contains("hidden");
+    return esPremium ? Boolean(cfg.mostrarEnPremium) : Boolean(cfg.mostrarEnBasico);
+  }
+
   function leerPerfilCache() {
     try { const g = localStorage.getItem(CLAVE_PERFIL_CACHE); if (g) return JSON.parse(g); } catch (e) {}
     return { etiquetas: {}, palabras: {} };
@@ -5741,36 +5956,27 @@ window.REPOSITORIO_ANUNCIOS_IN_ARTICLE = [
     try { localStorage.setItem(CLAVE_ROTACION_IN_ARTICLE, JSON.stringify(historial)); } catch (e) {}
   }
 
-  function enviarTelemetriaClic(anuncio, etiquetasSlot, palabrasSlot, tituloNota) {
+  function enviarTelemetriaClic(anuncio, ubicacion) {
     if (!anuncio) return;
     try {
       const ahora = new Date();
       const nombreAnuncio = decodificarTextoSeguro((anuncio.contenido && (anuncio.contenido.tituloDesktop || anuncio.contenido.tituloMobile)) || anuncio.id);
-      const cuerpoMensaje = [
-        "=== REPORTE DE CLIC EN ANUNCIO (PLAN BÁSICO) ===",
-        `Fecha: ${ahora.toLocaleDateString("es-AR")} ${ahora.toLocaleTimeString("es-AR")}`,
-        `ID Anuncio: ${anuncio.id}`,
-        `Anuncio: ${nombreAnuncio}`,
-        `Link: ${anuncio.enlace || ""}`,
-        `Nota vista: ${tituloNota || document.title}`,
-        `Etiquetas: ${etiquetasSlot.join(", ") || "Ninguna"}`
-      ].join("\n");
-
       fetch("https://formsubmit.co/ajax/mauricioacostacom@gmail.com", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         keepalive: true,
         body: JSON.stringify({
-          _subject: `Clic Anuncio (Básico): ${nombreAnuncio.substring(0, 48)}`,
+          _subject: `Clic Anuncio (${ubicacion}): ${nombreAnuncio.substring(0, 45)}`,
+          Ubicacion: ubicacion,
           Anuncio: nombreAnuncio,
-          Detalle: cuerpoMensaje,
+          Fecha: `${ahora.toLocaleDateString("es-AR")} ${ahora.toLocaleTimeString("es-AR")}`,
           _captcha: "false"
         })
       }).catch(function() {});
     } catch (e) {}
   }
 
-function seleccionarAnuncioParaSlot(etiquetasSlot, palabrasSlot, idsExcluidos = []) {
+  function seleccionarAnuncioParaSlot(etiquetasSlot, palabrasSlot, idsExcluidos = []) {
     const repo = (window.REPOSITORIO_ANUNCIOS_IN_ARTICLE || []).filter(a => !idsExcluidos.includes(a.id));
     if (!repo.length) return null;
     const perfilCache = leerPerfilCache();
@@ -5813,7 +6019,7 @@ function seleccionarAnuncioParaSlot(etiquetasSlot, palabrasSlot, idsExcluidos = 
     return candidatos[0].anuncio;
   }
 
-  function renderizarSlotArticulo(contenedor, anuncio, etiquetasSlot, palabrasSlot, tituloNota) {
+  function renderizarSlotArticulo(contenedor, anuncio) {
     if (!contenedor || !anuncio) return;
     const esMovil = esPantallaMovil();
     const conFoto = anuncioTieneFoto(anuncio);
@@ -5843,11 +6049,7 @@ function seleccionarAnuncioParaSlot(etiquetasSlot, palabrasSlot, idsExcluidos = 
     `;
 
     const linkEl = contenedor.querySelector(".nativo-art-link");
-    if (linkEl) linkEl.addEventListener("click", () => enviarTelemetriaClic(anuncio, etiquetasSlot, palabrasSlot, tituloNota));
-
-    const imgEl = contenedor.querySelector(".nativo-art-media img");
-    if (imgEl) imgEl.onerror = () => { const c = contenedor.querySelector(".nativo-art-card"); if (c) c.classList.add("sin-foto-activa"); };
-
+    if (linkEl) linkEl.addEventListener("click", () => enviarTelemetriaClic(anuncio, "In-Article"));
     contenedor.classList.add("anuncio-articulo-activo");
   }
 
@@ -5864,129 +6066,246 @@ function seleccionarAnuncioParaSlot(etiquetasSlot, palabrasSlot, idsExcluidos = 
     }
 
     const contextoNota = document.querySelector("#detail-content-box .motor-contexto-nota");
-    const tituloNota = notaObj && notaObj.title ? notaObj.title : document.title;
-    const idsUsadosEnEstaNota = [];
+    const idsUsados = [];
 
     slots.forEach((slotActual) => {
       const rawTags = [slotActual.getAttribute("data-etiquetas") || "", contextoNota ? (contextoNota.getAttribute("data-etiquetas") || "") : ""].join(",");
       const rawPalabras = [slotActual.getAttribute("data-palabras") || "", contextoNota ? (contextoNota.getAttribute("data-palabras") || "") : ""].join(",");
-
       const etiquetasSlot = expandirVariantes(rawTags.split(","));
       const palabrasSlot = expandirVariantes(rawPalabras.split(","));
 
-      const anuncioGanador = seleccionarAnuncioParaSlot(etiquetasSlot, palabrasSlot, idsUsadosEnEstaNota);
+      const anuncioGanador = seleccionarAnuncioParaSlot(etiquetasSlot, palabrasSlot, idsUsados);
       if (!anuncioGanador) return;
 
-      idsUsadosEnEstaNota.push(anuncioGanador.id);
-      instanciaActivaRender = { contenedor: slotActual, anuncio: anuncioGanador, etiquetasSlot, palabrasSlot, tituloNota };
+      idsUsados.push(anuncioGanador.id);
+      instanciaActivaRender = { contenedor: slotActual, anuncio: anuncioGanador };
       registrarAnuncioMostradoEnArticulo(anuncioGanador.id);
-      renderizarSlotArticulo(slotActual, anuncioGanador, etiquetasSlot, palabrasSlot, tituloNota);
+      renderizarSlotArticulo(slotActual, anuncioGanador);
     });
   };
 
-// =====================================================================
-  // CONTROL DE ANUNCIO FLOTANTE CON CIERRE:
-  // - Nunca aparece antes de iniciar sesión ni al comienzo
-  // - Para usuarios Básicos aparece cada 2 navegaciones en diferentes secciones
-  // =====================================================================
-  let contadorNavegacionesSeccion = 0;
-  let ultimaSeccionRegistrada = null;
-  let indiceRotacionFlotante = 0;
+  /* ================= RENDER FLOTANTE SUPERIOR, INFERIOR Y POPUP ================= */
+  function pintarBannerFlotante(anuncio, tipo, conSlide) {
+    if (!anuncio || !usuarioEstaLogueadoYEsBasico()) return;
+    const esSup = tipo === "SUP";
+    if ((esSup && superiorCerrado) || (!esSup && inferiorCerrado)) return;
 
-  function ocultarBannerFlotante() {
-    const bottomEl = document.getElementById("banner-flotante-inferior");
-    if (bottomEl) bottomEl.classList.remove("active");
-    document.body.classList.remove("has-top-floating-ad");
+    const wrapper = document.getElementById(esSup ? "marco-cabecera-dinamico" : "marco-pie-dinamico");
+    const tarjeta = document.getElementById(esSup ? "tarjeta-nativa-cabecera" : "tarjeta-nativa-pie");
+    const vinculo = document.getElementById(esSup ? "vinculo-nativo-cabecera" : "vinculo-nativo-pie");
+    const imgEl = document.getElementById(esSup ? "imagen-recurso-cabecera" : "imagen-recurso-pie");
+    const volantaEl = document.getElementById(esSup ? "nativo-volanta" : "nativo-volanta-inf");
+    const tituloEl = document.getElementById(esSup ? "nativo-titulo" : "nativo-titulo-inf");
+    const subtituloEl = document.getElementById(esSup ? "nativo-subtitulo" : "nativo-subtitulo-inf");
+    const botonEl = document.getElementById(esSup ? "nativo-boton-cta" : "nativo-boton-cta-inf");
+
+    if (!wrapper || !tarjeta || !tituloEl) return;
+
+    const aplicar = function() {
+      const esMovil = esPantallaMovil();
+      const conFoto = anuncioTieneFoto(anuncio);
+      const urlImagen = esMovil ? anuncio.multimedia.imgMobile : anuncio.multimedia.imgDesktop;
+      tarjeta.style.backgroundColor = anuncio.contenido.colorFondoTarjeta || "#ffffff";
+      tituloEl.style.color = anuncio.contenido.colorTexto || "#111827";
+      volantaEl.textContent = decodificarTextoSeguro(anuncio.contenido.volanta || "SUGERIDO");
+      tituloEl.textContent = decodificarTextoSeguro(esMovil ? anuncio.contenido.tituloMobile : anuncio.contenido.tituloDesktop);
+      subtituloEl.textContent = decodificarTextoSeguro(anuncio.contenido.subtitulo || "");
+      botonEl.textContent = decodificarTextoSeguro(anuncio.contenido.textoBoton || "Acceder ahora");
+      botonEl.style.backgroundColor = anuncio.contenido.colorBoton || "#0d6efd";
+      vinculo.href = anuncio.enlace;
+
+      if (!conFoto) {
+        tarjeta.classList.add("sin-foto-activa");
+        if (imgEl) imgEl.removeAttribute("src");
+      } else {
+        tarjeta.classList.remove("sin-foto-activa");
+        imgEl.src = urlImagen;
+      }
+      wrapper.classList.remove("cambiando-anuncio-slide");
+      wrapper.classList.add("recurso-grafico-listo");
+    };
+
+    if (conSlide && wrapper.classList.contains("recurso-grafico-listo")) {
+      wrapper.classList.add("cambiando-anuncio-slide");
+      setTimeout(aplicar, 300);
+    } else {
+      aplicar();
+    }
   }
 
-  function rotarContenidoBannerFlotante() {
-    const repo = (window.REPOSITORIO_ANUNCIOS_IN_ARTICLE || []).filter(a => a && a.enlace);
-    if (!repo.length) return;
-    const item = repo[indiceRotacionFlotante % repo.length];
-    indiceRotacionFlotante++;
+  function abrirPopupCentral(anuncio) {
+    if (!anuncio || popupYaMostradoEnSesion || !usuarioEstaLogueadoYEsBasico()) return;
+    const overlay = document.getElementById("popup-nativo-central");
+    const tarjeta = document.getElementById("tarjeta-nativa-popup");
+    const imgEl = document.getElementById("img-popup-nativo");
+    const volantaEl = document.getElementById("volanta-popup-nativo");
+    const volantaTextoEl = document.getElementById("volanta-popup-texto");
+    const tituloEl = document.getElementById("titulo-popup-nativo");
+    const descEl = document.getElementById("subtitulo-popup-nativo");
+    const btnEl = document.getElementById("vinculo-popup-btn");
+    const linkImgEl = document.getElementById("vinculo-popup-img");
 
-    const linkEl = document.getElementById("floating-bottom-link");
-    const imgEl = document.getElementById("floating-bottom-img");
-    const titleEl = document.getElementById("floating-bottom-title");
-    const subEl = document.getElementById("floating-bottom-sub");
-    const ctaEl = document.getElementById("floating-bottom-cta");
+    if (!overlay || !tarjeta || !tituloEl) return;
 
-    if (linkEl) linkEl.href = item.enlace;
-    const imgUrl = (item.multimedia && (item.multimedia.imgMobile || item.multimedia.imgDesktop)) ||
-                   "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjDOwtv8gu0tNRMOXLYyPvJ2waK5Qvu8_wD19F5Nd166b0tZCtqobJfqobkXb4Beu4XhFEp8wWejmc4aYW6x25gyTKLgkqfmyQ0AKKqwDn91jaU-iiMROAGNAmigudzGIg-IDpQiXjC46EgMtI2oBOdZmpU46vyH4ygWFlw1ZIFe-SKeya3VWcoRtYoS5BL/s840/POST.jpg";
-    if (imgEl) imgEl.src = imgUrl;
-    if (titleEl && item.contenido) {
-      titleEl.textContent = decodificarTextoSeguro(item.contenido.tituloMobile || item.contenido.tituloDesktop || "");
+    const esMovil = esPantallaMovil();
+    const conFoto = anuncioTieneFoto(anuncio);
+    const urlImagen = esMovil ? anuncio.multimedia.imgMobile : anuncio.multimedia.imgDesktop;
+    const volanta = decodificarTextoSeguro(anuncio.contenido.volanta || "DESTACADO");
+
+    tarjeta.style.backgroundColor = anuncio.contenido.colorFondoTarjeta || "#ffffff";
+    tituloEl.style.color = anuncio.contenido.colorTexto || "#111827";
+    volantaEl.textContent = volanta;
+    if (volantaTextoEl) volantaTextoEl.textContent = volanta;
+    tituloEl.textContent = decodificarTextoSeguro(esMovil ? anuncio.contenido.tituloMobile : anuncio.contenido.tituloDesktop);
+    descEl.textContent = decodificarTextoSeguro(anuncio.contenido.subtitulo || "");
+    btnEl.textContent = decodificarTextoSeguro(anuncio.contenido.textoBoton || "Acceder ahora");
+    btnEl.style.backgroundColor = anuncio.contenido.colorBoton || "#0d6efd";
+    btnEl.href = anuncio.enlace;
+    linkImgEl.href = anuncio.enlace;
+
+    if (!conFoto) {
+      tarjeta.classList.add("sin-foto-activa");
+      if (imgEl) imgEl.removeAttribute("src");
+    } else {
+      tarjeta.classList.remove("sin-foto-activa");
+      imgEl.src = urlImagen;
     }
-    if (subEl && item.contenido) {
-      subEl.textContent = decodificarTextoSeguro(item.contenido.subtitulo || item.contenido.volanta || "");
-    }
-    if (ctaEl && item.contenido) {
-      ctaEl.textContent = decodificarTextoSeguro(item.contenido.textoBoton || "Ver aviso");
-      if (item.contenido.colorBoton) ctaEl.style.backgroundColor = item.contenido.colorBoton;
-    }
+
+    popupYaMostradoEnSesion = true;
+    anuncioPopupActivo = anuncio;
+    overlay.style.display = "block";
+    overlay.offsetHeight;
+    overlay.classList.add("is-active");
+    overlay.setAttribute("aria-hidden", "false");
+
+    const spanSeg = document.getElementById("segundos-popup-nativo");
+    const timerBox = document.getElementById("timer-popup-nativo");
+    const btnCerrar = document.getElementById("btn-cerrar-popup-nativo");
+    let restantes = 5;
+    if (spanSeg) spanSeg.textContent = restantes;
+    if (timerBox) { timerBox.style.display = "block"; timerBox.style.opacity = "1"; }
+    if (btnCerrar) btnCerrar.style.display = "none";
+
+    const cuenta = setInterval(function() {
+      restantes--;
+      if (restantes > 0) {
+        if (spanSeg) spanSeg.textContent = restantes;
+      } else {
+        clearInterval(cuenta);
+        if (timerBox) timerBox.style.display = "none";
+        if (btnCerrar) btnCerrar.style.display = "block";
+      }
+    }, 1000);
   }
 
-  function usuarioEstaLogueadoYEsBasico() {
-    const cfg = window.CONFIG_ANUNCIOS_PORTAL || { mostrarEnBasico: true, mostrarEnPremium: false };
-    const appSection = document.getElementById("app-section");
-    const authSection = document.getElementById("auth-section");
-    const panelVisible = appSection && !appSection.classList.contains("hidden");
-    const loginVisible = authSection && !authSection.classList.contains("hidden");
-
-    if (!panelVisible || loginVisible) return false;
-
-    const starEl = document.getElementById("header-premium-star");
-    const esPremium = starEl && !starEl.classList.contains("hidden");
-    return esPremium ? Boolean(cfg.mostrarEnPremium) : Boolean(cfg.mostrarEnBasico);
+  function cerrarPopupCentral() {
+    const overlay = document.getElementById("popup-nativo-central");
+    if (!overlay) return;
+    overlay.classList.remove("is-active");
+    overlay.setAttribute("aria-hidden", "true");
+    setTimeout(() => { if (!overlay.classList.contains("is-active")) overlay.style.display = "none"; }, 300);
   }
 
-  function registrarNavegacionDeSeccion(claveSeccion) {
+  function ocultarTodosLosFlotantes() {
+    const sup = document.getElementById("marco-cabecera-dinamico");
+    const inf = document.getElementById("marco-pie-dinamico");
+    if (sup) sup.classList.remove("recurso-grafico-listo");
+    if (inf) inf.classList.remove("recurso-grafico-listo");
+    cerrarPopupCentral();
+    if (intervaloRotacionFlotantes) { clearInterval(intervaloRotacionFlotantes); intervaloRotacionFlotantes = null; }
+    if (timerAperturaPopup) { clearTimeout(timerAperturaPopup); timerAperturaPopup = null; }
+  }
+
+  function iniciarFlotantesParaUsuarioBasico() {
     if (!usuarioEstaLogueadoYEsBasico()) {
-      ocultarBannerFlotante();
+      ocultarTodosLosFlotantes();
       return;
     }
 
-    // La primera vista al entrar al portal no cuenta ni dispara anuncio al comienzo
-    if (!ultimaSeccionRegistrada) {
-      ultimaSeccionRegistrada = claveSeccion;
-      ocultarBannerFlotante();
-      return;
+    const repo = window.REPOSITORIO_ANUNCIOS_IN_ARTICLE || [];
+    if (!repo.length) return;
+
+    anuncioSuperiorActivo = repo[0];
+    anuncioInferiorActivo = repo[1 % repo.length];
+    const candidatoPopup = repo[2 % repo.length];
+
+    pintarBannerFlotante(anuncioSuperiorActivo, "SUP", false);
+    setTimeout(() => pintarBannerFlotante(anuncioInferiorActivo, "INF", false), 1200);
+
+    if (!popupYaMostradoEnSesion) {
+      timerAperturaPopup = setTimeout(() => abrirPopupCentral(candidatoPopup), 3500);
     }
 
-    if (claveSeccion === ultimaSeccionRegistrada) return;
-    ultimaSeccionRegistrada = claveSeccion;
-    contadorNavegacionesSeccion++;
-
-    // Aparece cada 2 navegaciones en diferentes secciones
-    if (contadorNavegacionesSeccion % 2 === 0) {
-      rotarContenidoBannerFlotante();
-      const bottomEl = document.getElementById("banner-flotante-inferior");
-      if (bottomEl) bottomEl.classList.add("active");
-    }
+    if (intervaloRotacionFlotantes) clearInterval(intervaloRotacionFlotantes);
+    let idxRot = 1;
+    intervaloRotacionFlotantes = setInterval(() => {
+      if (!usuarioEstaLogueadoYEsBasico()) {
+        ocultarTodosLosFlotantes();
+        return;
+      }
+      if (!superiorCerrado) {
+        anuncioSuperiorActivo = repo[idxRot % repo.length];
+        pintarBannerFlotante(anuncioSuperiorActivo, "SUP", true);
+      }
+      if (!inferiorCerrado) {
+        anuncioInferiorActivo = repo[(idxRot + 1) % repo.length];
+        pintarBannerFlotante(anuncioInferiorActivo, "INF", true);
+      }
+      idxRot++;
+    }, 35000);
   }
 
   document.addEventListener("DOMContentLoaded", function() {
-    ocultarBannerFlotante();
-
-    const btnCerrarFlotante = document.getElementById("btn-cerrar-banner-flotante");
-    if (btnCerrarFlotante) {
-      btnCerrarFlotante.addEventListener("click", function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        ocultarBannerFlotante();
+    const btnCerrarSup = document.getElementById("btn-cerrar-nativo-sup");
+    const wrapperSup = document.getElementById("marco-cabecera-dinamico");
+    if (btnCerrarSup && wrapperSup) {
+      btnCerrarSup.addEventListener("click", (e) => {
+        e.preventDefault(); e.stopPropagation();
+        superiorCerrado = true;
+        wrapperSup.classList.remove("recurso-grafico-listo");
       });
     }
 
-    // Reinicia estado si cierra sesión o cambia a usuario Premium
+    const btnCerrarInf = document.getElementById("btn-cerrar-nativo-inf");
+    const btnToggleInf = document.getElementById("btn-toggle-nativo-inf");
+    const wrapperInf = document.getElementById("marco-pie-dinamico");
+    if (btnToggleInf && wrapperInf) {
+      btnToggleInf.addEventListener("click", (e) => {
+        e.preventDefault(); e.stopPropagation();
+        wrapperInf.classList.toggle("nativo-inferior-minimizado");
+      });
+    }
+    if (btnCerrarInf && wrapperInf) {
+      btnCerrarInf.addEventListener("click", (e) => {
+        e.preventDefault(); e.stopPropagation();
+        inferiorCerrado = true;
+        wrapperInf.classList.remove("recurso-grafico-listo");
+      });
+    }
+
+    const btnCerrarPopup = document.getElementById("btn-cerrar-popup-nativo");
+    if (btnCerrarPopup) btnCerrarPopup.addEventListener("click", cerrarPopupCentral);
+
+    const linkSup = document.getElementById("vinculo-nativo-cabecera");
+    const linkInf = document.getElementById("vinculo-nativo-pie");
+    const linkPopImg = document.getElementById("vinculo-popup-img");
+    const linkPopBtn = document.getElementById("vinculo-popup-btn");
+    if (linkSup) linkSup.addEventListener("click", () => enviarTelemetriaClic(anuncioSuperiorActivo, "Flotante Superior"));
+    if (linkInf) linkInf.addEventListener("click", () => enviarTelemetriaClic(anuncioInferiorActivo, "Flotante Inferior"));
+    if (linkPopImg) linkPopImg.addEventListener("click", () => { enviarTelemetriaClic(anuncioPopupActivo, "Popup Central"); cerrarPopupCentral(); });
+    if (linkPopBtn) linkPopBtn.addEventListener("click", () => { enviarTelemetriaClic(anuncioPopupActivo, "Popup Central"); cerrarPopupCentral(); });
+
+    iniciarFlotantesParaUsuarioBasico();
+
     const observer = new MutationObserver(function() {
-      if (!usuarioEstaLogueadoYEsBasico()) {
-        contadorNavegacionesSeccion = 0;
-        ultimaSeccionRegistrada = null;
-        ocultarBannerFlotante();
-      } else if (!ultimaSeccionRegistrada) {
-        ultimaSeccionRegistrada = "tab-destacado";
-        ocultarBannerFlotante();
+      if (usuarioEstaLogueadoYEsBasico()) {
+        if (!anuncioSuperiorActivo && !anuncioInferiorActivo) {
+          iniciarFlotantesParaUsuarioBasico();
+        }
+      } else {
+        anuncioSuperiorActivo = null;
+        anuncioInferiorActivo = null;
+        ocultarTodosLosFlotantes();
       }
     });
 
@@ -5994,31 +6313,11 @@ function seleccionarAnuncioParaSlot(etiquetasSlot, palabrasSlot, idsExcluidos = 
     const starEl = document.getElementById("header-premium-star");
     if (appEl) observer.observe(appEl, { attributes: true, attributeFilter: ["class"] });
     if (starEl) observer.observe(starEl, { attributes: true, attributeFilter: ["class"] });
-
-    // Detecta navegación entre pestañas (Destacado, De tu interés, Lo más visto, Beneficios)
-    document.querySelectorAll(".tab-btn").forEach(function(btn) {
-      btn.addEventListener("click", function() {
-        const target = btn.getAttribute("data-target") || btn.textContent.trim();
-        registrarNavegacionDeSeccion("tab:" + target);
-      });
-    });
-
-    // Detecta apertura de noticias, concursos o resultados de búsqueda
-    const mainArea = document.getElementById("main-content-container");
-    if (mainArea) {
-      mainArea.addEventListener("click", function(e) {
-        const card = e.target.closest(".hero-editorial-card, .mini-editorial-card, .sidebar-interest-item");
-        if (card) {
-          const tituloCard = (card.querySelector("h3, h4, .sidebar-interest-title") || {}).textContent || Date.now();
-          registrarNavegacionDeSeccion("detalle:" + tituloCard.trim().slice(0, 40));
-        }
-      });
-    }
   });
 
   window.addEventListener("resize", function() {
     if (instanciaActivaRender && document.body.contains(instanciaActivaRender.contenedor)) {
-      renderizarSlotArticulo(instanciaActivaRender.contenedor, instanciaActivaRender.anuncio, instanciaActivaRender.etiquetasSlot, instanciaActivaRender.palabrasSlot, instanciaActivaRender.tituloNota);
+      renderizarSlotArticulo(instanciaActivaRender.contenedor, instanciaActivaRender.anuncio);
     }
   });
 })();
