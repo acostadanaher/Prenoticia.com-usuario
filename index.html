@@ -4801,23 +4801,23 @@ window.REPOSITORIO_ANUNCIOS_IN_ARTICLE = [
       return;
     }
 
-    const slotUnico = slots[0];
-    const contextoNota = document.querySelector("#detail-content-box .motor-contexto-nota");
-    const rawTags = [slotUnico.getAttribute("data-etiquetas") || "", contextoNota ? (contextoNota.getAttribute("data-etiquetas") || "") : ""].join(",");
-    const rawPalabras = [slotUnico.getAttribute("data-palabras") || "", contextoNota ? (contextoNota.getAttribute("data-palabras") || "") : ""].join(",");
-
-    const etiquetasSlot = expandirVariantes(rawTags.split(","));
-    const palabrasSlot = expandirVariantes(rawPalabras.split(","));
-
-    const anuncioGanador = seleccionarAnuncioParaSlot(etiquetasSlot, palabrasSlot);
-    if (!anuncioGanador) return;
-
+const contextoNota = document.querySelector("#detail-content-box .motor-contexto-nota");
     const tituloNota = notaObj && notaObj.title ? notaObj.title : document.title;
-    instanciaActivaRender = { contenedor: slotUnico, anuncio: anuncioGanador, etiquetasSlot, palabrasSlot, tituloNota };
 
-    registrarAnuncioMostradoEnArticulo(anuncioGanador.id);
-    renderizarSlotArticulo(slotUnico, anuncioGanador, etiquetasSlot, palabrasSlot, tituloNota);
-  };
+    slots.forEach((slotActual) => {
+      const rawTags = [slotActual.getAttribute("data-etiquetas") || "", contextoNota ? (contextoNota.getAttribute("data-etiquetas") || "") : ""].join(",");
+      const rawPalabras = [slotActual.getAttribute("data-palabras") || "", contextoNota ? (contextoNota.getAttribute("data-palabras") || "") : ""].join(",");
+
+      const etiquetasSlot = expandirVariantes(rawTags.split(","));
+      const palabrasSlot = expandirVariantes(rawPalabras.split(","));
+
+      const anuncioGanador = seleccionarAnuncioParaSlot(etiquetasSlot, palabrasSlot);
+      if (!anuncioGanador) return;
+
+      instanciaActivaRender = { contenedor: slotActual, anuncio: anuncioGanador, etiquetasSlot, palabrasSlot, tituloNota };
+      registrarAnuncioMostradoEnArticulo(anuncioGanador.id);
+      renderizarSlotArticulo(slotActual, anuncioGanador, etiquetasSlot, palabrasSlot, tituloNota);
+    });
 
   let resizeTimer;
   window.addEventListener("resize", function() {
