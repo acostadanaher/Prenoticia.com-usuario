@@ -47,10 +47,10 @@
         .tabs-list,
         .search-drawer-inner,
         .tab-content-area {
-            max-width: 1040px;
+            max-width: 1160px;
             margin: 0 auto;
-            padding-left: 20px;
-            padding-right: 20px;
+            padding-left: 28px;
+            padding-right: 28px;
         }
 
         /* ================= ESTRELLA PREMIUM PROFESIONAL ================= */
@@ -676,13 +676,13 @@
 
         /* ================= CONTENIDO EDITORIAL Y TICKER FIJO ================= */
 .tab-content-area {
-            max-width: 1040px;
+            max-width: 1160px;
             margin: 0 auto;
-            padding: 22px 20px 18vh 20px;
+            padding: 28px 32px 18vh 32px;
             background-color: #ffffff;
             min-height: calc(100vh - 115px);
-            border-left: 1px solid var(--border-color);
-            border-right: 1px solid var(--border-color);
+            border-left: 1px solid #dfe5ee;
+            border-right: 1px solid #dfe5ee;
             overflow-x: hidden;
         }
 
@@ -1052,11 +1052,11 @@
             }
         }
 
-        /* ================= DETALLE DE ARTÍCULO Y SORTEOS ================= */
+/* ================= DETALLE DE ARTÍCULO Y SORTEOS ================= */
         #detail-view-section {
             display: none;
             width: 100%;
-            max-width: 1000px;
+            max-width: 1096px;
             margin: 0 auto;
         }
 
@@ -1067,8 +1067,8 @@
 
         .detail-layout-grid {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) 300px;
-            gap: 24px;
+            grid-template-columns: minmax(0, 1fr) 320px;
+            gap: 28px;
             align-items: start;
         }
 
@@ -1080,9 +1080,10 @@
             position: sticky;
             top: 76px;
             background: #ffffff;
-            border: 1px solid var(--border-color);
+            border: 1px solid #dfe5ee;
             border-radius: 16px;
-            padding: 18px 16px;
+            padding: 20px 18px;
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
         }
 
         .detail-sidebar-heading {
@@ -1174,12 +1175,13 @@
             border-color: var(--primary);
         }
 
-        .detail-card-full {
+.detail-card-full {
             background: #ffffff;
             width: 100%;
             border-radius: 16px;
-            padding: 26px 28px 34px 28px;
-            border: 1px solid var(--border-color);
+            padding: 32px 36px 40px 36px;
+            border: 1px solid #dfe5ee;
+            box-shadow: 0 2px 12px rgba(15, 23, 42, 0.035);
         }
 
         .detail-main-topic-pill {
@@ -5057,22 +5059,8 @@ window.CONFIG_ANUNCIOS_PORTAL = {
 };
 </script>
 
-<!-- BANNERS FLOTANTES SUPERIOR E INFERIOR (SOLO PLAN BÁSICO - FIJOS SIN CIERRE) -->
-<div id="banner-flotante-superior" class="prenoticia-floating-banner top-banner" aria-label="Publicidad superior">
-  <div class="floating-banner-inner">
-    <span class="floating-ad-tag">AD</span>
-    <a id="floating-top-link" href="https://www.empleosvacantes.com/2025/07/mostaza-busca-personal-para-sus.html" target="_blank" rel="noopener noreferrer" class="floating-banner-content">
-      <img id="floating-top-img" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgRiZEPUEJ9WIN2U7BzFxZsQb5xl29fxgVwOlSyuYR4qjKwEEHQhprWDtFhNNWL8AlWFgQ9hR1hs8Qv-3RuM2rZz4fDBTz-bt_Xj2i6oQhxnehTg2F0Jrq_jEC8noVQQITFCqYoIDxwDMejKqrBmMXKeH2X-AsTp-zMxYi9WuwDryvIyLybCSwUgl2Dm6k/s1774/POST.jpg" alt="Aviso">
-      <div class="floating-banner-text">
-        <strong id="floating-top-title">Mostaza busca personal para sucursales de Buenos Aires</strong>
-        <span id="floating-top-sub">Nuevas vacantes disponibles en CABA y GBA • Postulate hoy</span>
-      </div>
-      <span class="floating-banner-cta" id="floating-top-cta">Ver aviso</span>
-    </a>
-  </div>
-</div>
-
-<div id="banner-flotante-inferior" class="prenoticia-floating-banner bottom-banner" aria-label="Publicidad inferior">
+<!-- BANNER FLOTANTE CON OPCIÓN DE CIERRE (SOLO USUARIO BÁSICO, CADA 2 NAVEGACIONES DE SECCIÓN) -->
+<div id="banner-flotante-inferior" class="prenoticia-floating-banner bottom-banner" aria-label="Publicidad flotante">
   <div class="floating-banner-inner">
     <span class="floating-ad-tag">AD</span>
     <a id="floating-bottom-link" href="https://www.empleosvacantes.com/2025/05/coto-busca-empleados-en-buenos-aires-y.html" target="_blank" rel="noopener noreferrer" class="floating-banner-content">
@@ -5083,6 +5071,7 @@ window.CONFIG_ANUNCIOS_PORTAL = {
       </div>
       <span class="floating-banner-cta" id="floating-bottom-cta" style="background:#d32f2f;">Postularme</span>
     </a>
+    <button type="button" id="btn-cerrar-banner-flotante" class="floating-banner-close" aria-label="Cerrar anuncio" title="Cerrar anuncio">&times;</button>
   </div>
 </div>
 
@@ -5634,41 +5623,135 @@ function seleccionarAnuncioParaSlot(etiquetasSlot, palabrasSlot, idsExcluidos = 
   };
 
 // =====================================================================
-  // CONTROL AUTOMÁTICO DE BANNERS FLOTANTES (ARRIBA Y ABAJO) SEGÚN EL PLAN
+  // CONTROL DE ANUNCIO FLOTANTE CON CIERRE:
+  // - Nunca aparece antes de iniciar sesión ni al comienzo
+  // - Para usuarios Básicos aparece cada 2 navegaciones en diferentes secciones
   // =====================================================================
-  function actualizarBannersFlotantesSegunSesion() {
-    const topEl = document.getElementById("banner-flotante-superior");
-    const bottomEl = document.getElementById("banner-flotante-inferior");
-    const appSection = document.getElementById("app-section");
-    if (!topEl || !bottomEl) return;
+  let contadorNavegacionesSeccion = 0;
+  let ultimaSeccionRegistrada = null;
+  let indiceRotacionFlotante = 0;
 
+  function ocultarBannerFlotante() {
+    const bottomEl = document.getElementById("banner-flotante-inferior");
+    if (bottomEl) bottomEl.classList.remove("active");
+    document.body.classList.remove("has-top-floating-ad");
+  }
+
+  function rotarContenidoBannerFlotante() {
+    const repo = (window.REPOSITORIO_ANUNCIOS_IN_ARTICLE || []).filter(a => a && a.enlace);
+    if (!repo.length) return;
+    const item = repo[indiceRotacionFlotante % repo.length];
+    indiceRotacionFlotante++;
+
+    const linkEl = document.getElementById("floating-bottom-link");
+    const imgEl = document.getElementById("floating-bottom-img");
+    const titleEl = document.getElementById("floating-bottom-title");
+    const subEl = document.getElementById("floating-bottom-sub");
+    const ctaEl = document.getElementById("floating-bottom-cta");
+
+    if (linkEl) linkEl.href = item.enlace;
+    const imgUrl = (item.multimedia && (item.multimedia.imgMobile || item.multimedia.imgDesktop)) ||
+                   "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjDOwtv8gu0tNRMOXLYyPvJ2waK5Qvu8_wD19F5Nd166b0tZCtqobJfqobkXb4Beu4XhFEp8wWejmc4aYW6x25gyTKLgkqfmyQ0AKKqwDn91jaU-iiMROAGNAmigudzGIg-IDpQiXjC46EgMtI2oBOdZmpU46vyH4ygWFlw1ZIFe-SKeya3VWcoRtYoS5BL/s840/POST.jpg";
+    if (imgEl) imgEl.src = imgUrl;
+    if (titleEl && item.contenido) {
+      titleEl.textContent = decodificarTextoSeguro(item.contenido.tituloMobile || item.contenido.tituloDesktop || "");
+    }
+    if (subEl && item.contenido) {
+      subEl.textContent = decodificarTextoSeguro(item.contenido.subtitulo || item.contenido.volanta || "");
+    }
+    if (ctaEl && item.contenido) {
+      ctaEl.textContent = decodificarTextoSeguro(item.contenido.textoBoton || "Ver aviso");
+      if (item.contenido.colorBoton) ctaEl.style.backgroundColor = item.contenido.colorBoton;
+    }
+  }
+
+  function usuarioEstaLogueadoYEsBasico() {
     const cfg = window.CONFIG_ANUNCIOS_PORTAL || { mostrarEnBasico: true, mostrarEnPremium: false };
+    const appSection = document.getElementById("app-section");
+    const authSection = document.getElementById("auth-section");
     const panelVisible = appSection && !appSection.classList.contains("hidden");
+    const loginVisible = authSection && !authSection.classList.contains("hidden");
+
+    if (!panelVisible || loginVisible) return false;
+
     const starEl = document.getElementById("header-premium-star");
     const esPremium = starEl && !starEl.classList.contains("hidden");
+    return esPremium ? Boolean(cfg.mostrarEnPremium) : Boolean(cfg.mostrarEnBasico);
+  }
 
-    const debeMostrar = panelVisible && (esPremium ? Boolean(cfg.mostrarEnPremium) : Boolean(cfg.mostrarEnBasico));
-
-    if (!debeMostrar) {
-      topEl.classList.remove("active");
-      bottomEl.classList.remove("active");
-      document.body.classList.remove("has-top-floating-ad");
+  function registrarNavegacionDeSeccion(claveSeccion) {
+    if (!usuarioEstaLogueadoYEsBasico()) {
+      ocultarBannerFlotante();
       return;
     }
 
-    topEl.classList.add("active");
-    document.body.classList.add("has-top-floating-ad");
-    bottomEl.classList.add("active");
+    // La primera vista al entrar al portal no cuenta ni dispara anuncio al comienzo
+    if (!ultimaSeccionRegistrada) {
+      ultimaSeccionRegistrada = claveSeccion;
+      ocultarBannerFlotante();
+      return;
+    }
+
+    if (claveSeccion === ultimaSeccionRegistrada) return;
+    ultimaSeccionRegistrada = claveSeccion;
+    contadorNavegacionesSeccion++;
+
+    // Aparece cada 2 navegaciones en diferentes secciones
+    if (contadorNavegacionesSeccion % 2 === 0) {
+      rotarContenidoBannerFlotante();
+      const bottomEl = document.getElementById("banner-flotante-inferior");
+      if (bottomEl) bottomEl.classList.add("active");
+    }
   }
 
   document.addEventListener("DOMContentLoaded", function() {
-    const observer = new MutationObserver(actualizarBannersFlotantesSegunSesion);
+    ocultarBannerFlotante();
+
+    const btnCerrarFlotante = document.getElementById("btn-cerrar-banner-flotante");
+    if (btnCerrarFlotante) {
+      btnCerrarFlotante.addEventListener("click", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        ocultarBannerFlotante();
+      });
+    }
+
+    // Reinicia estado si cierra sesión o cambia a usuario Premium
+    const observer = new MutationObserver(function() {
+      if (!usuarioEstaLogueadoYEsBasico()) {
+        contadorNavegacionesSeccion = 0;
+        ultimaSeccionRegistrada = null;
+        ocultarBannerFlotante();
+      } else if (!ultimaSeccionRegistrada) {
+        ultimaSeccionRegistrada = "tab-destacado";
+        ocultarBannerFlotante();
+      }
+    });
+
     const appEl = document.getElementById("app-section");
     const starEl = document.getElementById("header-premium-star");
     if (appEl) observer.observe(appEl, { attributes: true, attributeFilter: ["class"] });
     if (starEl) observer.observe(starEl, { attributes: true, attributeFilter: ["class"] });
 
-    actualizarBannersFlotantesSegunSesion();
+    // Detecta navegación entre pestañas (Destacado, De tu interés, Lo más visto, Beneficios)
+    document.querySelectorAll(".tab-btn").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        const target = btn.getAttribute("data-target") || btn.textContent.trim();
+        registrarNavegacionDeSeccion("tab:" + target);
+      });
+    });
+
+    // Detecta apertura de noticias, concursos o resultados de búsqueda
+    const mainArea = document.getElementById("main-content-container");
+    if (mainArea) {
+      mainArea.addEventListener("click", function(e) {
+        const card = e.target.closest(".hero-editorial-card, .mini-editorial-card, .sidebar-interest-item");
+        if (card) {
+          const tituloCard = (card.querySelector("h3, h4, .sidebar-interest-title") || {}).textContent || Date.now();
+          registrarNavegacionDeSeccion("detalle:" + tituloCard.trim().slice(0, 40));
+        }
+      });
+    }
   });
 
   window.addEventListener("resize", function() {
