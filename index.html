@@ -861,9 +861,11 @@
         }
 
         /* ================= DETALLE DE ARTÍCULO Y SORTEOS ================= */
-        #detail-view-section {
+#detail-view-section {
             display: none;
             width: 100%;
+            max-width: 780px;
+            margin: 0 auto;
         }
 
         #detail-view-section.active {
@@ -872,97 +874,109 @@
         }
 
         .detail-back-btn {
-            background: #fff;
+            background: #f8fafc;
             border: 1px solid var(--border-color);
             padding: 9px 16px;
             border-radius: 10px;
             font-weight: 700;
             font-size: 13.5px;
             cursor: pointer;
-            margin: 0 0 14px 14px;
+            margin: 0 0 18px 0;
+            transition: background 0.2s;
+        }
+
+        .detail-back-btn:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
         }
 
         .detail-card-full {
             background: #ffffff;
             width: 100%;
-            border-radius: 0;
-            padding: 16px 14px 36px 14px;
-            border-top: 1px solid var(--border-color);
-            border-left: none;
-            border-right: none;
-            border-bottom: none;
-        }
-
-        .detail-top-meta-header {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .detail-main-topic-pill {
-            display: inline-block;
-            background: var(--primary-light);
-            color: var(--primary);
-            border: 1px solid #fed7aa;
-            padding: 4px 12px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            cursor: pointer;
-        }
-
-        .detail-top-author-date {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 12px;
-            font-size: 13px;
-            color: var(--text-muted);
-            font-weight: 500;
+            border-radius: 16px;
+            padding: 26px 28px 40px 28px;
+            border: 1px solid var(--border-color);
         }
 
         .detail-main-img-wrap {
             position: relative;
-            margin: 14px -14px 18px -14px;
+            margin: 18px 0 22px 0;
+            border-radius: 14px;
+            overflow: hidden;
         }
 
         .detail-hero-img, .detail-second-img {
             width: 100%;
-            max-height: 440px;
+            max-height: 460px;
             object-fit: cover;
-            border-radius: 0;
+            border-radius: 14px;
             margin: 0;
             display: block;
         }
 
         .detail-second-img {
-            margin: 16px -14px;
-            width: calc(100% + 28px);
+            margin: 22px 0;
+            width: 100%;
         }
 
         .detail-card-full h2 {
-            font-size: 24px;
+            font-size: 30px;
             font-weight: 800;
-            line-height: 1.3;
-            margin-bottom: 10px;
+            line-height: 1.24;
+            margin-bottom: 12px;
         }
 
         .detail-subtitle {
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 17.5px;
+            font-weight: 500;
             color: var(--text-muted);
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
 
         .detail-card-full p {
-            font-size: 15.5px;
-            margin-bottom: 14px;
-            line-height: 1.68;
+            font-size: 16.5px;
+            margin-bottom: 18px;
+            line-height: 1.75;
+        }
+
+        /* Ajustes específicos para pantallas pequeñas (móvil) */
+        @media (max-width: 768px) {
+            #detail-view-section {
+                max-width: 100%;
+            }
+            .detail-back-btn {
+                margin: 0 0 14px 14px;
+            }
+            .detail-card-full {
+                border-radius: 0;
+                padding: 16px 14px 36px 14px;
+                border-left: none;
+                border-right: none;
+                border-bottom: none;
+            }
+            .detail-main-img-wrap {
+                margin: 14px -14px 18px -14px;
+                border-radius: 0;
+            }
+            .detail-hero-img, .detail-second-img {
+                border-radius: 0;
+                max-height: 360px;
+            }
+            .detail-second-img {
+                margin: 16px -14px;
+                width: calc(100% + 28px);
+            }
+            .detail-card-full h2 {
+                font-size: 23px;
+            }
+            .detail-subtitle {
+                font-size: 15.5px;
+            }
+            .detail-card-full p {
+                font-size: 15.5px;
+                line-height: 1.68;
+            }
         }
 
         .paywall-fade-wrapper {
