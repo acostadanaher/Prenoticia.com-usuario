@@ -2071,7 +2071,28 @@
     <!-- ================= PANEL PRINCIPAL ================= -->
     <section id="app-section" class="hidden">
 
-        <div id="menu-backdrop"></div>
+<div id="menu-backdrop"></div>
+
+<!-- 1. BANNER FLOTANTE SUPERIOR (UBICADO JUSTO ARRIBA DEL LOGO) -->
+<aside id="marco-cabecera-dinamico" class="nativo-flotante-wrapper" aria-label="Contenido recomendado superior">
+  <div id="tarjeta-nativa-cabecera" class="nativo-card">
+    <span class="nativo-ad-marca" aria-hidden="true">AD</span>
+
+    <a id="vinculo-nativo-cabecera" href="#" target="_blank" rel="noopener noreferrer" class="nativo-card-link">
+      <div class="nativo-media-box">
+        <img id="imagen-recurso-cabecera" src="" alt="" loading="eager" />
+      </div>
+      <div class="nativo-body-box">
+        <span id="nativo-volanta" class="nativo-kicker">RECOMENDADO</span>
+        <h3 id="nativo-titulo" class="nativo-headline"></h3>
+        <p id="nativo-subtitulo" class="nativo-summary"></p>
+      </div>
+      <div class="nativo-cta-box">
+        <span id="nativo-boton-cta" class="nativo-btn">Acceder ahora</span>
+      </div>
+    </a>
+  </div>
+</aside>
 
 <!-- Header Superior -->
         <header>
@@ -5343,15 +5364,10 @@ window.CONFIG_ANUNCIOS_PORTAL = {
   </div>
 </aside>
 
-<!-- 2. BANNER FLOTANTE INFERIOR DESLIZANTE CON PESTAÑA Y CIERRE -->
+<!-- 2. BANNER FLOTANTE INFERIOR FIJO SIN PESTAÑA NI CIERRE -->
 <aside id="marco-pie-dinamico" class="nativo-flotante-inferior-wrapper" aria-label="Contenido recomendado inferior">
-  <button type="button" id="btn-toggle-nativo-inf" class="nativo-inferior-tab" title="Minimizar o desplegar anuncio" aria-label="Minimizar o desplegar anuncio">
-    <span class="nativo-inferior-chevron" aria-hidden="true">⌄</span>
-  </button>
-
   <div id="tarjeta-nativa-pie" class="nativo-card nativo-card--inferior">
     <span class="nativo-ad-marca" aria-hidden="true">AD</span>
-    <button type="button" id="btn-cerrar-nativo-inf" class="nativo-close-mini" title="Ocultar sugerencia" aria-label="Cerrar">✕</button>
 
     <a id="vinculo-nativo-pie" href="#" target="_blank" rel="noopener noreferrer" class="nativo-card-link">
       <div class="nativo-media-box">
@@ -5470,25 +5486,30 @@ window.CONFIG_ANUNCIOS_PORTAL = {
 
 /* ================= ESTILOS BANNERS FLOTANTES SUPERIOR E INFERIOR ================= */
 .nativo-flotante-wrapper {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%) translateY(-10px);
-  z-index: 950;
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 95;
+  display: none;
   opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 0.35s ease, transform 0.35s ease, top 0.25s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 .nativo-flotante-wrapper.recurso-grafico-listo {
+  display: block;
   opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
 }
 .nativo-flotante-wrapper.cambiando-anuncio-slide {
   opacity: 0;
-  transform: translateX(calc(-50% - 26px)) translateY(0);
+  transform: translateX(-16px);
+}
+
+/* Ajusta la posición sticky del header naranja para que quede pegado justo debajo del anuncio superior */
+body.con-banner-superior-activo header {
+  top: var(--altura-banner-sup, 72px);
 }
 
 .nativo-flotante-inferior-wrapper {
@@ -5502,7 +5523,6 @@ window.CONFIG_ANUNCIOS_PORTAL = {
   pointer-events: none;
   transition: opacity 0.4s ease, transform 0.4s ease;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  overflow: visible;
 }
 .nativo-flotante-inferior-wrapper.recurso-grafico-listo {
   opacity: 1;
@@ -5514,53 +5534,20 @@ window.CONFIG_ANUNCIOS_PORTAL = {
   opacity: 0;
   transform: translateX(calc(-50% + 26px)) translateY(0);
 }
-.nativo-flotante-inferior-wrapper.nativo-inferior-minimizado {
-  transform: translateX(-50%) translateY(100%);
-}
-
-.nativo-inferior-tab {
-  position: absolute;
-  top: -24px;
-  left: 0;
-  width: 48px;
-  height: 24px;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-bottom: none;
-  border-radius: 10px 10px 0 0;
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
-  color: #4b5563;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  z-index: 7;
-}
-.nativo-inferior-chevron {
-  display: inline-block;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1;
-  margin-top: -6px;
-  transition: transform 0.28s ease;
-}
-.nativo-flotante-inferior-wrapper.nativo-inferior-minimizado .nativo-inferior-chevron {
-  transform: rotate(180deg);
-  margin-top: 4px;
-}
 
 .nativo-card {
   position: relative;
   background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
   overflow: hidden;
   box-sizing: border-box;
+  width: 100%;
 }
 .nativo-card--inferior {
-  border-radius: 0 12px 0 0;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 12px 12px 0 0;
   border-bottom: none;
   box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.16);
 }
@@ -5596,48 +5583,61 @@ window.CONFIG_ANUNCIOS_PORTAL = {
 .nativo-card.sin-foto-activa .nativo-media-box { display: none !important; }
 .nativo-card.sin-foto-activa .nativo-card-link { padding-left: 18px; }
 
-.nativo-close-mini {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 22px;
-  height: 22px;
-  border: none;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.08);
-  color: #444444;
-  font-size: 12px;
-  line-height: 22px;
-  text-align: center;
-  cursor: pointer;
-  padding: 0;
-  z-index: 10;
-}
-.nativo-close-mini:hover { background: rgba(0, 0, 0, 0.2); color: #000000; }
-
 @media screen and (min-width: 769px) {
-  .nativo-flotante-wrapper { top: 68px; width: min(760px, calc(100vw - 40px)); }
+  .nativo-flotante-wrapper .nativo-card { max-width: 960px; margin: 0 auto; height: 82px; }
   .nativo-flotante-inferior-wrapper { bottom: 0; width: min(760px, calc(100vw - 40px)); }
-  .nativo-card-link { padding: 10px 30px 10px 12px; gap: 14px; }
-  .nativo-media-box { flex: 0 0 110px; height: 70px; border-radius: 8px; overflow: hidden; background: #f3f4f6; }
+  .nativo-flotante-inferior-wrapper .nativo-card--inferior { height: 82px; }
+  .nativo-card-link { padding: 8px 16px; gap: 14px; height: 100%; }
+  .nativo-media-box { flex: 0 0 110px; height: 64px; border-radius: 8px; overflow: hidden; background: #f3f4f6; }
   .nativo-media-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .nativo-body-box { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
   .nativo-kicker { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #6b7280; margin-bottom: 2px; }
-  .nativo-headline { margin: 0 0 3px 0; font-size: 14.5px; font-weight: 800; line-height: 1.32; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nativo-headline { margin: 0 0 3px 0; font-size: 14.5px; font-weight: 800; line-height: 1.3; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .nativo-summary { margin: 0; font-size: 12px; color: #4b5563; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .nativo-cta-box { flex: 0 0 auto; }
   .nativo-btn { display: inline-block; padding: 9px 15px; border-radius: 8px; background-color: #0d6efd; color: #ffffff; font-size: 12.5px; font-weight: 700; white-space: nowrap; }
 }
+
 @media screen and (max-width: 768px) {
-  .nativo-flotante-wrapper { top: 60px; width: calc(100vw - 18px); max-width: 480px; }
-  .nativo-flotante-inferior-wrapper { bottom: 0; width: 100vw; max-width: 100%; }
-  .nativo-card--inferior { border-radius: 0 12px 0 0; border-left: none; border-right: none; }
-  .nativo-card-link { padding: 9px 28px 9px 10px; gap: 10px; }
-  .nativo-media-box { flex: 0 0 56px; height: 56px; border-radius: 8px; overflow: hidden; background: #f3f4f6; }
+  /* En celular ocupan todo el ancho (100vw) y mantienen altura fija uniforme de 68px */
+  .nativo-flotante-wrapper {
+    width: 100vw;
+    max-width: 100vw;
+    left: 0;
+  }
+  .nativo-flotante-wrapper .nativo-card,
+  .nativo-flotante-inferior-wrapper .nativo-card--inferior {
+    height: 68px;
+    min-height: 68px;
+    max-height: 68px;
+    width: 100vw;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+  .nativo-flotante-inferior-wrapper {
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    max-width: 100vw;
+    transform: translateY(105%);
+  }
+  .nativo-flotante-inferior-wrapper.recurso-grafico-listo {
+    transform: translateY(0);
+  }
+  .nativo-flotante-inferior-wrapper.cambiando-anuncio-slide {
+    transform: translateX(26px) translateY(0);
+  }
+  .nativo-card-link {
+    padding: 8px 12px;
+    gap: 10px;
+    height: 68px;
+  }
+  .nativo-media-box { flex: 0 0 52px; height: 52px; border-radius: 8px; overflow: hidden; background: #f3f4f6; }
   .nativo-media-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .nativo-body-box { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
   .nativo-kicker { font-size: 9px; font-weight: 700; text-transform: uppercase; color: #6b7280; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .nativo-headline { margin: 0; font-size: 12.5px; font-weight: 700; line-height: 1.32; color: #111827; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .nativo-headline { margin: 0; font-size: 12.5px; font-weight: 700; line-height: 1.28; color: #111827; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .nativo-summary { display: none; }
   .nativo-cta-box { flex: 0 0 auto; }
   .nativo-btn { display: inline-block; padding: 7px 10px; border-radius: 7px; background-color: #0d6efd; color: #ffffff; font-size: 11px; font-weight: 700; white-space: nowrap; }
