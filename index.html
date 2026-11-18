@@ -378,11 +378,8 @@
             .tabs-list,
             .search-drawer-inner,
             .tab-content-area {
-                padding-left: 10px;
-                padding-right: 10px;
-            }
-            .tabs-list li:first-child .tab-btn {
-                padding-left: 0;
+                padding-left: 10px !important;
+                padding-right: 10px !important;
             }
             .header-content {
                 height: 54px;
@@ -619,42 +616,59 @@
             margin-bottom: 12px;
         }
 
-        /* ================= TABS Y BUSCADOR ================= */
+/* ================= BARRA DE TEMAS EN TENDENCIA Y BUSCADOR ================= */
         .main-nav-tabs {
             background: #ffffff;
             border-bottom: 1px solid var(--border-color);
             overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .main-nav-tabs::-webkit-scrollbar {
+            display: none;
         }
 
-.tabs-list {
+        .tabs-list {
             max-width: 1020px;
             margin: 0 auto;
-            padding: 0 24px;
+            padding: 10px 24px;
             display: flex;
+            align-items: center;
             list-style: none;
-            gap: 18px;
+            gap: 8px;
         }
 
-        .tabs-list li:first-child .tab-btn {
-            padding-left: 0;
-        }
-
-        .tab-btn {
-            background: none;
-            border: none;
-            padding: 14px 16px;
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text-muted);
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            white-space: nowrap;
-            transition: color 0.2s, border-color 0.2s;
-        }
-
-        .tab-btn.active {
+        .trending-label-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            font-weight: 800;
             color: var(--primary);
-            border-bottom-color: var(--primary);
+            white-space: nowrap;
+            padding-right: 4px;
+            flex-shrink: 0;
+        }
+
+        .trending-topic-btn {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            padding: 6px 13px;
+            border-radius: 999px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .trending-topic-btn:hover,
+        .trending-topic-btn.active {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
         }
 
         .search-drawer {
@@ -719,14 +733,16 @@
             overflow-x: hidden;
         }
 
-/* Solo en celulares (menos de 768px) la nota va de borde a borde */
+/* Solo en celulares (menos de 768px) el contenido principal queda alineado al borde de los botones del header */
         @media (max-width: 768px) {
             body {
                 background-color: #ffffff;
             }
             .tab-content-area {
-                border-left: -5px;
-                border-right: -5px;
+                max-width: 100%;
+                border-left: none;
+                border-right: none;
+                padding: 14px 10px 18vh 10px !important;
             }
             .tab-content-area.full-bleed-detail {
                 max-width: 100% !important;
@@ -2212,13 +2228,19 @@
             </div>
         </div>
 
-        <!-- Navegación de Secciones (Tabs) -->
-        <nav class="main-nav-tabs">
-            <ul class="tabs-list">
-                <li><button class="tab-btn active" data-target="tab-destacado">Destacado</button></li>
-                <li><button class="tab-btn" data-target="tab-interes">De tu interés</button></li>
-                <li><button class="tab-btn" data-target="tab-mas-visto">Lo más visto</button></li>
-                <li><button class="tab-btn" data-target="tab-beneficios">Beneficios</button></li>
+<!-- Barra de Temas en Tendencia -->
+        <nav class="main-nav-tabs" aria-label="Temas en tendencia">
+            <ul class="tabs-list" id="trending-topics-list">
+                <li class="trending-label-pill"><i class="fas fa-arrow-trend-up"></i> Tendencias:</li>
+                <li><button type="button" class="trending-topic-btn" data-topic="Dólar hoy en Argentina">Dólar hoy en Argentina</button></li>
+                <li><button type="button" class="trending-topic-btn" data-topic="Javier Milei">Javier Milei</button></li>
+                <li><button type="button" class="trending-topic-btn" data-topic="Papa en Perú">Papa en Perú</button></li>
+                <li><button type="button" class="trending-topic-btn" data-topic="Seleccionado nacional">Seleccionado nacional</button></li>
+                <li><button type="button" class="trending-topic-btn" data-topic="Deportes">Deportes</button></li>
+                <li><button type="button" class="trending-topic-btn" data-topic="Cine">Cine</button></li>
+                <li><button type="button" class="trending-topic-btn" data-topic="Economía">Economía</button></li>
+                <li><button type="button" class="trending-topic-btn" data-topic="Supermercados">Supermercados</button></li>
+                <li><button type="button" class="trending-topic-btn" data-nav-tab="tab-beneficios">Beneficios</button></li>
             </ul>
         </nav>
 
@@ -4027,18 +4049,65 @@ let urlPublicaExternaCache = "";
                 });
             }
 
-const headerBrandLogoLink = document.getElementById('header-brand-logo-link');
+function irAPortadaPrincipal() {
+                closeAllMenus();
+                cerrarBuscador();
+                if (searchInput) searchInput.value = '';
+                document.querySelectorAll('.trending-topic-btn').forEach(b => b.classList.remove('active'));
+
+                const detailSection = document.getElementById('detail-view-section');
+                if (detailSection) detailSection.classList.remove('active');
+                if (mainContentContainer) mainContentContainer.classList.remove('full-bleed-detail');
+
+                tabPanes.forEach(p => {
+                    p.classList.remove('active');
+                    p.classList.remove('slide-from-left');
+                });
+
+                const portadaPane = document.getElementById('tab-destacado');
+                if (portadaPane) portadaPane.classList.add('active');
+
+                lastActiveViewId = 'tab-destacado';
+                actualizarUrlPersonalizada({});
+                actualizarVisibilidadTickerGlobal('tab-destacado');
+                renderBasicPromoBanner();
+
+                if (mainContentContainer) mainContentContainer.scrollTo({ top: 0, behavior: 'smooth' });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            const headerBrandLogoLink = document.getElementById('header-brand-logo-link');
             if (headerBrandLogoLink) {
                 headerBrandLogoLink.addEventListener('click', (e) => {
                     e.preventDefault();
-                    closeAllMenus();
-                    cerrarBuscador();
-                    const btnDestacado = document.querySelector('.tab-btn[data-target="tab-destacado"]');
-                    if (btnDestacado) {
-                        btnDestacado.click();
-                    }
+                    irAPortadaPrincipal();
                 });
             }
+
+            document.querySelectorAll('.trending-topic-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.trending-topic-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    const navTab = btn.getAttribute('data-nav-tab');
+                    if (navTab) {
+                        const detailSection = document.getElementById('detail-view-section');
+                        if (detailSection) detailSection.classList.remove('active');
+                        if (mainContentContainer) mainContentContainer.classList.remove('full-bleed-detail');
+                        tabPanes.forEach(p => p.classList.remove('active'));
+                        const targetPane = document.getElementById(navTab);
+                        if (targetPane) targetPane.classList.add('active');
+                        lastActiveViewId = navTab;
+                        actualizarVisibilidadTickerGlobal(navTab);
+                        return;
+                    }
+
+                    const tema = btn.getAttribute('data-topic');
+                    if (tema) {
+                        window.buscarPorEtiqueta(tema);
+                    }
+                });
+            });
 
             const categoriesToggleBtn = document.getElementById('categories-toggle-btn');
             const closeCategoriesSidebarBtn = document.getElementById('close-categories-sidebar-btn');
