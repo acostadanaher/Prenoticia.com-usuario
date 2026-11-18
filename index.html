@@ -3799,17 +3799,71 @@ const sidebarAvatarEl = document.getElementById('sidebar-profile-avatar');
 
 const PENDING_DEEP_LINK_KEY = "prenoticia_destino_compartido_v1";
 
+let urlPublicaExternaCache = "";
+
+            window.addEventListener("message", function(e) {
+                if (e.data && e.data.canal === "PRENOTICIA_URL_EXTERNA" && e.data.href) {
+                    urlPublicaExternaCache = String(e.data.href).split("?")[0].split("#")[0];
+                }
+            });
+
+            function obtenerUrlBasePublica() {
+                if (urlPublicaExternaCache) return urlPublicaExternaCache;
+                try {
+                    if (window.parent && window.parent !== window && window.parent.location.href) {
+                        return window.parent.location.href.split("?")[0].split("#")[0];
+                    }
+                } catch (e) {}
+                if (document.referrer && document.referrer.indexOf("http") === 0) {
+                    return document.referrer.split("?")[0].split("#")[0];
+                }
+                return window.location.href.split("?")[0].split("#")[0];
+            }
+
+            function actualizarUrlPersonalizada(paramsObj) {
+                try {
+                    const searchParams = new URLSearchParams();
+                    Object.keys(paramsObj).forEach(k => {
+                        if (paramsObj[k] !== null && paramsObj[k] !== undefined && paramsObj[k] !== "") {
+                            searchParams.set(k, String(paramsObj[k]));
+                        }
+                    });
+                    const queryString = searchParams.toString() ? `?${searchParams.toString()}` : "";
+                    const baseLocal = window.location.href.split("?")[0].split("#")[0];
+                    window.history.replaceState(paramsObj, document.title, baseLocal + queryString);
+
+                    if (window.parent && window.parent !== window) {
+                        window.parent.postMessage({
+                            canal: "PRENOTICIA_ACTUALIZAR_URL",
+                            search: queryString
+                        }, "*");
+                    }
+                } catch (e) {}
+            }
+
             function detectarDestinoEnUrl() {
                 try {
-                    const params = new URLSearchParams(window.location.search);
+                    let searchStr = window.location.search;
+                    if ((!searchStr || searchStr === "?") && window.parent && window.parent !== window) {
+                        try { searchStr = window.parent.location.search; } catch (e) {}
+                    }
+                    if ((!searchStr || searchStr === "?") && document.referrer && document.referrer.indexOf("?") !== -1) {
+                        searchStr = "?" + document.referrer.split("?")[1].split("#")[0];
+                    }
+
+                    const params = new URLSearchParams(searchStr);
                     const noticiaParam = params.get("noticia") || params.get("articulo");
                     const beneficioParam = params.get("beneficio") || params.get("concurso");
+                    const seccionParam = params.get("seccion") || params.get("sector") || params.get("tab");
 
                     if (noticiaParam && !isNaN(Number(noticiaParam))) {
                         return { tipo: "noticia", id: Number(noticiaParam) };
                     }
                     if (beneficioParam && !isNaN(Number(beneficioParam))) {
                         return { tipo: "beneficio", id: Number(beneficioParam) };
+                    }
+                    if (seccionParam) {
+                        return { tipo: "seccion", seccion: seccionParam.toLowerCase().trim() };
                     }
 
                     const hash = (window.location.hash || "").replace(/^#/, "");
@@ -3835,16 +3889,31 @@ const PENDING_DEEP_LINK_KEY = "prenoticia_destino_compartido_v1";
                         if (raw) destino = JSON.parse(raw);
                     } catch (e) {}
                 }
-                if (destino && destino.id) {
+                if (destino) {
                     try { sessionStorage.removeItem(PENDING_DEEP_LINK_KEY); } catch (e) {}
                     setTimeout(() => {
-                        openDetailView(Number(destino.id), destino.tipo || "noticia");
+                        if (destino.tipo === "seccion" && destino.seccion) {
+                            const mapaTabs = {
+                                "destacado": "tab-destacado",
+                                "interes": "tab-interes",
+                                "de-tu-interes": "tab-interes",
+                                "mas-visto": "tab-mas-visto",
+                                "lo-mas-visto": "tab-mas-visto",
+                                "beneficios": "tab-beneficios",
+                                "concursos": "tab-beneficios"
+                            };
+                            const targetTab = mapaTabs[destino.seccion] || "tab-destacado";
+                            const btnTab = document.querySelector(`.tab-btn[data-target="${targetTab}"]`);
+                            if (btnTab) btnTab.click();
+                        } else if (destino.id) {
+                            openDetailView(Number(destino.id), destino.tipo || "noticia");
+                        }
                     }, 80);
                 }
             }
 
             function generarUrlCompartible(item, tipo) {
-                const baseUrl = window.location.href.split("?")[0].split("#")[0];
+                const baseUrl = obtenerUrlBasePublica();
                 const paramName = tipo === "beneficio" ? "beneficio" : "noticia";
                 return `${baseUrl}?${paramName}=${item.id}`;
             }
@@ -4294,7 +4363,8 @@ const headerBrandLogoLink = document.getElementById('header-brand-logo-link');
                         }
                         targetPane.classList.add('active');
                     }
-                    lastActiveViewId = targetId;
+lastActiveViewId = targetId;
+                    actualizarUrlPersonalizada({ seccion: targetId.replace("tab-", "") });
                     actualizarVisibilidadTickerGlobal(targetId);
                     renderBasicPromoBanner();
 
@@ -4771,11 +4841,10 @@ const detailSection = document.getElementById('detail-view-section');
                 const isPremiumUser = esUsuarioPremium(currentUser);
                 const bloqueadoPorMembresia = item.acceso === "premium" && !isPremiumUser;
 
-                // Actualiza la URL del navegador con el enlace personalizado de la noticia/concurso
+// Actualiza la URL del navegador con el enlace personalizado de la noticia/concurso
                 const urlPersonalizada = generarUrlCompartible(item, tipo);
-                try {
-                    window.history.replaceState({ tipo, id: item.id }, item.title, urlPersonalizada);
-                } catch (e) {}
+                const paramTipo = tipo === "beneficio" ? "beneficio" : "noticia";
+                actualizarUrlPersonalizada({ [paramTipo]: item.id });
 
 const urlEncoded = encodeURIComponent(urlPersonalizada);
                 const tituloEncoded = encodeURIComponent(`${item.title} - Leelo en Prenoticia`);
