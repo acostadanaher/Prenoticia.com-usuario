@@ -1227,9 +1227,49 @@
             border-bottom: 1px solid #f1f5f9;
         }
 
-        .detail-byline-below-subtitle strong {
+.detail-byline-below-subtitle strong {
             color: var(--text-color);
             font-weight: 700;
+        }
+
+        .detail-share-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0 14px 0;
+        }
+
+        .btn-share-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 13px;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+            background: #f8fafc;
+            color: var(--text-color);
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-share-link:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .btn-share-link.whatsapp {
+            background: #ecfdf5;
+            border-color: #a7f3d0;
+            color: #047857;
+        }
+
+        .btn-share-link.whatsapp:hover {
+            background: #d1fae5;
         }
 
         .detail-main-img-wrap {
@@ -3711,17 +3751,90 @@ const sidebarAvatarEl = document.getElementById('sidebar-profile-avatar');
             const loginUser = document.getElementById('login-user');
             const loginError = document.getElementById('login-error');
 
+const PENDING_DEEP_LINK_KEY = "prenoticia_destino_compartido_v1";
+
+            function detectarDestinoEnUrl() {
+                try {
+                    const params = new URLSearchParams(window.location.search);
+                    const noticiaParam = params.get("noticia") || params.get("articulo");
+                    const beneficioParam = params.get("beneficio") || params.get("concurso");
+
+                    if (noticiaParam && !isNaN(Number(noticiaParam))) {
+                        return { tipo: "noticia", id: Number(noticiaParam) };
+                    }
+                    if (beneficioParam && !isNaN(Number(beneficioParam))) {
+                        return { tipo: "beneficio", id: Number(beneficioParam) };
+                    }
+
+                    const hash = (window.location.hash || "").replace(/^#/, "");
+                    const matchNoticia = hash.match(/^(?:noticia|articulo)[-_:](\d+)$/i);
+                    if (matchNoticia) return { tipo: "noticia", id: Number(matchNoticia[1]) };
+
+                    const matchBeneficio = hash.match(/^(?:beneficio|concurso)[-_:](\d+)$/i);
+                    if (matchBeneficio) return { tipo: "beneficio", id: Number(matchBeneficio[1]) };
+                } catch (e) {}
+                return null;
+            }
+
+            function guardarDestinoPendiente(destino) {
+                if (!destino) return;
+                try { sessionStorage.setItem(PENDING_DEEP_LINK_KEY, JSON.stringify(destino)); } catch (e) {}
+            }
+
+            function consumirDestinoPendiente() {
+                let destino = detectarDestinoEnUrl();
+                if (!destino) {
+                    try {
+                        const raw = sessionStorage.getItem(PENDING_DEEP_LINK_KEY);
+                        if (raw) destino = JSON.parse(raw);
+                    } catch (e) {}
+                }
+                if (destino && destino.id) {
+                    try { sessionStorage.removeItem(PENDING_DEEP_LINK_KEY); } catch (e) {}
+                    setTimeout(() => {
+                        openDetailView(Number(destino.id), destino.tipo || "noticia");
+                    }, 80);
+                }
+            }
+
+            function generarUrlCompartible(item, tipo) {
+                const baseUrl = window.location.href.split("?")[0].split("#")[0];
+                const paramName = tipo === "beneficio" ? "beneficio" : "noticia";
+                return `${baseUrl}?${paramName}=${item.id}`;
+            }
+
+            window.copiarEnlaceCompartible = function(urlCompartir, btnEl) {
+                copiarAlPortapapeles(urlCompartir, null, null);
+                if (btnEl) {
+                    const orig = btnEl.innerHTML;
+                    btnEl.innerHTML = '<i class="fas fa-check"></i> ¡Enlace copiado!';
+                    setTimeout(() => { btnEl.innerHTML = orig; }, 2500);
+                }
+            };
+
             function restaurarSesionSiExiste() {
+                const destinoUrl = detectarDestinoEnUrl();
                 const savedUserEmail = obtenerSesion();
+
                 if (savedUserEmail) {
                     const foundSavedUser = usuariosDB.find(u => u.usuario.toLowerCase() === savedUserEmail.toLowerCase());
                     if (foundSavedUser) {
                         authSection.classList.add('hidden');
                         appSection.classList.remove('hidden');
                         cargarDatosUsuario(foundSavedUser);
+                        consumirDestinoPendiente();
                         return true;
                     } else {
                         borrarSesion();
+                    }
+                }
+
+                // Si no tiene sesión abierta y entró por un link compartido, guarda el destino y pide iniciar sesión
+                if (destinoUrl) {
+                    guardarDestinoPendiente(destinoUrl);
+                    const authSub = document.querySelector("#auth-section .auth-header p");
+                    if (authSub) {
+                        authSub.innerHTML = "Iniciá sesión con tu cuenta para ver el contenido compartido.";
                     }
                 }
                 return false;
@@ -3752,6 +3865,7 @@ const sidebarAvatarEl = document.getElementById('sidebar-profile-avatar');
                         authSection.classList.add('hidden');
                         appSection.classList.remove('hidden');
                         cargarDatosUsuario(matchedUser);
+                        consumirDestinoPendiente();
                     } else {
                         loginError.style.display = 'block';
                     }
@@ -4606,10 +4720,28 @@ function debeMostrarAnunciosParaUsuarioActual() {
                 const promoContainer = document.getElementById('basic-promo-banner-container');
                 if (promoContainer) promoContainer.classList.add('hidden');
 
-                const detailSection = document.getElementById('detail-view-section');
+const detailSection = document.getElementById('detail-view-section');
                 const detailBox = document.getElementById('detail-content-box');
                 const isPremiumUser = esUsuarioPremium(currentUser);
                 const bloqueadoPorMembresia = item.acceso === "premium" && !isPremiumUser;
+
+                // Actualiza la URL del navegador con el enlace personalizado de la noticia/concurso
+                const urlPersonalizada = generarUrlCompartible(item, tipo);
+                try {
+                    window.history.replaceState({ tipo, id: item.id }, item.title, urlPersonalizada);
+                } catch (e) {}
+
+                const textoShare = encodeURIComponent(`${item.title} - Leelo en Prenoticia: ${urlPersonalizada}`);
+                const barraCompartirHtml = `
+                    <div class="detail-share-bar">
+                        <a href="https://wa.me/?text=${textoShare}" target="_blank" rel="noopener noreferrer" class="btn-share-link whatsapp">
+                            <i class="fab fa-whatsapp"></i> Compartir
+                        </a>
+                        <button type="button" class="btn-share-link" onclick="copiarEnlaceCompartible('${urlPersonalizada}', this)">
+                            <i class="fas fa-link"></i> Copiar enlace
+                        </button>
+                    </div>
+                `;
 
                 const starIcon = item.acceso === "premium"
                     ? `<span class="premium-star-corner" title="Contenido exclusivo Premium"><i class="fas fa-star"></i></span>`
@@ -5007,8 +5139,11 @@ const relatedContainer = document.getElementById('detail-related-latest-containe
                         activeCountdownInterval = null;
                     }
 
-                    const detailSection = document.getElementById('detail-view-section');
+const detailSection = document.getElementById('detail-view-section');
                     if (detailSection) detailSection.classList.remove('active');
+                    try {
+                        window.history.replaceState({}, document.title, window.location.href.split("?")[0].split("#")[0]);
+                    } catch (e) {}
                     if (mainContentContainer) mainContentContainer.classList.remove('full-bleed-detail');
 
                     tabPanes.forEach(p => {
