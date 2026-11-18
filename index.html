@@ -2238,8 +2238,7 @@ function enviarNotificacionEmailSilenciosa(nombreRemitente, emailRemitente, cuer
                     paragraphs: [
                         "La plataforma de movilidad mantiene activo su programa de incentivos para nuevos socios conductores que completen una meta mínima de viajes durante sus primeras semanas de actividad en el Área Metropolitana de Buenos Aires y principales plazas del interior.",
                         
-                        // <-- ACÁ PEGÁS EL CÓDIGO MANUAL DEL ANUNCIO -->
-        `<div class="slot-anuncio-nativo-articulo" data-etiquetas="EMPLEO, TRABAJO, MOSTAZA" data-palabras="empleo, trabajo, ingresos, caba, amba"></div>`,
+
                         
                         "Para iniciar el alta únicamente se solicita licencia de conducir vigente con categoría profesional según jurisdicción, cédula del vehículo, comprobante de seguro automotor al día y certificado de antecedentes penales.",
                         "Una vez aprobada la documentación dentro de la aplicación, el sistema habilita de forma automática las promociones de bienvenida y las tarifas dinámicas en franjas horarias de alta demanda, como mañanas laborales y salidas nocturnas de fines de semana.",
@@ -4074,17 +4073,18 @@ const comentariosHtml = construirBloqueComentariosHtml(item);
                     const tagsAnuncio = (item.anuncioEtiquetas || item.tags || []).join(", ");
                     const palabrasAnuncio = (item.anuncioPalabras || item.tags || []).join(", ");
 
-                    const bloqueSlotAnuncioBasicoHtml = habilitarAnuncioEnEstaNota
-                        ? `
-                            <div class="motor-contexto-nota"
-                                 data-etiquetas="${escaparHtml(tagsAnuncio)}"
-                                 data-palabras="${escaparHtml(palabrasAnuncio)}"
-                                 hidden></div>
-                            <div class="slot-anuncio-nativo-articulo"
-                                 data-etiquetas="${escaparHtml(tagsAnuncio)}"
-                                 data-palabras="${escaparHtml(palabrasAnuncio)}">
-                            </div>
-                          `
+                    const crearSlotAnuncioHtml = (numeroSlot) => habilitarAnuncioEnEstaNota
+                        ? `<div class="slot-anuncio-nativo-articulo"
+                                data-slot-num="${numeroSlot}"
+                                data-etiquetas="${escaparHtml(tagsAnuncio)}"
+                                data-palabras="${escaparHtml(palabrasAnuncio)}"></div>`
+                        : '';
+
+                    const contextoMotorHtml = habilitarAnuncioEnEstaNota
+                        ? `<div class="motor-contexto-nota"
+                                data-etiquetas="${escaparHtml(tagsAnuncio)}"
+                                data-palabras="${escaparHtml(palabrasAnuncio)}"
+                                hidden></div>`
                         : '';
 
                     if (bloqueadoPorMembresia) {
@@ -4099,8 +4099,10 @@ const comentariosHtml = construirBloqueComentariosHtml(item);
                                 ${starIcon}
                                 <img src="${item.image}" alt="${item.title}" class="detail-hero-img">
                             </div>
+                            ${contextoMotorHtml}
+                            ${crearSlotAnuncioHtml(1)}
                             <p>${primerParrafo}</p>
-                            ${bloqueSlotAnuncioBasicoHtml}
+                            ${crearSlotAnuncioHtml(2)}
                             <div class="paywall-fade-wrapper">
                                 <div class="paywall-blurred-preview">
                                     <p>${segundoParrafoPreview}</p>
@@ -4116,15 +4118,30 @@ const comentariosHtml = construirBloqueComentariosHtml(item);
                             ${etiquetasPie}
                         `;
                     } else {
-                        let cuerpoParrafos = '';
+                        let cuerpoParrafos = contextoMotorHtml;
+                        const totalParrafos = item.paragraphs.length;
+                        const indiceSegundoAnuncio = totalParrafos > 2 ? totalParrafos - 2 : 0;
+
                         item.paragraphs.forEach((p, idx) => {
                             cuerpoParrafos += `<p>${p}</p>`;
+
+                            if (idx === 0) {
+                                cuerpoParrafos += crearSlotAnuncioHtml(1);
+                            }
+
                             if (idx === 1) {
                                 if (videoHtml) cuerpoParrafos += videoHtml;
                                 if (secondImageHtml) cuerpoParrafos += secondImageHtml;
-                                if (bloqueSlotAnuncioBasicoHtml) cuerpoParrafos += bloqueSlotAnuncioBasicoHtml;
+                            }
+
+                            if (idx === indiceSegundoAnuncio && idx !== 0) {
+                                cuerpoParrafos += crearSlotAnuncioHtml(2);
                             }
                         });
+
+                        if (totalParrafos <= 2) {
+                            cuerpoParrafos += crearSlotAnuncioHtml(2);
+                        }
 
                         detailBox.innerHTML = `
                             ${metaHeaderHtml}
@@ -4874,8 +4891,8 @@ window.REPOSITORIO_ANUNCIOS_IN_ARTICLE = [
     } catch (e) {}
   }
 
-  function seleccionarAnuncioParaSlot(etiquetasSlot, palabrasSlot) {
-    const repo = window.REPOSITORIO_ANUNCIOS_IN_ARTICLE || [];
+function seleccionarAnuncioParaSlot(etiquetasSlot, palabrasSlot, idsExcluidos = []) {
+    const repo = (window.REPOSITORIO_ANUNCIOS_IN_ARTICLE || []).filter(a => !idsExcluidos.includes(a.id));
     if (!repo.length) return null;
     const perfilCache = leerPerfilCache();
     const historialMostrados = leerHistorialRotacion();
@@ -4969,6 +4986,7 @@ window.REPOSITORIO_ANUNCIOS_IN_ARTICLE = [
 
     const contextoNota = document.querySelector("#detail-content-box .motor-contexto-nota");
     const tituloNota = notaObj && notaObj.title ? notaObj.title : document.title;
+    const idsUsadosEnEstaNota = [];
 
     slots.forEach((slotActual) => {
       const rawTags = [slotActual.getAttribute("data-etiquetas") || "", contextoNota ? (contextoNota.getAttribute("data-etiquetas") || "") : ""].join(",");
@@ -4977,14 +4995,15 @@ window.REPOSITORIO_ANUNCIOS_IN_ARTICLE = [
       const etiquetasSlot = expandirVariantes(rawTags.split(","));
       const palabrasSlot = expandirVariantes(rawPalabras.split(","));
 
-      const anuncioGanador = seleccionarAnuncioParaSlot(etiquetasSlot, palabrasSlot);
+      const anuncioGanador = seleccionarAnuncioParaSlot(etiquetasSlot, palabrasSlot, idsUsadosEnEstaNota);
       if (!anuncioGanador) return;
 
+      idsUsadosEnEstaNota.push(anuncioGanador.id);
       instanciaActivaRender = { contenedor: slotActual, anuncio: anuncioGanador, etiquetasSlot, palabrasSlot, tituloNota };
       registrarAnuncioMostradoEnArticulo(anuncioGanador.id);
       renderizarSlotArticulo(slotActual, anuncioGanador, etiquetasSlot, palabrasSlot, tituloNota);
     });
-  }; // <-- LLAVE QUE FALTABA CERRAR
+  };
 
   // =====================================================================
   // CONTROL AUTOMÁTICO DE BANNERS FLOTANTES (ARRIBA Y ABAJO) SEGÚN EL PLAN
