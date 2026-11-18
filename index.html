@@ -372,19 +372,22 @@
             border-color: #ffffff;
         }
 
-/* Adaptación en celulares: logo más grande y márgenes laterales alineados */
+/* Adaptación en celulares: contenido alineado exactamente con los bordes de los botones del menú */
         @media (max-width: 768px) {
             .container,
             .tabs-list,
             .search-drawer-inner,
             .tab-content-area {
-                padding-left: 0px;
-                padding-right: 0px;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            .tabs-list li:first-child .tab-btn {
+                padding-left: 0;
             }
             .header-content {
                 height: 54px;
-                padding-left: 14px;
-                padding-right: 14px;
+                padding-left: 10px;
+                padding-right: 10px;
             }
             .header-categories-label {
                 display: none;
@@ -665,9 +668,10 @@
             display: block;
         }
 
-        .search-drawer-inner {
-            max-width: 1080px;
+.search-drawer-inner {
+            max-width: 1020px;
             margin: 0 auto;
+            padding: 0 24px;
             display: flex;
             gap: 8px;
         }
@@ -703,9 +707,9 @@
             cursor: pointer;
         }
 
-        /* ================= CONTENIDO EDITORIAL Y TICKER FIJO ================= */
+/* ================= CONTENIDO EDITORIAL Y TICKER FIJO ================= */
 .tab-content-area {
-            max-width: 1140px;
+            max-width: 1020px;
             margin: 0 auto;
             padding: 24px 24px 18vh 24px;
             background-color: #ffffff;
@@ -5635,12 +5639,12 @@ body.con-banner-superior-activo header {
     border-left: none;
     border-right: none;
   }
-  .nativo-flotante-inferior-wrapper {
-    bottom: 150px;
+.nativo-flotante-inferior-wrapper {
+    bottom: 0;
     left: 0;
     width: 100vw;
     max-width: 100vw;
-    transform: translateY(calc(105% + 150px));
+    transform: translateY(105%);
   }
   .nativo-flotante-inferior-wrapper.recurso-grafico-listo {
     transform: translateY(0);
@@ -6141,8 +6145,11 @@ window.REPOSITORIO_ANUNCIOS_IN_ARTICLE = [
         tarjeta.classList.remove("sin-foto-activa");
         imgEl.src = urlImagen;
       }
-      wrapper.classList.remove("cambiando-anuncio-slide");
+wrapper.classList.remove("cambiando-anuncio-slide");
       wrapper.classList.add("recurso-grafico-listo");
+      if (esSup) {
+        document.body.classList.add("con-banner-superior-activo");
+      }
     };
 
     if (conSlide && wrapper.classList.contains("recurso-grafico-listo")) {
@@ -6226,11 +6233,12 @@ window.REPOSITORIO_ANUNCIOS_IN_ARTICLE = [
     setTimeout(() => { if (!overlay.classList.contains("is-active")) overlay.style.display = "none"; }, 300);
   }
 
-  function ocultarTodosLosFlotantes() {
+function ocultarTodosLosFlotantes() {
     const sup = document.getElementById("marco-cabecera-dinamico");
     const inf = document.getElementById("marco-pie-dinamico");
     if (sup) sup.classList.remove("recurso-grafico-listo");
     if (inf) inf.classList.remove("recurso-grafico-listo");
+    document.body.classList.remove("con-banner-superior-activo");
     cerrarPopupCentral();
     if (intervaloRotacionFlotantes) { clearInterval(intervaloRotacionFlotantes); intervaloRotacionFlotantes = null; }
     if (timerAperturaPopup) { clearTimeout(timerAperturaPopup); timerAperturaPopup = null; }
