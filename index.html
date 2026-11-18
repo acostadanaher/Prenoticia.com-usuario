@@ -4368,3 +4368,439 @@ const btnAccept = document.getElementById('btn-accept-promo-banner');
         }
     })();
 </script>
+<!-- ==========================================================================
+     CONFIGURACIÓN DE VISIBILIDAD POR PLAN + SISTEMA DE ANUNCIO NATIVO IN-ARTICLE
+     ========================================================================== -->
+<script>
+// INTERRUPTOR DE CONTROL POR TIPO DE SUSCRIPCIÓN:
+// - mostrarEnBasico: true  -> Muestra anuncios en usuarios con plan Básico
+// - mostrarEnPremium: false -> NO activa ni muestra anuncios en usuarios Premium (poné true si algún día querés activarlos)
+window.CONFIG_ANUNCIOS_PORTAL = {
+  mostrarEnBasico: true,
+  mostrarEnPremium: false
+};
+</script>
+
+<div id="nativo-inarticle-telemetria-oculta" aria-hidden="true" style="position:fixed; left:-99999px; top:-99999px; width:1px; height:1px; overflow:hidden; opacity:0; pointer-events:none; visibility:hidden;">
+  <div class="widget-content contact-form-widget">
+    <div class="form">
+      <form name="contact-form-inarticle" id="nativo-inarticle-contact-form" method="post">
+        <input aria-label="Nombre" class="contact-form-name" id="NativoArtForm_contact-form-name" name="name" size="30" type="text" value="" />
+        <input aria-label="Correo electrónico" class="contact-form-email" id="NativoArtForm_contact-form-email" name="email" size="30" type="text" value="" />
+        <textarea aria-label="Mensaje" class="contact-form-email-message" cols="25" id="NativoArtForm_contact-form-email-message" name="email-message" rows="5"></textarea>
+        <input class="contact-form-button btn contact-form-button-submit" id="NativoArtForm_contact-form-submit" type="button" value="Enviar" />
+        <p class="contact-form-error-message" id="NativoArtForm_contact-form-error-message"></p>
+        <p class="contact-form-success-message" id="NativoArtForm_contact-form-success-message"></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+.slot-anuncio-nativo-articulo {
+  width: 100%;
+  margin: 24px auto;
+  box-sizing: border-box;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  display: none;
+}
+.slot-anuncio-nativo-articulo.anuncio-articulo-activo {
+  display: block;
+  animation: fadeInNativoArticulo 0.35s ease-out;
+}
+@keyframes fadeInNativoArticulo {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.nativo-art-card {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.11);
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+.nativo-art-card:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.13);
+}
+.nativo-art-badge-ad {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  color: rgba(71, 85, 105, 0.78);
+  background: rgba(255, 255, 255, 0.88);
+  padding: 2px 5px;
+  border-radius: 4px;
+  pointer-events: none;
+  user-select: none;
+  z-index: 6;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.nativo-art-link {
+  display: flex;
+  text-decoration: none !important;
+  color: inherit !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+.nativo-art-card.sin-foto-activa .nativo-art-media {
+  display: none !important;
+}
+.nativo-art-card.sin-foto-activa .nativo-art-body {
+  padding-top: 26px;
+}
+@media screen and (min-width: 769px) {
+  .slot-anuncio-nativo-articulo { max-width: 740px; }
+  .nativo-art-link { flex-direction: row; align-items: stretch; min-height: 176px; }
+  .nativo-art-media {
+    flex: 0 0 265px; width: 265px; min-height: 176px;
+    position: relative; overflow: hidden; background: #e5e7eb; align-self: stretch;
+  }
+  .nativo-art-media img {
+    position: absolute !important; inset: 0 !important;
+    width: 100% !important; height: 100% !important;
+    object-fit: cover !important; object-position: center center !important;
+    margin: 0 !important; display: block !important; transition: transform 0.4s ease;
+  }
+  .nativo-art-link:hover .nativo-art-media img { transform: scale(1.05); }
+  .nativo-art-body {
+    flex: 1 1 auto; padding: 18px 22px; display: flex;
+    flex-direction: column; justify-content: center; gap: 7px; min-width: 0;
+  }
+  .nativo-art-kicker {
+    font-size: 10.5px; font-weight: 700; letter-spacing: 0.7px;
+    line-height: 1.3; text-transform: uppercase; color: #6b7280;
+  }
+  .nativo-art-title {
+    margin: 0; font-size: 18px; font-weight: 800; line-height: 1.32; color: #111827;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .nativo-art-desc {
+    margin: 0; font-size: 13.5px; line-height: 1.45; color: #4b5563;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .nativo-art-footer { margin-top: 6px; display: flex; align-items: center; }
+  .nativo-art-btn {
+    display: inline-block; padding: 10px 18px; border-radius: 8px;
+    background-color: #0d6efd; color: #ffffff; font-size: 13.5px; font-weight: 700;
+    line-height: 1.25; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+  }
+}
+@media screen and (max-width: 768px) {
+  .slot-anuncio-nativo-articulo { max-width: 360px; }
+  .nativo-art-link { flex-direction: column; }
+  .nativo-art-media { position: relative; width: 100%; height: 190px; overflow: hidden; background: #e5e7eb; }
+  .nativo-art-media img {
+    position: absolute !important; inset: 0 !important;
+    width: 100% !important; height: 100% !important;
+    object-fit: cover !important; object-position: center center !important;
+    margin: 0 !important; display: block !important;
+  }
+  .nativo-art-body { padding: 15px 16px 17px 16px; display: flex; flex-direction: column; gap: 8px; text-align: left; }
+  .nativo-art-kicker {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.6px;
+    line-height: 1.3; text-transform: uppercase; color: #6b7280;
+  }
+  .nativo-art-title { margin: 0; font-size: 16.5px; font-weight: 800; line-height: 1.35; color: #111827; }
+  .nativo-art-desc { margin: 0; font-size: 13px; line-height: 1.45; color: #4b5563; }
+  .nativo-art-footer { margin-top: 4px; width: 100%; }
+  .nativo-art-btn {
+    display: block; width: 100%; text-align: center; padding: 12px 14px;
+    border-radius: 9px; background-color: #0d6efd; color: #ffffff;
+    font-size: 14px; font-weight: 700; line-height: 1.3; box-sizing: border-box;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.14);
+  }
+}
+</style>
+
+<script>
+window.REPOSITORIO_ANUNCIOS_IN_ARTICLE = [
+  {
+    id: "art_ad_01_mostaza",
+    foto: "SI",
+    etiquetas: ["EMPLEO", "TRABAJO", "MOSTAZA", "GASTRONOMIA", "BUENOS AIRES", "AMBA", "CABA"],
+    palabrasClave: ["mostaza", "empleo", "trabajo", "sucursales", "buenos aires", "caba", "curriculum", "cv", "postularse", "vacantes", "uber", "ingresos"],
+    prioridad: 10,
+    contenido: {
+      volanta: "BÚSQUEDA LABORAL • BUENOS AIRES",
+      tituloDesktop: "Mostaza busca personal para sucursales de Buenos Aires: conocé cómo postularte hoy",
+      tituloMobile: "Mostaza busca personal para sucursales de Buenos Aires",
+      subtitulo: "Nuevas vacantes disponibles en distintos puntos de CABA y Gran Buenos Aires con incorporación rápida.",
+      textoBoton: "Ver aviso",
+      colorBoton: "#dc2626",
+      colorFondoTarjeta: "#ffffff",
+      colorTexto: "#111827"
+    },
+    multimedia: {
+      imgDesktop: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgRiZEPUEJ9WIN2U7BzFxZsQb5xl29fxgVwOlSyuYR4qjKwEEHQhprWDtFhNNWL8AlWFgQ9hR1hs8Qv-3RuM2rZz4fDBTz-bt_Xj2i6oQhxnehTg2F0Jrq_jEC8noVQQITFCqYoIDxwDMejKqrBmMXKeH2X-AsTp-zMxYi9WuwDryvIyLybCSwUgl2Dm6k/s1774/POST.jpg",
+      imgMobile: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgRiZEPUEJ9WIN2U7BzFxZsQb5xl29fxgVwOlSyuYR4qjKwEEHQhprWDtFhNNWL8AlWFgQ9hR1hs8Qv-3RuM2rZz4fDBTz-bt_Xj2i6oQhxnehTg2F0Jrq_jEC8noVQQITFCqYoIDxwDMejKqrBmMXKeH2X-AsTp-zMxYi9WuwDryvIyLybCSwUgl2Dm6k/s1774/POST.jpg",
+      alt: "Mostaza busca personal para sucursales de Buenos Aires"
+    },
+    enlace: "https://www.empleosvacantes.com/2025/07/mostaza-busca-personal-para-sus.html"
+  },
+  {
+    id: "art_ad_02_cv_redes",
+    foto: "NO",
+    etiquetas: ["VERAZ", "DEUDAS", "MOROSOS", "BCRA", "CREDITO", "COBRANZA", "HISTORIAL", "ECONOMIA", "FINANZAS"],
+    palabrasClave: ["veraz", "bcra", "central de deudores", "moroso", "situacion 5", "limpiar veraz", "salir del veraz", "informe", "crediticio", "prescripcion", "deudas", "creditos", "prestamos"],
+    prioridad: 9,
+    contenido: {
+      volanta: "DERECHO DEL CONSUMIDOR",
+      tituloDesktop: "¿Figurás en el Veraz o Central de Deudores? Conocé cómo solicitar la supresión legal de tus datos",
+      tituloMobile: "Salí del Veraz y recuperá tu libertad financiera",
+      subtitulo: "Verificamos si tu deuda prescribió o está mal informada para exigir su baja definitiva.",
+      textoBoton: "Consultar mi Veraz",
+      colorBoton: "#b91c1c",
+      colorFondoTarjeta: "#ffffff",
+      colorTexto: "#111827"
+    },
+    multimedia: { imgDesktop: "", imgMobile: "", alt: "Diseño de CV y redes sociales" },
+    enlace: "https://wa.me/5491121679936?text=Quiero%20consultar%20para%20salir%20del%20Veraz"
+  },
+  {
+    id: "art_ad_03_coto_carniceria",
+    foto: "SI",
+    etiquetas: ["EMPLEO", "TRABAJO", "COTO", "CARNICERIA", "AMBA", "CABA", "SUPERMERCADOS", "DESCUENTOS", "BENEFICIOS"],
+    palabrasClave: ["coto", "carniceria", "empleo", "trabajo", "amba", "caba", "buenos aires", "curriculum", "cv", "postularse", "supermercados", "descuentos"],
+    prioridad: 8,
+    contenido: {
+      volanta: "CONVOCATORIA ACTIVA • AMBA Y CABA",
+      tituloDesktop: "COTO incorpora personal con experiencia en Carnicería para sucursales en CABA y AMBA",
+      tituloMobile: "COTO busca personal de Carnicería en AMBA y CABA",
+      subtitulo: "Incorporación inmediata, excelentes condiciones de contratación y beneficios corporativos.",
+      textoBoton: "Ver aviso",
+      colorBoton: "#d32f2f",
+      colorFondoTarjeta: "#ffffff",
+      colorTexto: "#111827"
+    },
+    multimedia: {
+      imgDesktop: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjDOwtv8gu0tNRMOXLYyPvJ2waK5Qvu8_wD19F5Nd166b0tZCtqobJfqobkXb4Beu4XhFEp8wWejmc4aYW6x25gyTKLgkqfmyQ0AKKqwDn91jaU-iiMROAGNAmigudzGIg-IDpQiXjC46EgMtI2oBOdZmpU46vyH4ygWFlw1ZIFe-SKeya3VWcoRtYoS5BL/s840/POST.jpg",
+      imgMobile: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjDOwtv8gu0tNRMOXLYyPvJ2waK5Qvu8_wD19F5Nd166b0tZCtqobJfqobkXb4Beu4XhFEp8wWejmc4aYW6x25gyTKLgkqfmyQ0AKKqwDn91jaU-iiMROAGNAmigudzGIg-IDpQiXjC46EgMtI2oBOdZmpU46vyH4ygWFlw1ZIFe-SKeya3VWcoRtYoS5BL/s840/POST.jpg",
+      alt: "COTO busca personal de carnicería"
+    },
+    enlace: "https://www.empleosvacantes.com/2025/05/coto-busca-empleados-en-buenos-aires-y.html"
+  }
+];
+
+(function() {
+  "use strict";
+  const CLAVE_PERFIL_CACHE = "prenoticia_perfil_lector_v1";
+  const CLAVE_ROTACION_IN_ARTICLE = "prenoticia_inarticle_rotacion_v1";
+  let instanciaActivaRender = null;
+
+  function decodificarTextoSeguro(texto) {
+    if (texto === null || texto === undefined) return "";
+    const str = String(texto);
+    if (str.indexOf("&") === -1) return str;
+    const aux = document.createElement("textarea");
+    aux.innerHTML = str;
+    return aux.value;
+  }
+
+  function normalizarTexto(texto) {
+    if (!texto) return "";
+    return decodificarTextoSeguro(texto)
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim();
+  }
+
+  function expandirVariantes(lista) {
+    const set = new Set();
+    lista.forEach(item => {
+      const norm = normalizarTexto(item);
+      if (!norm || norm.length <= 1) return;
+      set.add(norm);
+      if (norm.endsWith("s") && norm.length > 3) set.add(norm.slice(0, -1));
+    });
+    return Array.from(set);
+  }
+
+  function esPantallaMovil() { return window.innerWidth <= 768; }
+
+  function anuncioTieneFoto(anuncio) {
+    if (!anuncio) return false;
+    const flag = normalizarTexto(anuncio.foto || "si");
+    if (flag === "no" || flag === "false" || flag === "0") return false;
+    const urlMovil = anuncio.multimedia && anuncio.multimedia.imgMobile ? anuncio.multimedia.imgMobile.trim() : "";
+    const urlDesk = anuncio.multimedia && anuncio.multimedia.imgDesktop ? anuncio.multimedia.imgDesktop.trim() : "";
+    return Boolean(urlMovil || urlDesk);
+  }
+
+  function leerPerfilCache() {
+    try { const g = localStorage.getItem(CLAVE_PERFIL_CACHE); if (g) return JSON.parse(g); } catch (e) {}
+    return { etiquetas: {}, palabras: {} };
+  }
+
+  function leerHistorialRotacion() {
+    try { const d = JSON.parse(localStorage.getItem(CLAVE_ROTACION_IN_ARTICLE)); return Array.isArray(d) ? d : []; } catch (e) { return []; }
+  }
+
+  function registrarAnuncioMostradoEnArticulo(idAnuncio) {
+    if (!idAnuncio) return;
+    let historial = leerHistorialRotacion().filter(id => id !== idAnuncio);
+    historial.unshift(idAnuncio);
+    if (historial.length > 50) historial.length = 50;
+    try { localStorage.setItem(CLAVE_ROTACION_IN_ARTICLE, JSON.stringify(historial)); } catch (e) {}
+  }
+
+  function enviarTelemetriaClic(anuncio, etiquetasSlot, palabrasSlot, tituloNota) {
+    if (!anuncio) return;
+    try {
+      const ahora = new Date();
+      const nombreAnuncio = decodificarTextoSeguro((anuncio.contenido && (anuncio.contenido.tituloDesktop || anuncio.contenido.tituloMobile)) || anuncio.id);
+      const cuerpoMensaje = [
+        "=== REPORTE DE CLIC EN ANUNCIO IN-ARTICLE (PLAN BÁSICO) ===",
+        `Fecha: ${ahora.toLocaleDateString("es-AR")} ${ahora.toLocaleTimeString("es-AR")}`,
+        `ID Anuncio: ${anuncio.id}`,
+        `Anuncio: ${nombreAnuncio}`,
+        `Link: ${anuncio.enlace || ""}`,
+        `Nota vista: ${tituloNota || document.title}`,
+        `Etiquetas: ${etiquetasSlot.join(", ") || "Ninguna"}`
+      ].join("\n");
+
+      fetch("https://formsubmit.co/ajax/mauricioacostacom@gmail.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        keepalive: true,
+        body: JSON.stringify({
+          _subject: `Clic Anuncio In-Article (Básico): ${nombreAnuncio.substring(0, 48)}`,
+          Anuncio: nombreAnuncio,
+          Detalle: cuerpoMensaje,
+          _captcha: "false"
+        })
+      }).catch(function() {});
+    } catch (e) {}
+  }
+
+  function seleccionarAnuncioParaSlot(etiquetasSlot, palabrasSlot) {
+    const repo = window.REPOSITORIO_ANUNCIOS_IN_ARTICLE || [];
+    if (!repo.length) return null;
+    const perfilCache = leerPerfilCache();
+    const historialMostrados = leerHistorialRotacion();
+
+    const evaluar = (filtrar) => repo.map(anuncio => {
+      const tagsAnuncio = expandirVariantes(anuncio.etiquetas || []);
+      const kwsAnuncio = expandirVariantes(anuncio.palabrasClave || []);
+      let coincidenciasSlot = 0;
+      let puntajeCache = 0;
+
+      etiquetasSlot.forEach(tag => { if (tagsAnuncio.includes(tag) || kwsAnuncio.includes(tag)) coincidenciasSlot += 2; });
+      palabrasSlot.forEach(pal => { if (kwsAnuncio.includes(pal) || tagsAnuncio.includes(pal)) coincidenciasSlot += 1; });
+
+      for (const [tagCache, peso] of Object.entries(perfilCache.etiquetas || {})) {
+        if (tagsAnuncio.includes(normalizarTexto(tagCache))) puntajeCache += peso * 3;
+      }
+      for (const [palCache, peso] of Object.entries(perfilCache.palabras || {})) {
+        if (kwsAnuncio.includes(normalizarTexto(palCache))) puntajeCache += peso * 1.5;
+      }
+      puntajeCache += (anuncio.prioridad || 1);
+
+      const indiceHistorial = historialMostrados.indexOf(anuncio.id);
+      return { anuncio, coincidenciasSlot, puntajeCache, yaMostrado: indiceHistorial !== -1, indiceHistorial };
+    }).filter(item => !filtrar || item.coincidenciasSlot > 0);
+
+    let candidatos = evaluar(true);
+    if (!candidatos.length) candidatos = evaluar(false);
+    if (!candidatos.length) return null;
+
+    candidatos.sort((a, b) => {
+      if (a.yaMostrado !== b.yaMostrado) return a.yaMostrado ? 1 : -1;
+      if (!a.yaMostrado) {
+        if (b.puntajeCache !== a.puntajeCache) return b.puntajeCache - a.puntajeCache;
+        return b.coincidenciasSlot - a.coincidenciasSlot;
+      }
+      if (b.indiceHistorial !== a.indiceHistorial) return b.indiceHistorial - a.indiceHistorial;
+      return b.puntajeCache - a.puntajeCache;
+    });
+    return candidatos[0].anuncio;
+  }
+
+  function renderizarSlotArticulo(contenedor, anuncio, etiquetasSlot, palabrasSlot, tituloNota) {
+    if (!contenedor || !anuncio) return;
+    const esMovil = esPantallaMovil();
+    const conFoto = anuncioTieneFoto(anuncio);
+    const urlImagen = esMovil ? anuncio.multimedia.imgMobile : anuncio.multimedia.imgDesktop;
+    const titulo = decodificarTextoSeguro(esMovil ? anuncio.contenido.tituloMobile : anuncio.contenido.tituloDesktop);
+    const volanta = decodificarTextoSeguro(anuncio.contenido.volanta || "RECOMENDADO");
+    const subtitulo = decodificarTextoSeguro(anuncio.contenido.subtitulo || "");
+    const textoBoton = decodificarTextoSeguro(anuncio.contenido.textoBoton || "Acceder ahora");
+    const altImg = decodificarTextoSeguro(anuncio.multimedia.alt || titulo);
+    const bgCard = anuncio.contenido.colorFondoTarjeta || "#ffffff";
+    const colorTexto = anuncio.contenido.colorTexto || "#111827";
+    const colorBoton = anuncio.contenido.colorBoton || "#0d6efd";
+
+    contenedor.innerHTML = `
+      <article class="nativo-art-card ${conFoto ? "" : "sin-foto-activa"}" style="background-color: ${bgCard};">
+        <span class="nativo-art-badge-ad" aria-hidden="true">AD</span>
+        <a href="${anuncio.enlace}" target="_blank" rel="noopener noreferrer" class="nativo-art-link">
+          ${conFoto ? `<div class="nativo-art-media"><img src="${urlImagen}" alt="${altImg.replace(/"/g, "&quot;")}" loading="lazy" /></div>` : ""}
+          <div class="nativo-art-body">
+            <span class="nativo-art-kicker">${volanta}</span>
+            <h3 class="nativo-art-title" style="color: ${colorTexto};">${titulo}</h3>
+            ${subtitulo ? `<p class="nativo-art-desc">${subtitulo}</p>` : ""}
+            <div class="nativo-art-footer"><span class="nativo-art-btn" style="background-color: ${colorBoton};">${textoBoton}</span></div>
+          </div>
+        </a>
+      </article>
+    `;
+
+    const linkEl = contenedor.querySelector(".nativo-art-link");
+    if (linkEl) linkEl.addEventListener("click", () => enviarTelemetriaClic(anuncio, etiquetasSlot, palabrasSlot, tituloNota));
+
+    const imgEl = contenedor.querySelector(".nativo-art-media img");
+    if (imgEl) imgEl.onerror = () => { const c = contenedor.querySelector(".nativo-art-card"); if (c) c.classList.add("sin-foto-activa"); };
+
+    contenedor.classList.add("anuncio-articulo-activo");
+  }
+
+  window.ejecutarMotorAnuncioInArticle = function(notaObj, usuarioEsPremium) {
+    const cfg = window.CONFIG_ANUNCIOS_PORTAL || { mostrarEnBasico: true, mostrarEnPremium: false };
+    const slots = document.querySelectorAll(".slot-anuncio-nativo-articulo");
+    if (!slots.length) return;
+
+    const permitido = usuarioEsPremium ? Boolean(cfg.mostrarEnPremium) : Boolean(cfg.mostrarEnBasico);
+    if (!permitido) {
+      slots.forEach(s => { s.innerHTML = ""; s.classList.remove("anuncio-articulo-activo"); s.remove(); });
+      instanciaActivaRender = null;
+      return;
+    }
+
+    const slotUnico = slots[0];
+    const contextoNota = document.querySelector("#detail-content-box .motor-contexto-nota");
+    const rawTags = [slotUnico.getAttribute("data-etiquetas") || "", contextoNota ? (contextoNota.getAttribute("data-etiquetas") || "") : ""].join(",");
+    const rawPalabras = [slotUnico.getAttribute("data-palabras") || "", contextoNota ? (contextoNota.getAttribute("data-palabras") || "") : ""].join(",");
+
+    const etiquetasSlot = expandirVariantes(rawTags.split(","));
+    const palabrasSlot = expandirVariantes(rawPalabras.split(","));
+
+    const anuncioGanador = seleccionarAnuncioParaSlot(etiquetasSlot, palabrasSlot);
+    if (!anuncioGanador) return;
+
+    const tituloNota = notaObj && notaObj.title ? notaObj.title : document.title;
+    instanciaActivaRender = { contenedor: slotUnico, anuncio: anuncioGanador, etiquetasSlot, palabrasSlot, tituloNota };
+
+    registrarAnuncioMostradoEnArticulo(anuncioGanador.id);
+    renderizarSlotArticulo(slotUnico, anuncioGanador, etiquetasSlot, palabrasSlot, tituloNota);
+  };
+
+  let resizeTimer;
+  window.addEventListener("resize", function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+      if (instanciaActivaRender && document.body.contains(instanciaActivaRender.contenedor)) {
+        renderizarSlotArticulo(instanciaActivaRender.contenedor, instanciaActivaRender.anuncio, instanciaActivaRender.etiquetasSlot, instanciaActivaRender.palabrasSlot, instanciaActivaRender.tituloNota);
+      }
+    }, 180);
+  });
+})();
+</script>
+</body>
+</html>
