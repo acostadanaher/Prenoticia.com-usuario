@@ -238,7 +238,7 @@
             text-decoration: none;
         }
 
-/* ================= HEADER Y SIDEBAR (MENÚ DE CUENTA) ================= */
+/* ================= HEADER Y SIDEBAR (MENÚ DE CUENTA Y SECCIONES) ================= */
         header {
             background: #f68e02;
             border-bottom: 1px solid #d97b00;
@@ -248,28 +248,66 @@
         }
 
         .header-content {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            height: 60px;
+            gap: 8px;
+        }
+
+        .header-left-area {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            height: 64px;
+            justify-content: flex-start;
+        }
+
+        .header-categories-btn {
+            height: 38px;
+            padding: 0 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            background: rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .header-categories-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #ffffff;
+            flex-shrink: 0;
+        }
+
+        .header-categories-btn:hover, .header-categories-btn.active {
+            background: rgba(255, 255, 255, 0.34);
+            border-color: #ffffff;
         }
 
         .brand-logo-group {
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
         }
 
         .header-brand-logo-link {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             text-decoration: none;
             cursor: pointer;
         }
 
         .header-brand-logo-img {
-            height: 36px;
-            max-width: 190px;
+            height: 34px;
+            max-width: 185px;
             width: auto;
             object-fit: contain;
             display: block;
@@ -288,6 +326,7 @@
         .user-nav-area {
             display: flex;
             align-items: center;
+            justify-content: flex-end;
             gap: 8px;
         }
 
@@ -315,6 +354,44 @@
             border-color: #ffffff;
         }
 
+        /* Adaptación en celulares: barra más baja y elementos proporcionados */
+        @media (max-width: 768px) {
+            .header-content {
+                height: 48px;
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+            .header-categories-label {
+                display: none;
+            }
+            .header-categories-btn {
+                width: 32px;
+                height: 32px;
+                padding: 0;
+                border-radius: 8px;
+            }
+            .header-categories-btn svg {
+                width: 17px;
+                height: 17px;
+            }
+            .header-brand-logo-img {
+                height: 25px;
+                max-width: 135px;
+            }
+            .user-nav-area {
+                gap: 6px;
+            }
+            .header-icon-btn {
+                width: 32px;
+                height: 32px;
+                border-radius: 8px;
+            }
+            .header-icon-btn svg {
+                width: 17px;
+                height: 17px;
+            }
+        }
+
         #menu-backdrop {
             display: none;
             position: fixed;
@@ -340,6 +417,49 @@
 
         .sidebar-menu.active {
             right: 0;
+        }
+
+        /* Menú lateral izquierdo de Categorías / Secciones */
+        .categories-sidebar-menu {
+            position: fixed;
+            top: 0;
+            left: -360px;
+            width: 100%;
+            max-width: 320px;
+            height: 100vh;
+            background: var(--bg-card);
+            z-index: 200;
+            padding: 24px 20px 24vh 20px;
+            overflow-y: auto;
+            transition: left 0.28s ease;
+            box-shadow: 8px 0 28px rgba(0,0,0,0.12);
+        }
+
+        .categories-sidebar-menu.active {
+            left: 0;
+        }
+
+        .category-menu-item {
+            width: 100%;
+            text-align: left;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s;
+        }
+
+        .category-menu-item:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
         }
 
         .sidebar-header {
@@ -1615,11 +1735,19 @@
 <!-- Header Superior -->
         <header>
             <div class="container header-content">
+                <div class="header-left-area">
+                    <button type="button" class="header-categories-btn" id="categories-toggle-btn" aria-label="Secciones y categorías" title="Secciones">
+                        <svg viewBox="0 0 24 24"><path d="M3 6h18v2.2H3V6zm0 4.9h18v2.2H3v-2.2zm0 4.9h18V18H3v-2.2z"/></svg>
+                        <span class="header-categories-label">Secciones</span>
+                    </button>
+                </div>
+
                 <div class="brand-logo-group">
                     <a href="#destacado" id="header-brand-logo-link" class="header-brand-logo-link" title="Ir a Destacado">
                         <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjmzy0U6QZyMHA1Y82KR_tasxfrNOR5QmP8ST_rIIPiJT5KjHVBvhy5PQY1Lxic6XPfcL675Kwuwm95lcSKwsz6XtniBqTqwwm5u4R3_ToWMI6qwEq8BiWpabcQUl8Aw1SxgqKxUf4N0rzbURCH4VO6lzUBrt0anTzyVPPzRgLNpOj1iFpiXTclwfK54Spd=s1600" alt="Prenoticia" class="header-brand-logo-img">
                     </a>
                 </div>
+
                 <div class="user-nav-area">
                     <button class="header-icon-btn" id="menu-toggle-btn" aria-label="Menú principal" title="Menú de cuenta">
                         <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
@@ -1630,6 +1758,18 @@
                 </div>
             </div>
         </header>
+
+        <!-- Menú Lateral Izquierdo de Categorías / Secciones -->
+        <div class="categories-sidebar-menu" id="categories-sidebar-menu">
+            <div class="sidebar-header">
+                <div class="sidebar-header-title-wrap">
+                    <i class="fas fa-layer-group" style="color:var(--primary); font-size:18px;"></i>
+                    <h3 style="font-size: 16px; font-weight: 800;">Secciones y Categorías</h3>
+                </div>
+                <button class="close-sidebar" id="close-categories-sidebar-btn">&times;</button>
+            </div>
+            <div id="categories-menu-list" class="sidebar-actions" style="margin-top: 0;"></div>
+        </div>
 
         <!-- Menú Lateral Desplegable -->
         <div class="sidebar-menu" id="sidebar-menu">
@@ -3375,7 +3515,7 @@ const headerBrandLogoLink = document.getElementById('header-brand-logo-link');
             if (headerBrandLogoLink) {
                 headerBrandLogoLink.addEventListener('click', (e) => {
                     e.preventDefault();
-                    closeMenu();
+                    closeAllMenus();
                     cerrarBuscador();
                     const btnDestacado = document.querySelector('.tab-btn[data-target="tab-destacado"]');
                     if (btnDestacado) {
@@ -3383,6 +3523,11 @@ const headerBrandLogoLink = document.getElementById('header-brand-logo-link');
                     }
                 });
             }
+
+            const categoriesToggleBtn = document.getElementById('categories-toggle-btn');
+            const closeCategoriesSidebarBtn = document.getElementById('close-categories-sidebar-btn');
+            const categoriesSidebarMenu = document.getElementById('categories-sidebar-menu');
+            const categoriesMenuList = document.getElementById('categories-menu-list');
 
             const menuToggleBtn = document.getElementById('menu-toggle-btn');
             const closeSidebarBtn = document.getElementById('close-sidebar-btn');
@@ -3402,20 +3547,106 @@ const headerBrandLogoLink = document.getElementById('header-brand-logo-link');
                 if (sidebarDeleteView) sidebarDeleteView.classList.remove('active');
             }
 
+            function closeAllMenus() {
+                if (sidebarMenu) sidebarMenu.classList.remove('active');
+                if (categoriesSidebarMenu) categoriesSidebarMenu.classList.remove('active');
+                if (menuBackdrop) menuBackdrop.style.display = 'none';
+            }
+
             function openMenu() {
+                closeAllMenus();
                 if (sidebarMenu) sidebarMenu.classList.add('active');
                 if (menuBackdrop) menuBackdrop.style.display = 'block';
                 resetSidebarViews();
             }
 
             function closeMenu() {
-                if (sidebarMenu) sidebarMenu.classList.remove('active');
-                if (menuBackdrop) menuBackdrop.style.display = 'none';
+                closeAllMenus();
             }
 
+            function poblarMenuCategorias() {
+                if (!categoriesMenuList) return;
+                const categoriasUnicas = new Map();
+
+                noticiasData.forEach(n => {
+                    if (n.category) {
+                        const key = n.category.trim().toLowerCase();
+                        if (!categoriasUnicas.has(key)) {
+                            categoriasUnicas.set(key, capitalizarTexto(n.category.trim()));
+                        }
+                    }
+                    if (n.categoryName) {
+                        const keyName = n.categoryName.trim().toLowerCase();
+                        if (!categoriasUnicas.has(keyName)) {
+                            categoriasUnicas.set(keyName, n.categoryName.trim());
+                        }
+                    }
+                });
+
+                const seccionesPrincipales = [
+                    { label: "Destacado", targetTab: "tab-destacado", icon: "fa-fire" },
+                    { label: "De tu interés", targetTab: "tab-interes", icon: "fa-heart" },
+                    { label: "Lo más visto", targetTab: "tab-mas-visto", icon: "fa-chart-line" },
+                    { label: "Beneficios y Sorteos", targetTab: "tab-beneficios", icon: "fa-gift" }
+                ];
+
+                let html = `<p style="font-size:11.5px; font-weight:800; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.5px; margin-bottom:2px;">Secciones del Portal</p>`;
+                seccionesPrincipales.forEach(sec => {
+                    html += `
+                        <button type="button" class="category-menu-item" data-nav-tab="${sec.targetTab}">
+                            <span><i class="fas ${sec.icon}" style="color:var(--primary); width:20px;"></i> ${sec.label}</span>
+                            <i class="fas fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+                        </button>
+                    `;
+                });
+
+                html += `<p style="font-size:11.5px; font-weight:800; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.5px; margin-top:10px; margin-bottom:2px;">Categorías</p>`;
+                categoriasUnicas.forEach((labelCategoria) => {
+                    html += `
+                        <button type="button" class="category-menu-item" data-filter-cat="${escaparHtml(labelCategoria)}">
+                            <span><i class="fas fa-tag" style="color:var(--primary); width:20px;"></i> ${escaparHtml(labelCategoria)}</span>
+                            <i class="fas fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+                        </button>
+                    `;
+                });
+
+                categoriesMenuList.innerHTML = html;
+
+                categoriesMenuList.querySelectorAll('[data-nav-tab]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const tabId = btn.getAttribute('data-nav-tab');
+                        closeAllMenus();
+                        const tabBtn = document.querySelector(`.tab-btn[data-target="${tabId}"]`);
+                        if (tabBtn) tabBtn.click();
+                    });
+                });
+
+                categoriesMenuList.querySelectorAll('[data-filter-cat]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const catTerm = btn.getAttribute('data-filter-cat');
+                        closeAllMenus();
+                        if (catTerm.toLowerCase() === 'beneficios') {
+                            const tabBen = document.querySelector('.tab-btn[data-target="tab-beneficios"]');
+                            if (tabBen) tabBen.click();
+                        } else {
+                            window.buscarPorEtiqueta(catTerm);
+                        }
+                    });
+                });
+            }
+
+            function openCategoriesMenu() {
+                closeAllMenus();
+                poblarMenuCategorias();
+                if (categoriesSidebarMenu) categoriesSidebarMenu.classList.add('active');
+                if (menuBackdrop) menuBackdrop.style.display = 'block';
+            }
+
+            if (categoriesToggleBtn) categoriesToggleBtn.addEventListener('click', openCategoriesMenu);
+            if (closeCategoriesSidebarBtn) closeCategoriesSidebarBtn.addEventListener('click', closeAllMenus);
             if (menuToggleBtn) menuToggleBtn.addEventListener('click', openMenu);
             if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', closeMenu);
-            if (menuBackdrop) menuBackdrop.addEventListener('click', closeMenu);
+            if (menuBackdrop) menuBackdrop.addEventListener('click', closeAllMenus);
 
             const sidebarUpgradeBtn = document.getElementById('sidebar-upgrade-btn');
             if (sidebarUpgradeBtn) {
@@ -4463,7 +4694,7 @@ window.CONFIG_ANUNCIOS_PORTAL = {
 };
 </script>
 
-<!-- BANNERS FLOTANTES SUPERIOR E INFERIOR (SOLO PLAN BÁSICO) -->
+<!-- BANNERS FLOTANTES SUPERIOR E INFERIOR (SOLO PLAN BÁSICO - FIJOS SIN CIERRE) -->
 <div id="banner-flotante-superior" class="prenoticia-floating-banner top-banner" aria-label="Publicidad superior">
   <div class="floating-banner-inner">
     <span class="floating-ad-tag">AD</span>
@@ -4475,7 +4706,6 @@ window.CONFIG_ANUNCIOS_PORTAL = {
       </div>
       <span class="floating-banner-cta" id="floating-top-cta">Ver aviso</span>
     </a>
-    <button type="button" class="floating-banner-close" id="close-floating-top" title="Cerrar anuncio">&times;</button>
   </div>
 </div>
 
@@ -4490,7 +4720,6 @@ window.CONFIG_ANUNCIOS_PORTAL = {
       </div>
       <span class="floating-banner-cta" id="floating-bottom-cta" style="background:#d32f2f;">Postularme</span>
     </a>
-    <button type="button" class="floating-banner-close" id="close-floating-bottom" title="Cerrar anuncio">&times;</button>
   </div>
 </div>
 
@@ -5041,7 +5270,7 @@ function seleccionarAnuncioParaSlot(etiquetasSlot, palabrasSlot, idsExcluidos = 
     });
   };
 
-  // =====================================================================
+// =====================================================================
   // CONTROL AUTOMÁTICO DE BANNERS FLOTANTES (ARRIBA Y ABAJO) SEGÚN EL PLAN
   // =====================================================================
   function actualizarBannersFlotantesSegunSesion() {
@@ -5064,37 +5293,12 @@ function seleccionarAnuncioParaSlot(etiquetasSlot, palabrasSlot, idsExcluidos = 
       return;
     }
 
-    if (!topBannerCerradoManual) {
-      topEl.classList.add("active");
-      document.body.classList.add("has-top-floating-ad");
-    }
-    if (!bottomBannerCerradoManual) {
-      bottomEl.classList.add("active");
-    }
+    topEl.classList.add("active");
+    document.body.classList.add("has-top-floating-ad");
+    bottomEl.classList.add("active");
   }
 
   document.addEventListener("DOMContentLoaded", function() {
-    const closeTop = document.getElementById("close-floating-top");
-    const closeBottom = document.getElementById("close-floating-bottom");
-
-    if (closeTop) {
-      closeTop.addEventListener("click", function() {
-        topBannerCerradoManual = true;
-        const topEl = document.getElementById("banner-flotante-superior");
-        if (topEl) topEl.classList.remove("active");
-        document.body.classList.remove("has-top-floating-ad");
-      });
-    }
-
-    if (closeBottom) {
-      closeBottom.addEventListener("click", function() {
-        bottomBannerCerradoManual = true;
-        const bottomEl = document.getElementById("banner-flotante-inferior");
-        if (bottomEl) bottomEl.classList.remove("active");
-      });
-    }
-
-    // Observa cambios en el estado de sesión y plan del usuario para activar/ocultar al instante
     const observer = new MutationObserver(actualizarBannersFlotantesSegunSesion);
     const appEl = document.getElementById("app-section");
     const starEl = document.getElementById("header-premium-star");
