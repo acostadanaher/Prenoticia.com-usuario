@@ -3000,7 +3000,10 @@ const SESSION_KEY = "portal_miembros_session_v4";
                         titulo: "Mauricio David Acosta Danaher ha comentado su comentario",
                         mensaje: "Mauricio David Acosta Danaher respondió tu comentario en la nota \"¿Qué significa que tu perro te siga a todos lados?\": \"Hola Lu cómo estás?\"",
                         fecha: "19/11/2026 12:11 hs",
-                        leida: false
+                        leida: false,
+                        itemId: 103,
+                        itemTipo: "noticia",
+                        comentarioAnchorId: "comentario-nota-103"
                     },
                     {
                         id: "NOTIF-101",
@@ -3143,7 +3146,7 @@ const SESSION_KEY = "portal_miembros_session_v4";
                 return siguiente;
             }
 
-            function obtenerOperacionesDeUsuario(emailUsuario) {
+function obtenerOperacionesDeUsuario(emailUsuario) {
                 if (!emailUsuario) return [];
                 const emailKey = String(emailUsuario).trim().toLowerCase();
                 const manuales = Array.isArray(operacionesCargadasPorUsuario[emailKey]) ? operacionesCargadasPorUsuario[emailKey] : [];
@@ -3153,6 +3156,39 @@ const SESSION_KEY = "portal_miembros_session_v4";
                 manuales.forEach(op => mapa.set(op.numeroOperacion, op));
                 locales.forEach(op => mapa.set(op.numeroOperacion, op));
                 return Array.from(mapa.values()).sort((a, b) => Number(b.numeroOperacion) - Number(a.numeroOperacion));
+            }
+
+            function obtenerEstadisticasGlobalesContenido(itemId, tipoItem = 'noticia') {
+                const store = obtenerAlmacenOperacionesLocales();
+                const emailsSet = new Set([
+                    ...Object.keys(operacionesCargadasPorUsuario || {}),
+                    ...Object.keys(store.porUsuario || {})
+                ]);
+
+                let totalLikes = 0;
+                let totalDislikes = 0;
+                let totalGuardados = 0;
+
+                emailsSet.forEach(emailKey => {
+                    const opsUsuario = obtenerOperacionesDeUsuario(emailKey).slice().reverse();
+                    let reaccionFinal = null;
+                    let guardadoFinal = false;
+
+                    opsUsuario.forEach(op => {
+                        if (Number(op.itemId) === Number(itemId) && (op.itemTipo || 'noticia') === tipoItem) {
+                            if (op.tipo === "LIKE_CONTENIDO") reaccionFinal = "like";
+                            if (op.tipo === "DISLIKE_CONTENIDO") reaccionFinal = "dislike";
+                            if (op.tipo === "GUARDAR_CONTENIDO") guardadoFinal = true;
+                            if (op.tipo === "QUITAR_GUARDADO") guardadoFinal = false;
+                        }
+                    });
+
+                    if (reaccionFinal === "like") totalLikes++;
+                    if (reaccionFinal === "dislike") totalDislikes++;
+                    if (guardadoFinal) totalGuardados++;
+                });
+
+                return { likes: totalLikes, dislikes: totalDislikes, guardados: totalGuardados };
             }
 
             function registrarOperacionYNotificar({ tipo, titulo = "", itemId = null, itemTipo = "noticia", detalleExtra = "", usuarioExplicito = null, enviarEmail = true }) {
@@ -5555,11 +5591,12 @@ function resetSidebarViews() {
                 ].forEach(v => { if (v) v.classList.remove('active'); });
             }
 
-            function closeAllMenus() {
+window.closeAllMenus = function() {
                 if (sidebarMenu) sidebarMenu.classList.remove('active');
                 if (categoriesSidebarMenu) categoriesSidebarMenu.classList.remove('active');
                 if (menuBackdrop) menuBackdrop.style.display = 'none';
-            }
+            };
+            const closeAllMenus = window.closeAllMenus;
 
 function openMenu() {
                 if (!currentUser) {
@@ -5718,7 +5755,64 @@ if (backFromMyAccount) backFromMyAccount.addEventListener('click', resetSidebarV
                 if (el) el.addEventListener('click', resetSidebarViews);
             });
 
-            // 1. RENDER Y LECTURA DE NOTIFICACIONES (SOLO ENVÍA MAIL SI ES NUEVA/NO LEÍDA)
+// 1. RENDER Y LECTURA DE NOTIFICACIONES (NO REENVÍA MAIL SI YA ESTABA LEÍDA + REDIRIGE AL COMENTARIO)
+            function resolverDestinoComentarioNotificacion(n) {
+                if (!n) return null;
+                if (n.itemId) {
+                    return {
+                        itemId: Number(n.itemId),
+                        itemTipo: n.itemTipo || 'noticia',
+                        anchorId: n.comentarioAnchorId || `comentario-nota-${Number(n.itemId)}`
+                    };
+                }
+                const textoCompleto = `${n.titulo || ""} ${n.mensaje || ""}`;
+                const esRespuestaComentario = /comentado su comentario|respondió tu comentario|comentario en la nota/i.test(textoCompleto);
+                if (esRespuestaComentario) {
+                    const notaCoincidente = noticiasData.find(nota =>
+                        textoCompleto.toLowerCase().includes(nota.title.toLowerCase())
+                    );
+                    if (notaCoincidente) {
+                        return {
+                            itemId: notaCoincidente.id,
+                            itemTipo: 'noticia',
+                            anchorId: `comentario-nota-${notaCoincidente.id}`
+                        };
+                    }
+                }
+                return null;
+            }
+
+            window.abrirNotificacionYRedirigir = function(notifId, irAlComentario = false) {
+                if (!currentUser) return;
+                const { noLeidas, leidas } = obtenerNotificacionesDeUsuario(currentUser.usuario);
+                const notifNueva = noLeidas.find(n => n.id === notifId);
+                const notifVista = leidas.find(n => n.id === notifId);
+                const notifObj = notifNueva || notifVista;
+                if (!notifObj) return;
+
+                // Solo envía mail si era nueva (no leída). Si ya estaba vista, jamás vuelve a notificar por email.
+                if (notifNueva) {
+                    marcarNotificacionComoLeidaLocal(currentUser.usuario, notifId);
+                    registrarOperacionYNotificar({
+                        tipo: "LECTURA_NOTIFICACION",
+                        titulo: `Notificación leída: ${notifObj.titulo}`,
+                        detalleExtra: `El usuario abrió y leyó la notificación ID "${notifObj.id}" (${notifObj.titulo}).`,
+                        enviarEmail: true
+                    });
+                    cargarDatosUsuario(currentUser);
+                    renderizarVistaNotificaciones();
+                } else {
+                    const msgBox = document.getElementById(`notif-read-msg-${notifId}`);
+                    if (msgBox) msgBox.classList.toggle('hidden');
+                }
+
+                const destino = resolverDestinoComentarioNotificacion(notifObj);
+                if (irAlComentario && destino) {
+                    closeAllMenus();
+                    openDetailView(destino.itemId, destino.itemTipo, destino.anchorId);
+                }
+            };
+
             function renderizarVistaNotificaciones() {
                 const container = document.getElementById('notifications-dynamic-container');
                 if (!container || !currentUser) return;
@@ -5728,16 +5822,20 @@ if (backFromMyAccount) backFromMyAccount.addEventListener('click', resetSidebarV
                 if (noLeidas.length > 0) {
                     html += `<p style="font-size:12px; font-weight:800; color:#b45309; text-transform:uppercase; margin-bottom:8px;">Nuevas sin leer (${noLeidas.length})</p>`;
                     noLeidas.forEach(n => {
+                        const destino = resolverDestinoComentarioNotificacion(n);
                         html += `
-                            <div class="notif-card-unread" id="notif-box-${escaparHtml(n.id)}">
+                            <div class="notif-card-unread" id="notif-box-${escaparHtml(n.id)}" style="${destino ? 'cursor:pointer;' : ''}" ${destino ? `onclick="abrirNotificacionYRedirigir('${escaparHtml(n.id)}', true)"` : ''}>
                                 <span style="font-size:11px; color:#92400e; font-weight:700;">${escaparHtml(n.fecha)}</span>
                                 <h5 style="font-size:14px; font-weight:800; margin:4px 0;">${escaparHtml(n.titulo)}</h5>
-                                <div id="notif-msg-${escaparHtml(n.id)}" class="hidden" style="font-size:13px; color:#1f2937; margin-top:8px; padding-top:8px; border-top:1px solid #fde68a;">
+                                <div style="font-size:13px; color:#1f2937; margin-top:6px;">
                                     ${escaparHtml(n.mensaje)}
                                 </div>
-                                <button type="button" class="btn-open-notif" onclick="abrirYMarcarNotificacionLeida('${escaparHtml(n.id)}')">
-                                    <i class="fas fa-envelope-open"></i> Abrir mensaje
-                                </button>
+                                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
+                                    ${destino
+                                        ? `<button type="button" class="btn-open-notif" onclick="event.stopPropagation(); abrirNotificacionYRedirigir('${escaparHtml(n.id)}', true)"><i class="fas fa-comment-dots"></i> Ver comentario</button>`
+                                        : `<button type="button" class="btn-open-notif" onclick="event.stopPropagation(); abrirNotificacionYRedirigir('${escaparHtml(n.id)}', false)"><i class="fas fa-envelope-open"></i> Marcar como leída</button>`
+                                    }
+                                </div>
                             </div>
                         `;
                     });
@@ -5748,11 +5846,13 @@ if (backFromMyAccount) backFromMyAccount.addEventListener('click', resetSidebarV
                 html += `<p style="font-size:12px; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin:16px 0 8px 0;">Historial de notificaciones vistas (${leidas.length})</p>`;
                 if (leidas.length > 0) {
                     leidas.forEach(n => {
+                        const destino = resolverDestinoComentarioNotificacion(n);
                         html += `
-                            <div class="notif-card-read">
+                            <div class="notif-card-read" id="notif-hist-${escaparHtml(n.id)}" style="cursor:pointer;" onclick="abrirNotificacionYRedirigir('${escaparHtml(n.id)}', ${destino ? 'true' : 'false'})">
                                 <span style="font-size:11px; color:var(--text-muted); font-weight:600;"><i class="fas fa-check-double"></i> Vista · ${escaparHtml(n.fecha)}</span>
                                 <h5 style="font-size:13.5px; font-weight:700; margin:4px 0;">${escaparHtml(n.titulo)}</h5>
-                                <p style="font-size:12.5px; color:#334155; margin:0;">${escaparHtml(n.mensaje)}</p>
+                                <p id="notif-read-msg-${escaparHtml(n.id)}" style="font-size:12.5px; color:#334155; margin:4px 0 0 0;">${escaparHtml(n.mensaje)}</p>
+                                ${destino ? `<button type="button" class="btn-open-notif" style="margin-top:8px;" onclick="event.stopPropagation(); abrirNotificacionYRedirigir('${escaparHtml(n.id)}', true)"><i class="fas fa-comment-dots"></i> Ver comentario</button>` : ''}
                             </div>
                         `;
                     });
@@ -5763,26 +5863,6 @@ if (backFromMyAccount) backFromMyAccount.addEventListener('click', resetSidebarV
                 container.innerHTML = html;
             }
 
-            window.abrirYMarcarNotificacionLeida = function(notifId) {
-                if (!currentUser) return;
-                const { noLeidas } = obtenerNotificacionesDeUsuario(currentUser.usuario);
-                const notifObj = noLeidas.find(n => n.id === notifId);
-
-                // Si ya estaba leída, no envía ningún correo ni registra operación nueva
-                if (!notifObj) return;
-
-                marcarNotificacionComoLeidaLocal(currentUser.usuario, notifId);
-                registrarOperacionYNotificar({
-                    tipo: "LECTURA_NOTIFICACION",
-                    titulo: `Notificación leída: ${notifObj.titulo}`,
-                    detalleExtra: `El usuario abrió y leyó la notificación ID "${notifObj.id}" (${notifObj.titulo}). Podés quitarla de sus pendientes.`,
-                    enviarEmail: true
-                });
-
-                cargarDatosUsuario(currentUser);
-                renderizarVistaNotificaciones();
-            };
-
             const navNotifications = document.getElementById('nav-notifications');
             if (navNotifications) {
                 navNotifications.addEventListener('click', () => {
@@ -5792,7 +5872,7 @@ if (backFromMyAccount) backFromMyAccount.addEventListener('click', resetSidebarV
                 });
             }
 
-            // 2. ELEMENTOS GUARDADOS
+            // 2. ELEMENTOS GUARDADOS (SIN N° DE OPERACIÓN Y CON REDIRECCIÓN DIRECTA AL CONTENIDO)
             const navSavedItems = document.getElementById('nav-saved-items');
             if (navSavedItems) {
                 navSavedItems.addEventListener('click', () => {
@@ -5805,9 +5885,9 @@ if (backFromMyAccount) backFromMyAccount.addEventListener('click', resetSidebarV
                     const guardadosMap = new Map();
                     ops.slice().reverse().forEach(op => {
                         if (op.tipo === "GUARDAR_CONTENIDO" && op.itemId) {
-                            guardadosMap.set(`${op.itemTipo}_${op.itemId}`, op);
+                            guardadosMap.set(`${op.itemTipo || 'noticia'}_${op.itemId}`, op);
                         } else if (op.tipo === "QUITAR_GUARDADO" && op.itemId) {
-                            guardadosMap.delete(`${op.itemTipo}_${op.itemId}`);
+                            guardadosMap.delete(`${op.itemTipo || 'noticia'}_${op.itemId}`);
                         }
                     });
 
@@ -5818,8 +5898,8 @@ if (backFromMyAccount) backFromMyAccount.addEventListener('click', resetSidebarV
                     }
 
                     container.innerHTML = listaGuardados.map(op => `
-                        <div class="activity-item-card">
-                            <span class="activity-op-badge">Operación #${op.numeroOperacion} · ${escaparHtml(op.fechaHora)}</span>
+                        <div class="activity-item-card" id="saved-item-card-${Number(op.itemId)}">
+                            <span style="display:block; font-size:11px; color:var(--text-muted); font-weight:600; margin-bottom:4px;"><i class="fas fa-bookmark" style="color:var(--primary);"></i> Guardado el ${escaparHtml(op.fechaHora)}</span>
                             <h5>${escaparHtml(op.titulo)}</h5>
                             <button type="button" class="btn-open-notif" onclick="closeAllMenus(); openDetailView(${Number(op.itemId)}, '${escaparHtml(op.itemTipo || 'noticia')}')">Ver contenido</button>
                         </div>
@@ -5847,7 +5927,6 @@ if (backFromMyAccount) backFromMyAccount.addEventListener('click', resetSidebarV
 
                     container.innerHTML = sesiones.slice(0, 10).map(op => `
                         <div class="activity-item-card">
-                            <span class="activity-op-badge">Operación #${op.numeroOperacion}</span>
                             <h5>${op.tipo === "INICIO_SESION" ? "🟢 Inicio de sesión" : "🔴 Cierre de sesión"}</h5>
                             <p style="margin:0;"><strong>Fecha y hora:</strong> ${escaparHtml(op.fechaHora)}</p>
                         </div>
@@ -5855,7 +5934,7 @@ if (backFromMyAccount) backFromMyAccount.addEventListener('click', resetSidebarV
                 });
             }
 
-            // 4. MIS COMENTARIOS
+            // 4. MIS COMENTARIOS (SIN N° DE OPERACIÓN Y CON ANCLA DIRECTA AL COMENTARIO)
             const navMyComments = document.getElementById('nav-my-comments');
             if (navMyComments) {
                 navMyComments.addEventListener('click', () => {
@@ -5875,10 +5954,10 @@ if (backFromMyAccount) backFromMyAccount.addEventListener('click', resetSidebarV
 
                     container.innerHTML = opsComentarios.map(op => `
                         <div class="activity-item-card">
-                            <span class="activity-op-badge">Operación #${op.numeroOperacion} · ${escaparHtml(op.fechaHora)}</span>
+                            <span style="display:block; font-size:11px; color:var(--text-muted); font-weight:600; margin-bottom:4px;">${escaparHtml(op.fechaHora)}</span>
                             <h5>${op.tipo === "RESPONDER_COMENTARIO" ? "Respuesta en:" : "Comentario en:"} ${escaparHtml(op.titulo)}</h5>
                             <p style="color:#1e293b;">"${escaparHtml(op.detalle)}"</p>
-                            ${op.itemId ? `<button type="button" class="btn-open-notif" onclick="closeAllMenus(); openDetailView(${Number(op.itemId)}, 'noticia')">Ir a la nota</button>` : ''}
+                            ${op.itemId ? `<button type="button" class="btn-open-notif" onclick="closeAllMenus(); openDetailView(${Number(op.itemId)}, 'noticia', 'comentario-nota-${Number(op.itemId)}')">Ir al comentario</button>` : ''}
                         </div>
                     `).join('');
                 });
@@ -6192,9 +6271,12 @@ lastActiveViewId = targetId;
                 return hero;
             }
 
-            function crearMiniTarjetaEditorial(item, tipo = 'noticia') {
+function crearMiniTarjetaEditorial(item, tipo = 'noticia') {
                 const card = document.createElement('article');
                 card.className = 'mini-editorial-card';
+                card.id = `card-${tipo}-${item.id}`;
+                card.setAttribute('data-item-id', String(item.id));
+                card.setAttribute('data-item-tipo', tipo);
                 card.addEventListener('click', () => openDetailView(item.id, tipo));
 
                 const starBadge = item.acceso === "premium"
@@ -6414,8 +6496,8 @@ function renderContent() {
                             ${com.respuestas.map(rep => {
                                 const starRep = rep.esPremium ? `<span class="comment-premium-star-badge" title="Miembro Premium"><i class="fas fa-star"></i></span>` : '';
                                 const fotoRep = rep.autorFoto || generarAvatarFallback(rep.autorNombre, "");
-                                return `
-                                    <div class="comment-reply-item">
+return `
+                                    <div class="comment-reply-item" id="respuesta-item-${escaparHtml(rep.id)}">
                                         <div class="comment-author-meta" style="margin-bottom:6px;">
                                             <img src="${fotoRep}" alt="${escaparHtml(rep.autorNombre)}" class="comment-avatar-circle" style="width:30px; height:30px;">
                                             <div>
@@ -6431,7 +6513,7 @@ function renderContent() {
                         : '';
 
                     return `
-                        <div class="comment-item-card">
+                        <div class="comment-item-card" id="comentario-item-${escaparHtml(com.id)}">
                             <div class="comment-item-header">
                                 <div class="comment-author-meta">
                                     <img src="${fotoAutor}" alt="${escaparHtml(com.autorNombre)}" class="comment-avatar-circle">
@@ -6468,8 +6550,8 @@ function renderContent() {
                     ? `<div class="comments-list-container">${comentariosHtml}</div>`
                     : '';
 
-                return `
-                    <div class="comments-section-box" id="comments-box-${item.id}">
+return `
+                    <div class="comments-section-box" id="comentario-nota-${item.id}" data-comments-anchor="comments-box-${item.id}">
                         <h3 class="comments-section-title"><i class="fas fa-comments" style="color:var(--primary);"></i> Comentarios (${listaComentarios.length})</h3>
                         <div class="comment-composer-card">
                             <div class="comment-composer-user-row">
@@ -6744,7 +6826,7 @@ function obtenerEstadoReaccionContenido(itemId, tipoItem) {
                 );
             };
 
-function openDetailView(id, tipo = 'noticia') {
+window.openDetailView = function(id, tipo = 'noticia', targetElementId = null) {
                 const sourceList = tipo === 'beneficio' ? beneficiosData : noticiasData;
                 const item = sourceList.find(n => n.id === id);
                 if (!item) return;
@@ -6752,7 +6834,7 @@ function openDetailView(id, tipo = 'noticia') {
                 if (!currentUser) {
                     abrirModalRegistroObligatorio(
                         "Para visualizar el contenido completo, ingresar, comentar, participar en sorteos y compartir esta noticia necesitás registrarte o iniciar sesión.",
-                        () => openDetailView(id, tipo)
+                        () => openDetailView(id, tipo, targetElementId)
                     );
                     return;
                 }
@@ -6808,17 +6890,22 @@ const barraCompartirHtml = `
                             <i class="fas fa-link"></i>
                         </button>
                     </div>
-                    <div class="article-reactions-bar">
-                        <button type="button" class="btn-reaction-action ${obtenerEstadoReaccionContenido(item.id, tipo) === 'like' ? 'active-like' : ''}" onclick="reaccionarContenido(${item.id}, '${tipo}', 'like')">
-                            <i class="fas fa-thumbs-up"></i> Me gusta
+${(() => {
+                        const stats = obtenerEstadisticasGlobalesContenido(item.id, tipo);
+                        const yaGuardado = contenidoEstaGuardadoPorUsuario(item.id, tipo);
+                        return `
+                    <div class="article-reactions-bar" id="reactions-bar-${tipo}-${item.id}">
+                        <button type="button" id="btn-like-${tipo}-${item.id}" class="btn-reaction-action ${obtenerEstadoReaccionContenido(item.id, tipo) === 'like' ? 'active-like' : ''}" onclick="reaccionarContenido(${item.id}, '${tipo}', 'like')">
+                            <i class="fas fa-thumbs-up"></i> Me gusta <span>(${stats.likes})</span>
                         </button>
-                        <button type="button" class="btn-reaction-action ${obtenerEstadoReaccionContenido(item.id, tipo) === 'dislike' ? 'active-dislike' : ''}" onclick="reaccionarContenido(${item.id}, '${tipo}', 'dislike')">
-                            <i class="fas fa-thumbs-down"></i> No me gusta
+                        <button type="button" id="btn-dislike-${tipo}-${item.id}" class="btn-reaction-action ${obtenerEstadoReaccionContenido(item.id, tipo) === 'dislike' ? 'active-dislike' : ''}" onclick="reaccionarContenido(${item.id}, '${tipo}', 'dislike')">
+                            <i class="fas fa-thumbs-down"></i> No me gusta <span>(${stats.dislikes})</span>
                         </button>
-                        <button type="button" class="btn-reaction-action ${contenidoEstaGuardadoPorUsuario(item.id, tipo) ? 'active-save' : ''}" onclick="alternarGuardarContenido(${item.id}, '${tipo}')">
-                            <i class="fas fa-bookmark"></i> ${contenidoEstaGuardadoPorUsuario(item.id, tipo) ? 'Guardado' : 'Guardar'}
+                        <button type="button" id="btn-save-${tipo}-${item.id}" class="btn-reaction-action ${yaGuardado ? 'active-save' : ''}" onclick="alternarGuardarContenido(${item.id}, '${tipo}')">
+                            <i class="fas fa-bookmark"></i> ${yaGuardado ? 'Guardado' : 'Guardar'} <span>(${stats.guardados})</span>
                         </button>
-                    </div>
+                    </div>`;
+                    })()}
                 `;
 
                 const starIcon = item.acceso === "premium"
@@ -7208,10 +7295,25 @@ const relatedContainer = document.getElementById('detail-related-latest-containe
                     }
                 }
 
-                detailSection.classList.add('active');
-                if (mainContentContainer) mainContentContainer.scrollTo({ top: 0, behavior: 'smooth' });
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
+detailSection.classList.add('active');
+
+                if (targetElementId) {
+                    setTimeout(() => {
+                        const targetEl = document.getElementById(targetElementId) || document.getElementById(`comentario-nota-${item.id}`);
+                        if (targetEl) {
+                            targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            targetEl.style.transition = 'box-shadow 0.4s ease, background-color 0.4s ease';
+                            targetEl.style.boxShadow = '0 0 0 3px #f68e02';
+                            targetEl.style.borderRadius = '12px';
+                            setTimeout(() => { targetEl.style.boxShadow = ''; }, 3200);
+                        }
+                    }, 180);
+                } else {
+                    if (mainContentContainer) mainContentContainer.scrollTo({ top: 0, behavior: 'smooth' });
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            };
+            const openDetailView = window.openDetailView;
 
             const btnBackToList = document.getElementById('btn-back-to-list');
             if (btnBackToList) {
