@@ -801,13 +801,201 @@
             display: block;
         }
 
-        .btn-back-account {
+.btn-back-account {
             background: none;
             border: none;
             color: var(--primary);
             font-weight: 700;
             font-size: 13.5px;
             cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        /* ================= CONTADOR DE NOTIFICACIONES EN AVATAR Y MENÚ ================= */
+        .header-profile-trigger {
+            position: relative !important;
+            overflow: visible !important;
+        }
+        .header-profile-trigger img,
+        .header-profile-initials {
+            border-radius: 10px !important;
+        }
+        .profile-notif-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            min-width: 19px;
+            height: 19px;
+            padding: 0 5px;
+            border-radius: 999px;
+            background: #dc2626;
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #f68e02;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.28);
+            z-index: 15;
+            line-height: 1;
+        }
+        .sidebar-notif-pill {
+            background: #dc2626;
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 999px;
+            margin-left: 6px;
+        }
+
+        /* ================= BARRA DE REACCIONES (LIKE / DISLIKE / GUARDAR) ================= */
+        .article-reactions-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin: 12px 0 16px 0;
+            padding: 10px 12px;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+        .btn-reaction-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 13px;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-reaction-action:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .btn-reaction-action.active-like {
+            background: #ecfdf5;
+            border-color: #10b981;
+            color: #047857;
+        }
+        .btn-reaction-action.active-dislike {
+            background: #fef2f2;
+            border-color: #ef4444;
+            color: #b91c1c;
+        }
+        .btn-reaction-action.active-save {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .comment-actions-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .btn-comment-react {
+            background: none;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            padding: 3px 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s;
+        }
+        .btn-comment-react:hover {
+            background: #e2e8f0;
+            color: var(--text-color);
+        }
+        .btn-comment-react.active-like {
+            color: #047857;
+            background: #dcfce7;
+            border-color: #86efac;
+        }
+        .btn-comment-react.active-dislike {
+            color: #b91c1c;
+            background: #fee2e2;
+            border-color: #fca5a5;
+        }
+
+        /* ================= TARJETAS DE ACTIVIDAD, HISTORIAL Y NOTIFICACIONES ================= */
+        .activity-item-card {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+        .activity-item-card h5 {
+            font-size: 13.5px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-color);
+        }
+        .activity-item-card p {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+        .activity-op-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 800;
+            background: #e2e8f0;
+            color: #1e293b;
+            padding: 2px 8px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+        }
+        .notif-card-unread {
+            background: #fffbeb;
+            border: 1.5px solid #f59e0b;
+            border-radius: 11px;
+            padding: 13px;
+            margin-bottom: 12px;
+        }
+        .notif-card-read {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 11px;
+            padding: 12px;
+            margin-bottom: 10px;
+            opacity: 0.88;
+        }
+        .btn-open-notif {
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 7px 12px;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+        .help-textarea {
+            width: 100%;
+            min-height: 110px;
+            padding: 10px 12px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 13.5px;
             margin-bottom: 12px;
         }
 
@@ -2515,14 +2703,44 @@
                     </p>
                 </div>
 
-                <div class="sidebar-actions" style="margin-top: 0;">
+<div class="sidebar-actions" style="margin-top: 0;">
                     <button type="button" class="btn-sidebar-action" id="nav-my-account" style="display:flex; align-items:center; justify-content:space-between; background:#f8fafc;">
                         <span><i class="fas fa-user-circle" style="color:var(--primary); margin-right:8px;"></i> Mi cuenta</span>
                         <i class="fas fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
                     </button>
+
+                    <button type="button" class="btn-sidebar-action hidden" id="nav-notifications" style="display:flex; align-items:center; justify-content:space-between; background:#fffbeb; border-color:#f59e0b;">
+                        <span><i class="fas fa-bell" style="color:var(--primary); margin-right:8px;"></i> Notificaciones <span id="sidebar-notif-count-pill" class="sidebar-notif-pill hidden">0</span></span>
+                        <i class="fas fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+                    </button>
+
+                    <button type="button" class="btn-sidebar-action" id="nav-saved-items" style="display:flex; align-items:center; justify-content:space-between;">
+                        <span><i class="fas fa-bookmark" style="color:var(--primary); margin-right:8px;"></i> Elementos guardados</span>
+                        <i class="fas fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+                    </button>
+
+                    <button type="button" class="btn-sidebar-action" id="nav-last-session" style="display:flex; align-items:center; justify-content:space-between;">
+                        <span><i class="fas fa-clock" style="color:var(--primary); margin-right:8px;"></i> Mi Última sesión</span>
+                        <i class="fas fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+                    </button>
+
+                    <button type="button" class="btn-sidebar-action" id="nav-my-comments" style="display:flex; align-items:center; justify-content:space-between;">
+                        <span><i class="fas fa-comments" style="color:var(--primary); margin-right:8px;"></i> Mis comentarios</span>
+                        <i class="fas fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+                    </button>
+
+                    <button type="button" class="btn-sidebar-action" id="nav-liked-disliked" style="display:flex; align-items:center; justify-content:space-between;">
+                        <span><i class="fas fa-thumbs-up" style="color:var(--primary); margin-right:8px;"></i> Contenido que me gustó y no me gustó</span>
+                        <i class="fas fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+                    </button>
+
                     <button type="button" id="sidebar-upgrade-btn" class="btn-sidebar-action btn-upgrade-sidebar hidden">Mejorar a Usuario Premium ($2.990/mes)</button>
                     <button class="btn-sidebar-action hidden" id="nav-downgrade-basic">Cambiar a plan Básico</button>
                     <button class="btn-sidebar-action" id="nav-update-data">Actualizar o modificar datos</button>
+                    <button type="button" class="btn-sidebar-action" id="nav-help-support" style="display:flex; align-items:center; justify-content:space-between;">
+                        <span><i class="fas fa-life-ring" style="color:var(--primary); margin-right:8px;"></i> Ayuda y soporte</span>
+                        <i class="fas fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+                    </button>
                     <button class="btn-sidebar-action" id="nav-delete-account">Eliminar cuenta</button>
                     <button class="btn-sidebar-action btn-logout" id="btn-logout">Cerrar sesión</button>
                 </div>
@@ -2546,6 +2764,59 @@
 
                     <p><strong>Estado de la cuenta:</strong> <span id="acc-status-box"></span></p>
                 </div>
+            </div>
+
+            <!-- SUBVISTA: NOTIFICACIONES E HISTORIAL -->
+            <div id="sidebar-notifications-view" class="account-subview">
+                <button class="btn-back-account" id="back-from-notifications">&larr; Volver atrás</button>
+                <h4 style="margin-bottom: 12px; font-size: 16px; font-weight: 800;"><i class="fas fa-bell" style="color:var(--primary);"></i> Notificaciones</h4>
+                <div id="notifications-dynamic-container"></div>
+            </div>
+
+            <!-- SUBVISTA: ELEMENTOS GUARDADOS -->
+            <div id="sidebar-saved-view" class="account-subview">
+                <button class="btn-back-account" id="back-from-saved">&larr; Volver atrás</button>
+                <h4 style="margin-bottom: 12px; font-size: 16px; font-weight: 800;"><i class="fas fa-bookmark" style="color:var(--primary);"></i> Elementos guardados</h4>
+                <div id="saved-items-dynamic-container"></div>
+            </div>
+
+            <!-- SUBVISTA: MI ÚLTIMA SESIÓN -->
+            <div id="sidebar-session-view" class="account-subview">
+                <button class="btn-back-account" id="back-from-session">&larr; Volver atrás</button>
+                <h4 style="margin-bottom: 12px; font-size: 16px; font-weight: 800;"><i class="fas fa-clock" style="color:var(--primary);"></i> Mi Última sesión</h4>
+                <div id="last-session-dynamic-container"></div>
+            </div>
+
+            <!-- SUBVISTA: MIS COMENTARIOS -->
+            <div id="sidebar-comments-view" class="account-subview">
+                <button class="btn-back-account" id="back-from-comments">&larr; Volver atrás</button>
+                <h4 style="margin-bottom: 12px; font-size: 16px; font-weight: 800;"><i class="fas fa-comments" style="color:var(--primary);"></i> Mis comentarios</h4>
+                <div id="my-comments-dynamic-container"></div>
+            </div>
+
+            <!-- SUBVISTA: CONTENIDO QUE ME GUSTÓ Y NO ME GUSTÓ -->
+            <div id="sidebar-reactions-view" class="account-subview">
+                <button class="btn-back-account" id="back-from-reactions">&larr; Volver atrás</button>
+                <h4 style="margin-bottom: 12px; font-size: 16px; font-weight: 800;"><i class="fas fa-thumbs-up" style="color:var(--primary);"></i> Contenido que me gustó y no me gustó</h4>
+                <div id="my-reactions-dynamic-container"></div>
+            </div>
+
+            <!-- SUBVISTA: AYUDA Y SOPORTE -->
+            <div id="sidebar-help-view" class="account-subview">
+                <button class="btn-back-account" id="back-from-help">&larr; Volver atrás</button>
+                <h4 style="margin-bottom: 8px; font-size: 16px; font-weight: 800;"><i class="fas fa-life-ring" style="color:var(--primary);"></i> Centro de Ayuda</h4>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">Escribinos tu consulta, sugerencia o inconveniente. Cuando nuestro equipo responda, recibirás la respuesta en tu sección de <strong>Notificaciones</strong>.</p>
+                <form id="help-support-form">
+                    <div class="form-group">
+                        <label for="help-subject-input">Asunto *</label>
+                        <input type="text" id="help-subject-input" required placeholder="Ej. Consulta sobre mi cuenta o beneficio">
+                    </div>
+                    <div class="form-group">
+                        <label for="help-message-input">Tu mensaje *</label>
+                        <textarea id="help-message-input" class="help-textarea" required placeholder="Detallá lo que necesitás comentarnos..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">Enviar consulta a Soporte</button>
+                </form>
             </div>
 
             <div id="sidebar-downgrade-view" class="account-subview">
@@ -2672,11 +2943,211 @@
     <script>
         (function() {
             const LINK_MERCADO_PAGO_SUSCRIPCION = "https://mpago.la/2GaBY8W";
-            const SESSION_KEY = "portal_miembros_session_v4";
+const SESSION_KEY = "portal_miembros_session_v4";
             const PROMO_DISMISS_KEY = "portal_miembros_promo_dismissed_until_v1";
             const CLAIMS_CACHE_KEY = "portal_miembros_beneficios_canjeados_permanente_v1";
             const COMMENTS_CACHE_KEY = "portal_miembros_comentarios_usuarios_v1";
+            const USER_OPS_STORAGE_KEY = "prenoticia_operaciones_usuarios_v1";
+            const READ_NOTIFS_STORAGE_KEY = "prenoticia_notificaciones_leidas_v1";
             const PROMO_COOLDOWN_HOURS = 6;
+
+            // =========================================================================
+            // CONFIGURACIÓN DE NÚMERO DE OPERACIÓN CORRELATIVO Y NOTIFICACIONES MANUALES
+            // =========================================================================
+            // Cambiá NUMERO_OPERACION_BASE_MANUAL al último número que ya tengas cargado
+            // para que la siguiente acción del usuario continúe correlativamente (+1).
+            const NUMERO_OPERACION_BASE_MANUAL = 1000;
+
+            // =========================================================================
+            // PANEL MANUAL DE NOTIFICACIONES IMPORTANTES Y RESPUESTAS DE SOPORTE
+            // =========================================================================
+            // Para cargar una notificación nueva a un usuario: agregala en su correo con leida: false.
+            // Cuando el usuario la abra, te llegará un mail con el N° de Operación avisando que la leyó.
+            // Luego podés cambiar leida: true (o pasarla a historial) para quitarle el aviso rojo.
+            const notificacionesManualesPorUsuario = {
+                "mauricioacostacom@gmail.com": [
+                    {
+                        id: "NOTIF-001",
+                        titulo: "Respuesta de Soporte · Consulta de cuenta",
+                        mensaje: "Hola Mauricio, verificamos tu suscripción Premium y ya se encuentra habilitada con todos los beneficios activos.",
+                        fecha: "19/11/2026 10:30 hs",
+                        leida: false
+                    },
+                    {
+                        id: "NOTIF-000",
+                        titulo: "Bienvenido a Prenoticia Premium",
+                        mensaje: "Tu membresía fue activada correctamente. Ya podés participar en sorteos VIP.",
+                        fecha: "15/11/2026 09:00 hs",
+                        leida: true
+                    }
+                ],
+                "luciacarpio20@gmail.com": [
+                    {
+                        id: "NOTIF-101",
+                        titulo: "Aviso importante sobre tu cuenta",
+                        mensaje: "Recordá que tenés disponible el sorteo especial de McDonald's en la pestaña Beneficios.",
+                        fecha: "19/11/2026 11:00 hs",
+                        leida: false
+                    }
+                ]
+            };
+
+            // =========================================================================
+            // PANEL MANUAL DE OPERACIONES YA CARGADAS POR USUARIO (PERFIL HISTÓRICO)
+            // =========================================================================
+            // Aquí podés cargar manualmente operaciones que el usuario ya realizó para que
+            // aparezcan en "Elementos guardados", "Mi Última sesión", "Mis comentarios" y "Me gustó / No me gustó".
+            const operacionesCargadasPorUsuario = {
+                "mauricioacostacom@gmail.com": [
+                    {
+                        numeroOperacion: 998,
+                        tipo: "INICIO_SESION",
+                        fechaHora: "18/11/2026 21:15 hs",
+                        detalle: "Inicio de sesión en Prenoticia"
+                    },
+                    {
+                        numeroOperacion: 999,
+                        tipo: "GUARDAR_CONTENIDO",
+                        itemId: 106,
+                        itemTipo: "noticia",
+                        titulo: "Godzilla Minus Zero llega a los cines: todos los detalles del estreno más esperado del año",
+                        fechaHora: "18/11/2026 21:20 hs"
+                    },
+                    {
+                        numeroOperacion: 1000,
+                        tipo: "LIKE_CONTENIDO",
+                        itemId: 101,
+                        itemTipo: "noticia",
+                        titulo: "Supermercados liquidan camperas desde $6.000 y con hasta 50% de descuento",
+                        fechaHora: "18/11/2026 21:24 hs"
+                    }
+                ],
+                "luciacarpio20@gmail.com": []
+            };
+
+            function obtenerAlmacenOperacionesLocales() {
+                try {
+                    const raw = localStorage.getItem(USER_OPS_STORAGE_KEY);
+                    return raw ? JSON.parse(raw) : { ultimoNumero: NUMERO_OPERACION_BASE_MANUAL, porUsuario: {} };
+                } catch (e) {
+                    return { ultimoNumero: NUMERO_OPERACION_BASE_MANUAL, porUsuario: {} };
+                }
+            }
+
+            function guardarAlmacenOperacionesLocales(data) {
+                try { localStorage.setItem(USER_OPS_STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+            }
+
+            function obtenerSiguienteNumeroOperacion() {
+                const store = obtenerAlmacenOperacionesLocales();
+                let maxManual = NUMERO_OPERACION_BASE_MANUAL;
+                Object.values(operacionesCargadasPorUsuario).forEach(lista => {
+                    if (Array.isArray(lista)) {
+                        lista.forEach(op => {
+                            if (Number(op.numeroOperacion) > maxManual) maxManual = Number(op.numeroOperacion);
+                        });
+                    }
+                });
+                const baseActual = Math.max(Number(store.ultimoNumero || 0), maxManual);
+                const siguiente = baseActual + 1;
+                store.ultimoNumero = siguiente;
+                guardarAlmacenOperacionesLocales(store);
+                return siguiente;
+            }
+
+            function obtenerOperacionesDeUsuario(emailUsuario) {
+                if (!emailUsuario) return [];
+                const emailKey = String(emailUsuario).trim().toLowerCase();
+                const manuales = Array.isArray(operacionesCargadasPorUsuario[emailKey]) ? operacionesCargadasPorUsuario[emailKey] : [];
+                const store = obtenerAlmacenOperacionesLocales();
+                const locales = (store.porUsuario && Array.isArray(store.porUsuario[emailKey])) ? store.porUsuario[emailKey] : [];
+                const mapa = new Map();
+                manuales.forEach(op => mapa.set(op.numeroOperacion, op));
+                locales.forEach(op => mapa.set(op.numeroOperacion, op));
+                return Array.from(mapa.values()).sort((a, b) => Number(b.numeroOperacion) - Number(a.numeroOperacion));
+            }
+
+            function registrarOperacionYNotificar({ tipo, titulo = "", itemId = null, itemTipo = "noticia", detalleExtra = "", usuarioExplicito = null, enviarEmail = true }) {
+                const userObj = usuarioExplicito || currentUser;
+                if (!userObj) return null;
+
+                const numOp = obtenerSiguienteNumeroOperacion();
+                const ahora = new Date();
+                const fechaHoraStr = `${ahora.toLocaleDateString("es-AR")} ${ahora.toLocaleTimeString("es-AR", { hour: '2-digit', minute: '2-digit', second: '2-digit' })} hs`;
+                const emailKey = String(userObj.usuario).trim().toLowerCase();
+                const nombreCompleto = `${userObj.nombre || ""} ${userObj.apellido || ""}`.trim();
+
+                const registro = {
+                    numeroOperacion: numOp,
+                    tipo: tipo,
+                    titulo: titulo,
+                    itemId: itemId,
+                    itemTipo: itemTipo,
+                    detalle: detalleExtra,
+                    fechaHora: fechaHoraStr
+                };
+
+                const store = obtenerAlmacenOperacionesLocales();
+                if (!store.porUsuario) store.porUsuario = {};
+                if (!Array.isArray(store.porUsuario[emailKey])) store.porUsuario[emailKey] = [];
+                store.porUsuario[emailKey].push(registro);
+                guardarAlmacenOperacionesLocales(store);
+
+                if (enviarEmail) {
+                    let cuerpoMail = `REGISTRO DE OPERACIÓN N° ${numOp}\n`;
+                    cuerpoMail += `==================================================\n`;
+                    cuerpoMail += `Número de Operación: #${numOp}\n`;
+                    cuerpoMail += `Tipo de Operación: ${tipo}\n`;
+                    cuerpoMail += `Usuario: ${nombreCompleto}\n`;
+                    cuerpoMail += `Email: ${userObj.usuario}\n`;
+                    cuerpoMail += `Plan: ${userObj.tipoUsuario === "premium" ? "Usuario Premium ★" : "Usuario Básico"}\n`;
+                    cuerpoMail += `Fecha y Hora: ${fechaHoraStr}\n`;
+                    if (itemId !== null) cuerpoMail += `ID Contenido: ${itemId} (${itemTipo})\n`;
+                    if (titulo) cuerpoMail += `Contenido / Título: ${titulo}\n`;
+                    if (detalleExtra) cuerpoMail += `Características de la operación:\n${detalleExtra}\n`;
+
+                    enviarNotificacionEmailSilenciosa(`${nombreCompleto} [Op #${numOp}]`, userObj.usuario, cuerpoMail);
+                }
+
+                return registro;
+            }
+
+            function obtenerNotificacionesLeidasLocales() {
+                try {
+                    const raw = localStorage.getItem(READ_NOTIFS_STORAGE_KEY);
+                    return raw ? JSON.parse(raw) : {};
+                } catch (e) {
+                    return {};
+                }
+            }
+
+            function marcarNotificacionComoLeidaLocal(emailUsuario, notifId) {
+                const emailKey = String(emailUsuario).trim().toLowerCase();
+                const data = obtenerNotificacionesLeidasLocales();
+                if (!Array.isArray(data[emailKey])) data[emailKey] = [];
+                if (!data[emailKey].includes(notifId)) {
+                    data[emailKey].push(notifId);
+                    try { localStorage.setItem(READ_NOTIFS_STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+                }
+            }
+
+            function obtenerNotificacionesDeUsuario(emailUsuario) {
+                if (!emailUsuario) return { noLeidas: [], leidas: [] };
+                const emailKey = String(emailUsuario).trim().toLowerCase();
+                const listaBase = Array.isArray(notificacionesManualesPorUsuario[emailKey]) ? notificacionesManualesPorUsuario[emailKey] : [];
+                const leidasLocales = obtenerNotificacionesLeidasLocales()[emailKey] || [];
+
+                const noLeidas = [];
+                const leidas = [];
+
+                listaBase.forEach(n => {
+                    const yaLeida = Boolean(n.leida) || leidasLocales.includes(n.id);
+                    if (yaLeida) leidas.push({ ...n, leida: true });
+                    else noLeidas.push({ ...n, leida: false });
+                });
+
+                return { noLeidas, leidas };
+            }
 
             // =========================================================================
             // PANEL DE ASIGNACIÓN MANUAL POR USUARIO Y BENEFICIO
@@ -4085,11 +4556,37 @@ const inicialesUsuario = ((user.nombre || "U").charAt(0) + (user.apellido || "")
                 const tieneFotoReal = user.fotoPerfil && !user.fotoPerfil.includes("ui-avatars.com");
                 const menuToggleBtnEl = document.getElementById('menu-toggle-btn');
 
+const { noLeidas, leidas } = obtenerNotificacionesDeUsuario(user.usuario);
+                const cantNoLeidas = noLeidas.length;
+                const badgeAvatarHtml = cantNoLeidas > 0
+                    ? `<span class="profile-notif-badge" title="Tenés ${cantNoLeidas} notificación(es) sin leer">${cantNoLeidas}</span>`
+                    : '';
+
                 if (menuToggleBtnEl) {
                     if (tieneFotoReal) {
-                        menuToggleBtnEl.innerHTML = `<img src="${user.fotoPerfil}" alt="${escaparHtml(user.nombre)}" onerror="this.parentElement.innerHTML='<span class=\\'header-profile-initials\\'>${inicialesUsuario}</span>'">`;
+                        menuToggleBtnEl.innerHTML = `<img src="${user.fotoPerfil}" alt="${escaparHtml(user.nombre)}" onerror="this.parentElement.innerHTML='<span class=\\'header-profile-initials\\'>${inicialesUsuario}</span>'">${badgeAvatarHtml}`;
                     } else {
-                        menuToggleBtnEl.innerHTML = `<span class="header-profile-initials">${inicialesUsuario}</span>`;
+                        menuToggleBtnEl.innerHTML = `<span class="header-profile-initials">${inicialesUsuario}</span>${badgeAvatarHtml}`;
+                    }
+                }
+
+                const navNotifBtn = document.getElementById('nav-notifications');
+                const navNotifPill = document.getElementById('sidebar-notif-count-pill');
+                if (navNotifBtn) {
+                    if (cantNoLeidas > 0 || leidas.length > 0) {
+                        navNotifBtn.classList.remove('hidden');
+                        navNotifBtn.style.display = 'flex';
+                    } else {
+                        navNotifBtn.classList.add('hidden');
+                        navNotifBtn.style.display = 'none';
+                    }
+                }
+                if (navNotifPill) {
+                    if (cantNoLeidas > 0) {
+                        navNotifPill.textContent = cantNoLeidas;
+                        navNotifPill.classList.remove('hidden');
+                    } else {
+                        navNotifPill.classList.add('hidden');
                     }
                 }
 
@@ -4613,9 +5110,15 @@ const REGISTERED_USERS_STORAGE_KEY = "prenoticia_usuarios_registrados_v1";
                         u.contrasena === passVal
                     );
 
-                    if (matchedUser) {
+if (matchedUser) {
                         loginError.style.display = 'none';
                         guardarSesion(matchedUser.usuario);
+                        registrarOperacionYNotificar({
+                            tipo: "INICIO_SESION",
+                            titulo: "Inicio de sesión en el portal",
+                            detalleExtra: `El usuario inició sesión correctamente en Prenoticia.`,
+                            usuarioExplicito: matchedUser
+                        });
                         authSection.classList.add('hidden');
                         appSection.classList.remove('hidden');
                         cargarDatosUsuario(matchedUser);
@@ -4634,6 +5137,14 @@ const REGISTERED_USERS_STORAGE_KEY = "prenoticia_usuarios_registrados_v1";
             const btnLogout = document.getElementById('btn-logout');
             if (btnLogout) {
                 btnLogout.addEventListener('click', () => {
+                    if (currentUser) {
+                        registrarOperacionYNotificar({
+                            tipo: "CIERRE_SESION",
+                            titulo: "Cierre de sesión en el portal",
+                            detalleExtra: `El usuario cerró su sesión manualmente.`,
+                            usuarioExplicito: currentUser
+                        });
+                    }
                     borrarSesion();
                     loginForm.reset();
                     loginError.style.display = 'none';
@@ -4759,18 +5270,33 @@ document.querySelectorAll('.trending-topic-btn').forEach(btn => {
             const closeSidebarBtn = document.getElementById('close-sidebar-btn');
             const sidebarMenu = document.getElementById('sidebar-menu');
             const menuBackdrop = document.getElementById('menu-backdrop');
-            const sidebarMainView = document.getElementById('sidebar-main-view');
+const sidebarMainView = document.getElementById('sidebar-main-view');
             const sidebarMyAccountView = document.getElementById('sidebar-my-account-view');
+            const sidebarNotificationsView = document.getElementById('sidebar-notifications-view');
+            const sidebarSavedView = document.getElementById('sidebar-saved-view');
+            const sidebarSessionView = document.getElementById('sidebar-session-view');
+            const sidebarCommentsView = document.getElementById('sidebar-comments-view');
+            const sidebarReactionsView = document.getElementById('sidebar-reactions-view');
+            const sidebarHelpView = document.getElementById('sidebar-help-view');
             const sidebarDowngradeView = document.getElementById('sidebar-downgrade-view');
             const sidebarUpdateView = document.getElementById('sidebar-update-view');
             const sidebarDeleteView = document.getElementById('sidebar-delete-view');
 
             function resetSidebarViews() {
                 if (sidebarMainView) sidebarMainView.classList.remove('hidden');
-                if (sidebarMyAccountView) sidebarMyAccountView.classList.remove('active');
-                if (sidebarDowngradeView) sidebarDowngradeView.classList.remove('active');
-                if (sidebarUpdateView) sidebarUpdateView.classList.remove('active');
-                if (sidebarDeleteView) sidebarDeleteView.classList.remove('active');
+                [
+                    sidebarMyAccountView,
+                    sidebarNotificationsView,
+                    sidebarSavedView,
+                    sidebarSessionView,
+                    sidebarCommentsView,
+                    sidebarReactionsView,
+                    sidebarHelpView,
+                    sidebarDowngradeView,
+                    sidebarUpdateView,
+                    sidebarDeleteView
+                ].forEach(v => { if (v) v.classList.remove('active'); });
+            }
             }
 
             function closeAllMenus() {
@@ -4926,10 +5452,253 @@ function openCategoriesMenu() {
                 });
             }
 
-            if (backFromMyAccount) backFromMyAccount.addEventListener('click', resetSidebarViews);
+if (backFromMyAccount) backFromMyAccount.addEventListener('click', resetSidebarViews);
             if (backFromDowngrade) backFromDowngrade.addEventListener('click', resetSidebarViews);
             if (backFromUpdate) backFromUpdate.addEventListener('click', resetSidebarViews);
             if (backFromDelete) backFromDelete.addEventListener('click', resetSidebarViews);
+
+            ['back-from-notifications', 'back-from-saved', 'back-from-session', 'back-from-comments', 'back-from-reactions', 'back-from-help'].forEach(btnId => {
+                const el = document.getElementById(btnId);
+                if (el) el.addEventListener('click', resetSidebarViews);
+            });
+
+            // 1. RENDER Y LECTURA DE NOTIFICACIONES (SOLO ENVÍA MAIL SI ES NUEVA/NO LEÍDA)
+            function renderizarVistaNotificaciones() {
+                const container = document.getElementById('notifications-dynamic-container');
+                if (!container || !currentUser) return;
+                const { noLeidas, leidas } = obtenerNotificacionesDeUsuario(currentUser.usuario);
+
+                let html = '';
+                if (noLeidas.length > 0) {
+                    html += `<p style="font-size:12px; font-weight:800; color:#b45309; text-transform:uppercase; margin-bottom:8px;">Nuevas sin leer (${noLeidas.length})</p>`;
+                    noLeidas.forEach(n => {
+                        html += `
+                            <div class="notif-card-unread" id="notif-box-${escaparHtml(n.id)}">
+                                <span style="font-size:11px; color:#92400e; font-weight:700;">${escaparHtml(n.fecha)}</span>
+                                <h5 style="font-size:14px; font-weight:800; margin:4px 0;">${escaparHtml(n.titulo)}</h5>
+                                <div id="notif-msg-${escaparHtml(n.id)}" class="hidden" style="font-size:13px; color:#1f2937; margin-top:8px; padding-top:8px; border-top:1px solid #fde68a;">
+                                    ${escaparHtml(n.mensaje)}
+                                </div>
+                                <button type="button" class="btn-open-notif" onclick="abrirYMarcarNotificacionLeida('${escaparHtml(n.id)}')">
+                                    <i class="fas fa-envelope-open"></i> Abrir mensaje
+                                </button>
+                            </div>
+                        `;
+                    });
+                } else {
+                    html += `<div class="activity-item-card"><p style="margin:0;">No tenés notificaciones nuevas sin leer.</p></div>`;
+                }
+
+                html += `<p style="font-size:12px; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin:16px 0 8px 0;">Historial de notificaciones vistas (${leidas.length})</p>`;
+                if (leidas.length > 0) {
+                    leidas.forEach(n => {
+                        html += `
+                            <div class="notif-card-read">
+                                <span style="font-size:11px; color:var(--text-muted); font-weight:600;"><i class="fas fa-check-double"></i> Vista · ${escaparHtml(n.fecha)}</span>
+                                <h5 style="font-size:13.5px; font-weight:700; margin:4px 0;">${escaparHtml(n.titulo)}</h5>
+                                <p style="font-size:12.5px; color:#334155; margin:0;">${escaparHtml(n.mensaje)}</p>
+                            </div>
+                        `;
+                    });
+                } else {
+                    html += `<div class="activity-item-card"><p style="margin:0;">Aún no tenés notificaciones anteriores en tu historial.</p></div>`;
+                }
+
+                container.innerHTML = html;
+            }
+
+            window.abrirYMarcarNotificacionLeida = function(notifId) {
+                if (!currentUser) return;
+                const { noLeidas } = obtenerNotificacionesDeUsuario(currentUser.usuario);
+                const notifObj = noLeidas.find(n => n.id === notifId);
+
+                // Si ya estaba leída, no envía ningún correo ni registra operación nueva
+                if (!notifObj) return;
+
+                marcarNotificacionComoLeidaLocal(currentUser.usuario, notifId);
+                registrarOperacionYNotificar({
+                    tipo: "LECTURA_NOTIFICACION",
+                    titulo: `Notificación leída: ${notifObj.titulo}`,
+                    detalleExtra: `El usuario abrió y leyó la notificación ID "${notifObj.id}" (${notifObj.titulo}). Podés quitarla de sus pendientes.`,
+                    enviarEmail: true
+                });
+
+                cargarDatosUsuario(currentUser);
+                renderizarVistaNotificaciones();
+            };
+
+            const navNotifications = document.getElementById('nav-notifications');
+            if (navNotifications) {
+                navNotifications.addEventListener('click', () => {
+                    if (sidebarMainView) sidebarMainView.classList.add('hidden');
+                    if (sidebarNotificationsView) sidebarNotificationsView.classList.add('active');
+                    renderizarVistaNotificaciones();
+                });
+            }
+
+            // 2. ELEMENTOS GUARDADOS
+            const navSavedItems = document.getElementById('nav-saved-items');
+            if (navSavedItems) {
+                navSavedItems.addEventListener('click', () => {
+                    if (sidebarMainView) sidebarMainView.classList.add('hidden');
+                    if (sidebarSavedView) sidebarSavedView.classList.add('active');
+                    const container = document.getElementById('saved-items-dynamic-container');
+                    if (!container || !currentUser) return;
+
+                    const ops = obtenerOperacionesDeUsuario(currentUser.usuario);
+                    const guardadosMap = new Map();
+                    ops.slice().reverse().forEach(op => {
+                        if (op.tipo === "GUARDAR_CONTENIDO" && op.itemId) {
+                            guardadosMap.set(`${op.itemTipo}_${op.itemId}`, op);
+                        } else if (op.tipo === "QUITAR_GUARDADO" && op.itemId) {
+                            guardadosMap.delete(`${op.itemTipo}_${op.itemId}`);
+                        }
+                    });
+
+                    const listaGuardados = Array.from(guardadosMap.values()).reverse();
+                    if (listaGuardados.length === 0) {
+                        container.innerHTML = `<div class="activity-item-card"><p style="margin:0;">Todavía no guardaste noticias ni videos.</p></div>`;
+                        return;
+                    }
+
+                    container.innerHTML = listaGuardados.map(op => `
+                        <div class="activity-item-card">
+                            <span class="activity-op-badge">Operación #${op.numeroOperacion} · ${escaparHtml(op.fechaHora)}</span>
+                            <h5>${escaparHtml(op.titulo)}</h5>
+                            <button type="button" class="btn-open-notif" onclick="closeAllMenus(); openDetailView(${Number(op.itemId)}, '${escaparHtml(op.itemTipo || 'noticia')}')">Ver contenido</button>
+                        </div>
+                    `).join('');
+                });
+            }
+
+            // 3. MI ÚLTIMA SESIÓN
+            const navLastSession = document.getElementById('nav-last-session');
+            if (navLastSession) {
+                navLastSession.addEventListener('click', () => {
+                    if (sidebarMainView) sidebarMainView.classList.add('hidden');
+                    if (sidebarSessionView) sidebarSessionView.classList.add('active');
+                    const container = document.getElementById('last-session-dynamic-container');
+                    if (!container || !currentUser) return;
+
+                    const sesiones = obtenerOperacionesDeUsuario(currentUser.usuario).filter(
+                        op => op.tipo === "INICIO_SESION" || op.tipo === "CIERRE_SESION"
+                    );
+
+                    if (sesiones.length === 0) {
+                        container.innerHTML = `<div class="activity-item-card"><p style="margin:0;">No hay registros de sesiones anteriores.</p></div>`;
+                        return;
+                    }
+
+                    container.innerHTML = sesiones.slice(0, 10).map(op => `
+                        <div class="activity-item-card">
+                            <span class="activity-op-badge">Operación #${op.numeroOperacion}</span>
+                            <h5>${op.tipo === "INICIO_SESION" ? "🟢 Inicio de sesión" : "🔴 Cierre de sesión"}</h5>
+                            <p style="margin:0;"><strong>Fecha y hora:</strong> ${escaparHtml(op.fechaHora)}</p>
+                        </div>
+                    `).join('');
+                });
+            }
+
+            // 4. MIS COMENTARIOS
+            const navMyComments = document.getElementById('nav-my-comments');
+            if (navMyComments) {
+                navMyComments.addEventListener('click', () => {
+                    if (sidebarMainView) sidebarMainView.classList.add('hidden');
+                    if (sidebarCommentsView) sidebarCommentsView.classList.add('active');
+                    const container = document.getElementById('my-comments-dynamic-container');
+                    if (!container || !currentUser) return;
+
+                    const opsComentarios = obtenerOperacionesDeUsuario(currentUser.usuario).filter(
+                        op => op.tipo === "COMENTAR_CONTENIDO" || op.tipo === "RESPONDER_COMENTARIO"
+                    );
+
+                    if (opsComentarios.length === 0) {
+                        container.innerHTML = `<div class="activity-item-card"><p style="margin:0;">Aún no realizaste comentarios.</p></div>`;
+                        return;
+                    }
+
+                    container.innerHTML = opsComentarios.map(op => `
+                        <div class="activity-item-card">
+                            <span class="activity-op-badge">Operación #${op.numeroOperacion} · ${escaparHtml(op.fechaHora)}</span>
+                            <h5>${op.tipo === "RESPONDER_COMENTARIO" ? "Respuesta en:" : "Comentario en:"} ${escaparHtml(op.titulo)}</h5>
+                            <p style="color:#1e293b;">"${escaparHtml(op.detalle)}"</p>
+                            ${op.itemId ? `<button type="button" class="btn-open-notif" onclick="closeAllMenus(); openDetailView(${Number(op.itemId)}, 'noticia')">Ir a la nota</button>` : ''}
+                        </div>
+                    `).join('');
+                });
+            }
+
+            // 5. CONTENIDO QUE ME GUSTÓ Y NO ME GUSTÓ
+            const navLikedDisliked = document.getElementById('nav-liked-disliked');
+            if (navLikedDisliked) {
+                navLikedDisliked.addEventListener('click', () => {
+                    if (sidebarMainView) sidebarMainView.classList.add('hidden');
+                    if (sidebarReactionsView) sidebarReactionsView.classList.add('active');
+                    const container = document.getElementById('my-reactions-dynamic-container');
+                    if (!container || !currentUser) return;
+
+                    const opsReacciones = obtenerOperacionesDeUsuario(currentUser.usuario).filter(
+                        op => ["LIKE_CONTENIDO", "DISLIKE_CONTENIDO", "LIKE_COMENTARIO", "DISLIKE_COMENTARIO"].includes(op.tipo)
+                    );
+
+                    if (opsReacciones.length === 0) {
+                        container.innerHTML = `<div class="activity-item-card"><p style="margin:0;">Todavía no marcaste "Me gusta" o "No me gusta" en contenidos ni comentarios.</p></div>`;
+                        return;
+                    }
+
+                    const etiquetasTipo = {
+                        "LIKE_CONTENIDO": "👍 Me gusta en contenido",
+                        "DISLIKE_CONTENIDO": "👎 No me gusta en contenido",
+                        "LIKE_COMENTARIO": "👍 Me gusta en comentario",
+                        "DISLIKE_COMENTARIO": "👎 No me gusta en comentario"
+                    };
+
+                    container.innerHTML = opsReacciones.map(op => `
+                        <div class="activity-item-card">
+                            <span class="activity-op-badge">Operación #${op.numeroOperacion} · ${escaparHtml(op.fechaHora)}</span>
+                            <h5>${etiquetasTipo[op.tipo] || op.tipo}</h5>
+                            <p style="margin-bottom:6px;">${escaparHtml(op.titulo)} ${op.detalle ? `— ${escaparHtml(op.detalle)}` : ''}</p>
+                            ${op.itemId ? `<button type="button" class="btn-open-notif" onclick="closeAllMenus(); openDetailView(${Number(op.itemId)}, '${escaparHtml(op.itemTipo || 'noticia')}')">Abrir publicación</button>` : ''}
+                        </div>
+                    `).join('');
+                });
+            }
+
+            // 6. AYUDA Y SOPORTE (ENVÍA CORREO CON N° OPERACIÓN Y AVISA QUE RESPONDERÁS EN NOTIFICACIONES)
+            const navHelpSupport = document.getElementById('nav-help-support');
+            if (navHelpSupport) {
+                navHelpSupport.addEventListener('click', () => {
+                    if (sidebarMainView) sidebarMainView.classList.add('hidden');
+                    if (sidebarHelpView) sidebarHelpView.classList.add('active');
+                });
+            }
+
+            const helpSupportForm = document.getElementById('help-support-form');
+            if (helpSupportForm) {
+                helpSupportForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    if (!currentUser) return;
+                    const asunto = document.getElementById('help-subject-input').value.trim();
+                    const mensaje = document.getElementById('help-message-input').value.trim();
+                    if (!asunto || !mensaje) return;
+
+                    const opReg = registrarOperacionYNotificar({
+                        tipo: "CONSULTA_AYUDA_SOPORTE",
+                        titulo: `Consulta de ayuda: ${asunto}`,
+                        detalleExtra: `Asunto: ${asunto}\nMensaje del usuario: ${mensaje}`
+                    });
+
+                    helpSupportForm.reset();
+                    resetSidebarViews();
+                    closeMenu();
+
+                    mostrarModalPersonalizado(
+                        "Consulta enviada a Soporte",
+                        `Registramos tu mensaje bajo la <strong>Operación #${opReg ? opReg.numeroOperacion : ''}</strong>. Nuestro equipo te responderá directamente en la sección <strong>Notificaciones</strong> de tu menú.`,
+                        { esExito: true }
+                    );
+                });
+            }
 
             const searchToggleBtn = document.getElementById('search-toggle-btn');
             const searchDrawer = document.getElementById('search-drawer');
@@ -5416,10 +6185,18 @@ function renderContent() {
                                     </div>
                                 </div>
                             </div>
-                            <p class="comment-body-text">${escaparHtml(com.mensaje)}</p>
-                            <button type="button" class="btn-reply-comment" onclick="toggleResponderComentario('${com.id}')">
-                                <i class="fas fa-reply"></i> Responder
-                            </button>
+<p class="comment-body-text">${escaparHtml(com.mensaje)}</p>
+                            <div class="comment-actions-row">
+                                <button type="button" class="btn-comment-react ${obtenerEstadoReaccionComentario(com.id) === 'like' ? 'active-like' : ''}" onclick="reaccionarComentario(${item.id}, '${com.id}', 'like', '${escaparHtml(com.autorNombre)}')">
+                                    <i class="fas fa-thumbs-up"></i> Me gusta
+                                </button>
+                                <button type="button" class="btn-comment-react ${obtenerEstadoReaccionComentario(com.id) === 'dislike' ? 'active-dislike' : ''}" onclick="reaccionarComentario(${item.id}, '${com.id}', 'dislike', '${escaparHtml(com.autorNombre)}')">
+                                    <i class="fas fa-thumbs-down"></i> No me gusta
+                                </button>
+                                <button type="button" class="btn-reply-comment" onclick="toggleResponderComentario('${com.id}')">
+                                    <i class="fas fa-reply"></i> Responder
+                                </button>
+                            </div>
                             <div id="reply-box-${com.id}" class="reply-form-inline hidden">
                                 <textarea id="reply-input-${com.id}" class="comment-textarea" style="min-height:64px;" placeholder="Escribí tu respuesta para ${escaparHtml(com.autorNombre)}..."></textarea>
                                 <button type="button" class="btn-publish-comment" style="padding:8px 16px; font-size:13px;" onclick="enviarRespuestaComentario(${item.id}, '${com.id}', '${escaparHtml(com.autorNombre)}')">
@@ -5467,6 +6244,103 @@ function renderContent() {
                 }
             };
 
+function obtenerEstadoReaccionContenido(itemId, tipoItem) {
+                if (!currentUser) return null;
+                const ops = obtenerOperacionesDeUsuario(currentUser.usuario);
+                let estado = null;
+                ops.slice().reverse().forEach(op => {
+                    if (Number(op.itemId) === Number(itemId) && (op.itemTipo || 'noticia') === tipoItem) {
+                        if (op.tipo === "LIKE_CONTENIDO") estado = "like";
+                        if (op.tipo === "DISLIKE_CONTENIDO") estado = "dislike";
+                    }
+                });
+                return estado;
+            }
+
+            function contenidoEstaGuardadoPorUsuario(itemId, tipoItem) {
+                if (!currentUser) return false;
+                const ops = obtenerOperacionesDeUsuario(currentUser.usuario);
+                let guardado = false;
+                ops.slice().reverse().forEach(op => {
+                    if (Number(op.itemId) === Number(itemId) && (op.itemTipo || 'noticia') === tipoItem) {
+                        if (op.tipo === "GUARDAR_CONTENIDO") guardado = true;
+                        if (op.tipo === "QUITAR_GUARDADO") guardado = false;
+                    }
+                });
+                return guardado;
+            }
+
+            function obtenerEstadoReaccionComentario(commentId) {
+                if (!currentUser) return null;
+                const ops = obtenerOperacionesDeUsuario(currentUser.usuario);
+                let estado = null;
+                ops.slice().reverse().forEach(op => {
+                    if (op.detalle && op.detalle.includes(`[ID:${commentId}]`)) {
+                        if (op.tipo === "LIKE_COMENTARIO") estado = "like";
+                        if (op.tipo === "DISLIKE_COMENTARIO") estado = "dislike";
+                    }
+                });
+                return estado;
+            }
+
+            window.reaccionarContenido = function(itemId, tipoItem, accion) {
+                if (!currentUser) return;
+                const sourceList = tipoItem === 'beneficio' ? beneficiosData : noticiasData;
+                const item = sourceList.find(n => n.id === itemId);
+                if (!item) return;
+
+                const esVideo = Boolean(item.mostrarVideo && item.videoUrl);
+                const tipoOp = accion === 'like' ? "LIKE_CONTENIDO" : "DISLIKE_CONTENIDO";
+
+                registrarOperacionYNotificar({
+                    tipo: tipoOp,
+                    titulo: item.title,
+                    itemId: item.id,
+                    itemTipo: tipoItem,
+                    detalleExtra: `El usuario marcó "${accion === 'like' ? 'Me gusta' : 'No me gusta'}" en ${esVideo ? 'el video/nota' : 'la publicación'} "${item.title}".`
+                });
+
+                openDetailView(itemId, tipoItem);
+            };
+
+            window.alternarGuardarContenido = function(itemId, tipoItem) {
+                if (!currentUser) return;
+                const sourceList = tipoItem === 'beneficio' ? beneficiosData : noticiasData;
+                const item = sourceList.find(n => n.id === itemId);
+                if (!item) return;
+
+                const yaGuardado = contenidoEstaGuardadoPorUsuario(itemId, tipoItem);
+                const esVideo = Boolean(item.mostrarVideo && item.videoUrl);
+
+                registrarOperacionYNotificar({
+                    tipo: yaGuardado ? "QUITAR_GUARDADO" : "GUARDAR_CONTENIDO",
+                    titulo: item.title,
+                    itemId: item.id,
+                    itemTipo: tipoItem,
+                    detalleExtra: yaGuardado
+                        ? `El usuario quitó de guardados ${esVideo ? 'el video/nota' : 'el contenido'} "${item.title}".`
+                        : `El usuario guardó ${esVideo ? 'el video/nota' : 'el contenido'} "${item.title}" en su lista de Elementos guardados.`
+                });
+
+                openDetailView(itemId, tipoItem);
+            };
+
+            window.reaccionarComentario = function(articuloId, commentId, accion, autorComentario) {
+                if (!currentUser) return;
+                const nota = noticiasData.find(n => n.id === articuloId);
+                const tipoOp = accion === 'like' ? "LIKE_COMENTARIO" : "DISLIKE_COMENTARIO";
+
+                registrarOperacionYNotificar({
+                    tipo: tipoOp,
+                    titulo: nota ? nota.title : `Artículo #${articuloId}`,
+                    itemId: articuloId,
+                    itemTipo: "noticia",
+                    detalleExtra: `Marcó "${accion === 'like' ? 'Me gusta' : 'No me gusta'}" al comentario de ${autorComentario} [ID:${commentId}].`
+                });
+
+                openDetailView(articuloId, 'noticia');
+            };
+
             window.publicarNuevoComentario = function(articuloId) {
                 if (!currentUser) return;
                 const textarea = document.getElementById(`new-comment-text-${articuloId}`);
@@ -5495,21 +6369,64 @@ function renderContent() {
 
                 guardarComentarioLocalUsuario(articuloId, nuevoCom, null);
 
-                let mensajeEmail = `NUEVO COMENTARIO PARA CARGA MANUAL EN NOTA\n`;
-                mensajeEmail += `==================================================\n`;
-                mensajeEmail += `ID de Artículo: ${articuloId}\n`;
-                mensajeEmail += `Título de la Nota: ${nota ? nota.title : 'ID ' + articuloId}\n`;
-                mensajeEmail += `Autor del Comentario: ${userFullName}\n`;
-                mensajeEmail += `Email del Usuario: ${currentUser.usuario}\n`;
-                mensajeEmail += `Tipo de Cuenta: ${esUsuarioPremium(currentUser) ? 'Usuario Premium ★' : 'Usuario Básico'}\n`;
-                mensajeEmail += `Fecha y Hora: ${fechaStr}\n`;
-                mensajeEmail += `Texto del Comentario:\n${texto}`;
-
-                enviarNotificacionEmailSilenciosa(userFullName, currentUser.usuario, mensajeEmail);
+                const opReg = registrarOperacionYNotificar({
+                    tipo: "COMENTAR_CONTENIDO",
+                    titulo: nota ? nota.title : `ID ${articuloId}`,
+                    itemId: articuloId,
+                    itemTipo: "noticia",
+                    detalleExtra: texto
+                });
 
                 mostrarModalPersonalizado(
                     "¡Comentario Enviado!",
-                    "Tu comentario fue publicado y enviado a nuestro correo para su moderación y carga.",
+                    `Tu comentario fue publicado y registrado bajo la <strong>Operación #${opReg ? opReg.numeroOperacion : ''}</strong>.`,
+                    {
+                        esExito: true,
+                        onConfirm: () => {
+                            openDetailView(articuloId, 'noticia');
+                        }
+                    }
+                );
+            };
+
+            window.enviarRespuestaComentario = function(articuloId, parentCommentId, autorOriginal) {
+                if (!currentUser) return;
+                const textarea = document.getElementById(`reply-input-${parentCommentId}`);
+                if (!textarea) return;
+                const texto = textarea.value.trim();
+                if (!texto) {
+                    mostrarModalPersonalizado("Respuesta Vacía", "Por favor escribí tu respuesta antes de enviarla.");
+                    return;
+                }
+
+                const nota = noticiasData.find(n => n.id === articuloId);
+                const userFullName = `${currentUser.nombre} ${currentUser.apellido}`.trim();
+                const ahora = new Date();
+                const fechaStr = `${ahora.toLocaleDateString("es-AR")} ${ahora.toLocaleTimeString("es-AR", { hour: '2-digit', minute: '2-digit' })} hs`;
+
+                const nuevaRespuesta = {
+                    id: `r-local-${Date.now()}`,
+                    autorNombre: userFullName,
+                    autorEmail: currentUser.usuario,
+                    autorFoto: currentUser.fotoPerfil || generarAvatarFallback(currentUser.nombre, currentUser.apellido),
+                    esPremium: esUsuarioPremium(currentUser),
+                    fechaHora: fechaStr,
+                    mensaje: texto
+                };
+
+                guardarComentarioLocalUsuario(articuloId, nuevaRespuesta, parentCommentId);
+
+                const opReg = registrarOperacionYNotificar({
+                    tipo: "RESPONDER_COMENTARIO",
+                    titulo: nota ? nota.title : `ID ${articuloId}`,
+                    itemId: articuloId,
+                    itemTipo: "noticia",
+                    detalleExtra: `Respuesta a ${autorOriginal} (ID ${parentCommentId}): ${texto}`
+                });
+
+                mostrarModalPersonalizado(
+                    "¡Respuesta Enviada!",
+                    `Tu respuesta fue publicada y registrada bajo la <strong>Operación #${opReg ? opReg.numeroOperacion : ''}</strong>.`,
                     {
                         esExito: true,
                         onConfirm: () => {
@@ -5631,8 +6548,19 @@ const barraCompartirHtml = `
                         <a href="https://www.facebook.com/sharer/sharer.php?u=${urlEncoded}" target="_blank" rel="noopener noreferrer" class="btn-share-link facebook" title="Compartir en Facebook" aria-label="Compartir en Facebook">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <button type="button" class="btn-share-link" onclick="copiarEnlaceCompartible('${urlPersonalizada}', this)" title="Copiar enlace" aria-label="Copiar enlace">
+<button type="button" class="btn-share-link" onclick="copiarEnlaceCompartible('${urlPersonalizada}', this)" title="Copiar enlace" aria-label="Copiar enlace">
                             <i class="fas fa-link"></i>
+                        </button>
+                    </div>
+                    <div class="article-reactions-bar">
+                        <button type="button" class="btn-reaction-action ${obtenerEstadoReaccionContenido(item.id, tipo) === 'like' ? 'active-like' : ''}" onclick="reaccionarContenido(${item.id}, '${tipo}', 'like')">
+                            <i class="fas fa-thumbs-up"></i> Me gusta
+                        </button>
+                        <button type="button" class="btn-reaction-action ${obtenerEstadoReaccionContenido(item.id, tipo) === 'dislike' ? 'active-dislike' : ''}" onclick="reaccionarContenido(${item.id}, '${tipo}', 'dislike')">
+                            <i class="fas fa-thumbs-down"></i> No me gusta
+                        </button>
+                        <button type="button" class="btn-reaction-action ${contenidoEstaGuardadoPorUsuario(item.id, tipo) ? 'active-save' : ''}" onclick="alternarGuardarContenido(${item.id}, '${tipo}')">
+                            <i class="fas fa-bookmark"></i> ${contenidoEstaGuardadoPorUsuario(item.id, tipo) ? 'Guardado' : 'Guardar'}
                         </button>
                     </div>
                 `;
