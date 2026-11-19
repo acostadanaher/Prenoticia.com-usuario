@@ -2968,7 +2968,7 @@ const SESSION_KEY = "portal_miembros_session_v4";
             // CONFIGURACIÓN DE NÚMERO DE OPERACIÓN CORRELATIVO Y NOTIFICACIONES MANUALES
             // =========================================================================
             // Último número cargado: 1005. La próxima acción en vivo continuará en #1006.
-            const NUMERO_OPERACION_BASE_MANUAL = 1005;
+            const NUMERO_OPERACION_BASE_MANUAL = 1008;
             const LOCAL_NOTIFS_STORAGE_KEY = "prenoticia_notificaciones_locales_usuario_v1";
 
             // =========================================================================
@@ -2993,8 +2993,15 @@ const SESSION_KEY = "portal_miembros_session_v4";
                         leida: true
                     }
                 ],
-                "luciacarpio20@gmail.com": [
+"luciacarpio20@gmail.com": [
                     // <-- PEGÁ AQUÍ ARRIBA LAS NUEVAS NOTIFICACIONES PARA LUCÍA
+                    {
+                        id: "NOTIF-102",
+                        titulo: "Mauricio David Acosta Danaher ha comentado su comentario",
+                        mensaje: "Mauricio David Acosta Danaher respondió tu comentario en la nota \"¿Qué significa que tu perro te siga a todos lados?\": \"Hola Lu cómo estás?\"",
+                        fecha: "19/11/2026 12:11 hs",
+                        leida: false
+                    },
                     {
                         id: "NOTIF-101",
                         titulo: "Aviso importante sobre tu cuenta",
@@ -3014,8 +3021,34 @@ const SESSION_KEY = "portal_miembros_session_v4";
             // "LECTURA_NOTIFICACION", "SOLICITUD_CAMBIO_USUARIO"
             // =========================================================================
             const operacionesCargadasPorUsuario = {
-                "mauricioacostacom@gmail.com": [
-                    // <-- PEGÁ AQUÍ ARRIBA LA PRÓXIMA OPERACIÓN DE MAURICIO (#1006 en adelante)
+"mauricioacostacom@gmail.com": [
+                    // <-- PEGÁ AQUÍ ARRIBA LA PRÓXIMA OPERACIÓN DE MAURICIO (#1009 en adelante)
+                    {
+                        numeroOperacion: 1008, // Captura 3 (19/11/2026 12:11 hs)
+                        tipo: "RESPONDER_COMENTARIO",
+                        itemId: 103,
+                        itemTipo: "noticia",
+                        titulo: "¿Qué significa que tu perro te siga a todos lados?",
+                        fechaHora: "19/11/2026 12:11 hs",
+                        detalle: "Respuesta a María Lucia Carpio Peralta: Hola Lu cómo estás?"
+                    },
+                    {
+                        numeroOperacion: 1007, // Captura 2 (19/11/2026 12:11:30 hs)
+                        tipo: "LIKE_COMENTARIO",
+                        itemId: 103,
+                        itemTipo: "noticia",
+                        titulo: "¿Qué significa que tu perro te siga a todos lados?",
+                        fechaHora: "19/11/2026 12:11:30 hs",
+                        detalle: "Marcó \"Me gusta\" al comentario de María Lucia Carpio Peralta."
+                    },
+                    {
+                        numeroOperacion: 1006, // Captura 1 (19/11/2026 12:10:48 hs)
+                        tipo: "GUARDAR_CONTENIDO",
+                        itemId: 102,
+                        itemTipo: "noticia",
+                        titulo: "Conductores de Uber: Cómo registrarte y ganar 360 pesos extra",
+                        fechaHora: "19/11/2026 12:10:48 hs"
+                    },
                     {
                         numeroOperacion: 1005, // Captura 1 (19/11/2026 11:55:03 hs)
                         tipo: "LECTURA_NOTIFICACION",
