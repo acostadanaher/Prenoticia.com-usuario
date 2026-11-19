@@ -2746,10 +2746,23 @@
                 </div>
             </div>
 
-            <div id="sidebar-my-account-view" class="account-subview">
+<div id="sidebar-my-account-view" class="account-subview">
                 <button class="btn-back-account" id="back-from-my-account">&larr; Volver atrás</button>
                 <h4 style="margin-bottom: 12px; font-size: 16px; font-weight: 800;">Mi cuenta</h4>
                 <div class="account-details">
+                    <p><strong>N° de Usuario interno:</strong> <span id="acc-user-id" class="activity-op-badge" style="font-size:12.5px;"></span></p>
+                    <p>
+                        <strong>Nombre de usuario:</strong> <span id="acc-username" style="font-weight:700; color:var(--primary);"></span>
+                        <button type="button" id="btn-toggle-change-username" class="btn-qr-action" style="display:block; margin-top:8px; width:100%; text-align:center;">
+                            <i class="fas fa-at"></i> Elegir o cambiar nombre de usuario
+                        </button>
+                    </p>
+                    <div id="change-username-box" class="hidden" style="background:#f8fafc; border:1px solid var(--border-color); border-radius:10px; padding:12px; margin-bottom:12px;">
+                        <label for="input-new-username" style="display:block; font-size:12.5px; font-weight:700; margin-bottom:5px;">Nuevo nombre de usuario (solo letras, números y guion bajo)</label>
+                        <input type="text" id="input-new-username" placeholder="ej. mauricio_acosta" style="width:100%; padding:9px 11px; border:1.5px solid var(--border-color); border-radius:8px; font-size:13.5px;">
+                        <div id="username-availability-feedback" style="font-size:12px; font-weight:700; margin-top:6px;"></div>
+                        <button type="button" id="btn-submit-username-change" class="btn-primary" style="margin-top:9px; padding:9px 12px; font-size:13px;">Solicitar asignación de usuario</button>
+                    </div>
                     <p><strong>Nombre:</strong> <span id="acc-name"></span></p>
                     <p><strong>Apellido:</strong> <span id="acc-lastname"></span></p>
                     <p><strong>Ubicación:</strong> <span id="acc-location"></span></p>
@@ -2951,27 +2964,26 @@ const SESSION_KEY = "portal_miembros_session_v4";
             const READ_NOTIFS_STORAGE_KEY = "prenoticia_notificaciones_leidas_v1";
             const PROMO_COOLDOWN_HOURS = 6;
 
-            // =========================================================================
+// =========================================================================
             // CONFIGURACIÓN DE NÚMERO DE OPERACIÓN CORRELATIVO Y NOTIFICACIONES MANUALES
             // =========================================================================
-            // Cambiá NUMERO_OPERACION_BASE_MANUAL al último número que ya tengas cargado
-            // para que la siguiente acción del usuario continúe correlativamente (+1).
-            const NUMERO_OPERACION_BASE_MANUAL = 1000;
+            // Último número cargado: 1005. La próxima acción en vivo continuará en #1006.
+            const NUMERO_OPERACION_BASE_MANUAL = 1005;
+            const LOCAL_NOTIFS_STORAGE_KEY = "prenoticia_notificaciones_locales_usuario_v1";
 
             // =========================================================================
-            // PANEL MANUAL DE NOTIFICACIONES IMPORTANTES Y RESPUESTAS DE SOPORTE
+            // PANEL MANUAL DE NOTIFICACIONES (APILÁ LAS NUEVAS ARRIBA DE LAS ANTERIORES)
+            // Cambiá leida: false a leida: true para quitarle la notificación pendiente.
             // =========================================================================
-            // Para cargar una notificación nueva a un usuario: agregala en su correo con leida: false.
-            // Cuando el usuario la abra, te llegará un mail con el N° de Operación avisando que la leyó.
-            // Luego podés cambiar leida: true (o pasarla a historial) para quitarle el aviso rojo.
             const notificacionesManualesPorUsuario = {
                 "mauricioacostacom@gmail.com": [
+                    // <-- PEGÁ AQUÍ ARRIBA LAS NUEVAS NOTIFICACIONES PARA MAURICIO
                     {
                         id: "NOTIF-001",
                         titulo: "Respuesta de Soporte · Consulta de cuenta",
                         mensaje: "Hola Mauricio, verificamos tu suscripción Premium y ya se encuentra habilitada con todos los beneficios activos.",
                         fecha: "19/11/2026 10:30 hs",
-                        leida: false
+                        leida: true // YA LEÍDA EN OPERACIÓN #1005 (captura 1)
                     },
                     {
                         id: "NOTIF-000",
@@ -2982,28 +2994,42 @@ const SESSION_KEY = "portal_miembros_session_v4";
                     }
                 ],
                 "luciacarpio20@gmail.com": [
+                    // <-- PEGÁ AQUÍ ARRIBA LAS NUEVAS NOTIFICACIONES PARA LUCÍA
                     {
                         id: "NOTIF-101",
                         titulo: "Aviso importante sobre tu cuenta",
                         mensaje: "Recordá que tenés disponible el sorteo especial de McDonald's en la pestaña Beneficios.",
                         fecha: "19/11/2026 11:00 hs",
-                        leida: false
+                        leida: true // YA LEÍDA EN OPERACIÓN #1002 (captura 4)
                     }
                 ]
             };
 
             // =========================================================================
-            // PANEL MANUAL DE OPERACIONES YA CARGADAS POR USUARIO (PERFIL HISTÓRICO)
+            // PANEL MANUAL DE OPERACIONES APILABLES (PEGÁ LAS NUEVAS ENCIMA DE LAS ANTERIORES)
+            // Tipos válidos:
+            // "INICIO_SESION", "CIERRE_SESION", "GUARDAR_CONTENIDO", "QUITAR_GUARDADO",
+            // "LIKE_CONTENIDO", "DISLIKE_CONTENIDO", "COMENTAR_CONTENIDO",
+            // "RESPONDER_COMENTARIO", "LIKE_COMENTARIO", "DISLIKE_COMENTARIO",
+            // "LECTURA_NOTIFICACION", "SOLICITUD_CAMBIO_USUARIO"
             // =========================================================================
-            // Aquí podés cargar manualmente operaciones que el usuario ya realizó para que
-            // aparezcan en "Elementos guardados", "Mi Última sesión", "Mis comentarios" y "Me gustó / No me gustó".
             const operacionesCargadasPorUsuario = {
                 "mauricioacostacom@gmail.com": [
+                    // <-- PEGÁ AQUÍ ARRIBA LA PRÓXIMA OPERACIÓN DE MAURICIO (#1006 en adelante)
                     {
-                        numeroOperacion: 998,
-                        tipo: "INICIO_SESION",
-                        fechaHora: "18/11/2026 21:15 hs",
-                        detalle: "Inicio de sesión en Prenoticia"
+                        numeroOperacion: 1005, // Captura 1 (19/11/2026 11:55:03 hs)
+                        tipo: "LECTURA_NOTIFICACION",
+                        titulo: "Notificación leída: Respuesta de Soporte · Consulta de cuenta",
+                        fechaHora: "19/11/2026 11:55:03 hs",
+                        detalle: "El usuario abrió y leyó la notificación ID NOTIF-001."
+                    },
+                    {
+                        numeroOperacion: 1000,
+                        tipo: "LIKE_CONTENIDO",
+                        itemId: 101,
+                        itemTipo: "noticia",
+                        titulo: "Supermercados liquidan camperas desde $6.000 y con hasta 50% de descuento",
+                        fechaHora: "18/11/2026 21:24 hs"
                     },
                     {
                         numeroOperacion: 999,
@@ -3014,15 +3040,44 @@ const SESSION_KEY = "portal_miembros_session_v4";
                         fechaHora: "18/11/2026 21:20 hs"
                     },
                     {
-                        numeroOperacion: 1000,
+                        numeroOperacion: 998,
+                        tipo: "INICIO_SESION",
+                        fechaHora: "18/11/2026 21:15 hs",
+                        detalle: "Inicio de sesión en Prenoticia"
+                    }
+                ],
+                "luciacarpio20@gmail.com": [
+                    // <-- PEGÁ AQUÍ ARRIBA LA PRÓXIMA OPERACIÓN DE LUCÍA (#1006 en adelante)
+                    {
+                        numeroOperacion: 1004, // Captura 2 (19/11/2026 11:47:15 hs)
+                        tipo: "GUARDAR_CONTENIDO",
+                        itemId: 101,
+                        itemTipo: "noticia",
+                        titulo: "Supermercados liquidan camperas desde $6.000 y con hasta 50% de descuento",
+                        fechaHora: "19/11/2026 11:47:15 hs"
+                    },
+                    {
+                        numeroOperacion: 1003, // Captura 3 (19/11/2026 11:46:23 hs)
                         tipo: "LIKE_CONTENIDO",
                         itemId: 101,
                         itemTipo: "noticia",
                         titulo: "Supermercados liquidan camperas desde $6.000 y con hasta 50% de descuento",
-                        fechaHora: "18/11/2026 21:24 hs"
+                        fechaHora: "19/11/2026 11:46:23 hs"
+                    },
+                    {
+                        numeroOperacion: 1002, // Captura 4 (19/11/2026 11:44:41 hs)
+                        tipo: "LECTURA_NOTIFICACION",
+                        titulo: "Notificación leída: Aviso importante sobre tu cuenta",
+                        fechaHora: "19/11/2026 11:44:41 hs",
+                        detalle: "El usuario abrió y leyó la notificación ID NOTIF-101."
+                    },
+                    {
+                        numeroOperacion: 1001, // Captura 5 (19/11/2026 11:44:34 hs)
+                        tipo: "INICIO_SESION",
+                        fechaHora: "19/11/2026 11:44:34 hs",
+                        detalle: "Inicio de sesión en el portal"
                     }
-                ],
-                "luciacarpio20@gmail.com": []
+                ]
             };
 
             function obtenerAlmacenOperacionesLocales() {
@@ -3131,10 +3186,26 @@ const SESSION_KEY = "portal_miembros_session_v4";
                 }
             }
 
+function agregarNotificacionLocalUsuario(emailUsuario, notifObj) {
+                const emailKey = String(emailUsuario).trim().toLowerCase();
+                let store = {};
+                try { store = JSON.parse(localStorage.getItem(LOCAL_NOTIFS_STORAGE_KEY) || "{}"); } catch (e) {}
+                if (!Array.isArray(store[emailKey])) store[emailKey] = [];
+                store[emailKey].unshift(notifObj);
+                try { localStorage.setItem(LOCAL_NOTIFS_STORAGE_KEY, JSON.stringify(store)); } catch (e) {}
+            }
+
             function obtenerNotificacionesDeUsuario(emailUsuario) {
                 if (!emailUsuario) return { noLeidas: [], leidas: [] };
                 const emailKey = String(emailUsuario).trim().toLowerCase();
-                const listaBase = Array.isArray(notificacionesManualesPorUsuario[emailKey]) ? notificacionesManualesPorUsuario[emailKey] : [];
+                const manuales = Array.isArray(notificacionesManualesPorUsuario[emailKey]) ? notificacionesManualesPorUsuario[emailKey] : [];
+                let locales = [];
+                try {
+                    const store = JSON.parse(localStorage.getItem(LOCAL_NOTIFS_STORAGE_KEY) || "{}");
+                    if (Array.isArray(store[emailKey])) locales = store[emailKey];
+                } catch (e) {}
+
+                const listaBase = [...locales, ...manuales];
                 const leidasLocales = obtenerNotificacionesLeidasLocales()[emailKey] || [];
 
                 const noLeidas = [];
@@ -3147,6 +3218,94 @@ const SESSION_KEY = "portal_miembros_session_v4";
                 });
 
                 return { noLeidas, leidas };
+            }
+
+            // Listeners para verificación instantánea y solicitud de cambio de Nombre de Usuario en "Mi cuenta"
+            const btnToggleChangeUsername = document.getElementById('btn-toggle-change-username');
+            const changeUsernameBox = document.getElementById('change-username-box');
+            const inputNewUsername = document.getElementById('input-new-username');
+            const usernameAvailabilityFeedback = document.getElementById('username-availability-feedback');
+            const btnSubmitUsernameChange = document.getElementById('btn-submit-username-change');
+
+            if (btnToggleChangeUsername && changeUsernameBox) {
+                btnToggleChangeUsername.addEventListener('click', () => {
+                    changeUsernameBox.classList.toggle('hidden');
+                    if (!changeUsernameBox.classList.contains('hidden') && inputNewUsername && currentUser) {
+                        inputNewUsername.value = currentUser.nombreUsuario || "";
+                        inputNewUsername.focus();
+                    }
+                });
+            }
+
+            if (inputNewUsername && usernameAvailabilityFeedback) {
+                inputNewUsername.addEventListener('input', () => {
+                    const limpio = sanitizarNombreUsuario(inputNewUsername.value);
+                    if (inputNewUsername.value !== limpio) inputNewUsername.value = limpio;
+
+                    if (!limpio || limpio.length < 4) {
+                        usernameAvailabilityFeedback.style.color = "#64748b";
+                        usernameAvailabilityFeedback.textContent = "Ingresá al menos 4 caracteres.";
+                        return;
+                    }
+                    if (currentUser && limpio === sanitizarNombreUsuario(currentUser.nombreUsuario)) {
+                        usernameAvailabilityFeedback.style.color = "#64748b";
+                        usernameAvailabilityFeedback.textContent = "Este es tu nombre de usuario actual.";
+                        return;
+                    }
+                    if (nombreUsuarioEstaOcupado(limpio, currentUser ? currentUser.usuario : "")) {
+                        usernameAvailabilityFeedback.style.color = "#d93838";
+                        usernameAvailabilityFeedback.innerHTML = `<i class="fas fa-times-circle"></i> El usuario @${limpio} ya está registrado por otro miembro. Elegí otro.`;
+                    } else {
+                        usernameAvailabilityFeedback.style.color = "#0d8a3e";
+                        usernameAvailabilityFeedback.innerHTML = `<i class="fas fa-check-circle"></i> ¡Disponible! Podés solicitar @${limpio}.`;
+                    }
+                });
+            }
+
+            if (btnSubmitUsernameChange) {
+                btnSubmitUsernameChange.addEventListener('click', () => {
+                    if (!currentUser || !inputNewUsername) return;
+                    const limpio = sanitizarNombreUsuario(inputNewUsername.value);
+
+                    if (!limpio || limpio.length < 4) {
+                        mostrarModalPersonalizado("Nombre muy corto", "El nombre de usuario debe tener al menos 4 caracteres (letras, números o guion bajo).");
+                        return;
+                    }
+                    if (limpio === sanitizarNombreUsuario(currentUser.nombreUsuario)) {
+                        mostrarModalPersonalizado("Sin cambios", "Ese ya es tu nombre de usuario actual.");
+                        return;
+                    }
+                    if (nombreUsuarioEstaOcupado(limpio, currentUser.usuario)) {
+                        mostrarModalPersonalizado("Usuario no disponible", `El nombre de usuario <strong>@${limpio}</strong> ya está registrado por otro usuario. Por favor elegí uno diferente.`);
+                        return;
+                    }
+
+                    const ahora = new Date();
+                    const fechaStr = `${ahora.toLocaleDateString("es-AR")} ${ahora.toLocaleTimeString("es-AR", { hour: '2-digit', minute: '2-digit' })} hs`;
+
+                    const opReg = registrarOperacionYNotificar({
+                        tipo: "SOLICITUD_CAMBIO_USUARIO",
+                        titulo: `Solicitud de cambio de nombre de usuario a @${limpio}`,
+                        detalleExtra: `N° Usuario Interno: ${currentUser.numeroUsuario}\nUsuario anterior: @${currentUser.nombreUsuario}\nNuevo usuario solicitado: @${limpio}\nPara aprobarlo, cargá nombreUsuario: "${limpio}" en usuariosDB.`
+                    });
+
+                    agregarNotificacionLocalUsuario(currentUser.usuario, {
+                        id: `NOTIF-USR-${opReg ? opReg.numeroOperacion : Date.now()}`,
+                        titulo: `Solicitud de cambio de usuario (@${limpio}) recibida`,
+                        mensaje: `Registramos tu pedido bajo la Operación #${opReg ? opReg.numeroOperacion : ''} para asignar @${limpio} a tu cuenta (${currentUser.numeroUsuario}). Te avisaremos por aquí apenas quede confirmado.`,
+                        fecha: fechaStr,
+                        leida: false
+                    });
+
+                    changeUsernameBox.classList.add('hidden');
+                    cargarDatosUsuario(currentUser);
+
+                    mostrarModalPersonalizado(
+                        "Solicitud de Usuario Enviada",
+                        `Registramos tu pedido para usar <strong>@${limpio}</strong> bajo la <strong>Operación #${opReg ? opReg.numeroOperacion : ''}</strong>. Ya podés ver el estado en tu sección de <strong>Notificaciones</strong>.`,
+                        { esExito: true }
+                    );
+                });
             }
 
             // =========================================================================
@@ -3394,8 +3553,10 @@ function enviarNotificacionEmailSilenciosa(nombreRemitente, emailRemitente, cuer
                 return `https://ui-avatars.com/api/?name=${iniciales}&background=f68e02&color=ffffff&bold=true&size=128`;
             }
 
-            const usuariosDB = [
+const usuariosDB = [
                 {
+                    numeroUsuario: "USR-0001",
+                    nombreUsuario: "mauricioacosta",
                     usuario: "mauricioacostacom@gmail.com",
                     contrasena: "auto333",
                     nombre: "Mauricio David",
@@ -3410,6 +3571,8 @@ function enviarNotificacionEmailSilenciosa(nombreRemitente, emailRemitente, cuer
                     montoDeuda: 0
                 },
                 {
+                    numeroUsuario: "USR-0002",
+                    nombreUsuario: "", // Al estar vacío, el sistema le asigna uno aleatorio en base a su nombre
                     usuario: "luciacarpio20@gmail.com",
                     contrasena: "osotobi20",
                     nombre: "María Lucia",
@@ -3424,6 +3587,8 @@ function enviarNotificacionEmailSilenciosa(nombreRemitente, emailRemitente, cuer
                     montoDeuda: 2990
                 },
                 {
+                    numeroUsuario: "USR-0003",
+                    nombreUsuario: "",
                     usuario: "maximoantonioacosta@hotmail.com",
                     contrasena: "casa0534",
                     nombre: "Máximo Antonio",
@@ -3438,6 +3603,8 @@ function enviarNotificacionEmailSilenciosa(nombreRemitente, emailRemitente, cuer
                     montoDeuda: 0
                 },
                 {
+                    numeroUsuario: "USR-0004",
+                    nombreUsuario: "",
                     usuario: "zamiramartinez38@gmail.com",
                     contrasena: "romeo1998",
                     nombre: "Gabriela",
@@ -3452,6 +3619,58 @@ function enviarNotificacionEmailSilenciosa(nombreRemitente, emailRemitente, cuer
                     montoDeuda: 2990
                 }
             ];
+
+            function sanitizarNombreUsuario(raw) {
+                return String(raw || "")
+                    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                    .toLowerCase()
+                    .replace(/^@+/, "")
+                    .replace(/[^a-z0-9_]/g, "")
+                    .trim();
+            }
+
+            function generarNombreUsuarioAleatorio(userObj) {
+                const baseNom = sanitizarNombreUsuario((userObj.nombre || "usuario").split(" ")[0]);
+                const baseApe = sanitizarNombreUsuario((userObj.apellido || "").split(" ")[0]);
+                const prefijo = (baseNom + (baseApe ? "_" + baseApe.slice(0, 4) : "")).slice(0, 14) || "lector";
+                let candidato = "";
+                do {
+                    const num = Math.floor(100 + Math.random() * 899);
+                    candidato = `${prefijo}${num}`;
+                } while (nombreUsuarioEstaOcupado(candidato, userObj.usuario));
+                return candidato;
+            }
+
+            function nombreUsuarioEstaOcupado(usernameSolicitado, emailPropio = "") {
+                const limpio = sanitizarNombreUsuario(usernameSolicitado);
+                if (!limpio) return true;
+                return usuariosDB.some(u => {
+                    if (emailPropio && u.usuario.toLowerCase() === emailPropio.toLowerCase()) return false;
+                    const actual = sanitizarNombreUsuario(u.nombreUsuario);
+                    return actual === limpio;
+                });
+            }
+
+            function asegurarIdentidadUsuario(userObj, idxFallback = 0) {
+                if (!userObj) return;
+                if (!userObj.numeroUsuario) {
+                    const num = String(idxFallback + 1).padStart(4, "0");
+                    userObj.numeroUsuario = `USR-${num}`;
+                }
+                const storageAutoKey = `prenoticia_autouser_${userObj.usuario.toLowerCase()}`;
+                if (!userObj.nombreUsuario || !sanitizarNombreUsuario(userObj.nombreUsuario)) {
+                    let guardadoAuto = "";
+                    try { guardadoAuto = localStorage.getItem(storageAutoKey) || ""; } catch (e) {}
+                    if (guardadoAuto && !nombreUsuarioEstaOcupado(guardadoAuto, userObj.usuario)) {
+                        userObj.nombreUsuario = guardadoAuto;
+                    } else {
+                        userObj.nombreUsuario = generarNombreUsuarioAleatorio(userObj);
+                        try { localStorage.setItem(storageAutoKey, userObj.nombreUsuario); } catch (e) {}
+                    }
+                }
+            }
+
+            usuariosDB.forEach((u, idx) => asegurarIdentidadUsuario(u, idx));
 
             // =========================================================================
             // COMENTARIOS CARGADOS MANUALMENTE POR NOTICIA (CON RESPUESTAS)
@@ -4605,6 +4824,9 @@ const { noLeidas, leidas } = obtenerNotificacionesDeUsuario(user.usuario);
                     else headerPremiumStar.classList.add('hidden');
                 }
 
+asegurarIdentidadUsuario(user, usuariosDB.indexOf(user));
+                const userIdEl = document.getElementById('acc-user-id');
+                const usernameEl = document.getElementById('acc-username');
                 const nameEl = document.getElementById('acc-name');
                 const lastNameEl = document.getElementById('acc-lastname');
                 const locEl = document.getElementById('acc-location');
@@ -4616,6 +4838,8 @@ const { noLeidas, leidas } = obtenerNotificacionesDeUsuario(user.usuario);
                 const downgradeSidebarBtn = document.getElementById('nav-downgrade-basic');
                 const sidebarPromoBox = document.getElementById('sidebar-promo-box');
 
+                if (userIdEl) userIdEl.textContent = user.numeroUsuario;
+                if (usernameEl) usernameEl.textContent = `@${user.nombreUsuario}`;
                 if (nameEl) nameEl.textContent = user.nombre;
                 if (lastNameEl) lastNameEl.textContent = user.apellido;
                 if (locEl) locEl.textContent = user.ubicacion;
