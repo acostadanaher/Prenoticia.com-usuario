@@ -124,24 +124,47 @@
             box-shadow: 0 1px 4px rgba(217, 119, 6, 0.4);
         }
 
-        /* ================= LOGIN ================= */
+/* ================= LOGIN MODAL SUPERPUESTO ================= */
         #auth-section {
-            min-height: 100vh;
+            position: fixed;
+            inset: 0;
+            z-index: 1200;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 24px 16px;
-            background-color: #ffffff;
+            background-color: rgba(15, 23, 42, 0.72);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
         }
 
         .auth-card {
+            position: relative;
             background: var(--bg-card);
             width: 100%;
             max-width: 420px;
             border-radius: 18px;
             padding: 34px 28px;
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
             border: 1px solid var(--border-color);
+        }
+
+        .btn-close-auth-modal {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: #f8fafc;
+            color: var(--text-muted);
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .auth-header {
@@ -367,9 +390,40 @@
             fill: #ffffff;
         }
 
-        .header-icon-btn:hover, .header-icon-btn.active {
+.header-icon-btn:hover, .header-icon-btn.active {
             background: rgba(255, 255, 255, 0.34);
             border-color: #ffffff;
+        }
+
+        .header-profile-trigger {
+            padding: 0;
+            overflow: hidden;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .header-profile-trigger img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            display: block;
+            border-radius: 50%;
+        }
+
+        .header-profile-initials {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1e293b;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            border-radius: 50%;
         }
 
 /* Adaptación en celulares: contenido alineado exactamente con los bordes de los botones del menú */
@@ -620,14 +674,19 @@
         .main-nav-tabs {
             background: #ffffff;
             border-bottom: 1px solid var(--border-color);
-            overflow-x: auto;
-            scrollbar-width: none;
+            position: relative;
         }
-        .main-nav-tabs::-webkit-scrollbar {
-            display: none;
+
+        .trending-nav-wrapper {
+            position: relative;
+            max-width: 1020px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
         }
 
         .tabs-list {
+            width: 100%;
             max-width: 1020px;
             margin: 0 auto;
             padding: 10px 24px;
@@ -635,6 +694,55 @@
             align-items: center;
             list-style: none;
             gap: 8px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+        }
+        .tabs-list::-webkit-scrollbar {
+            display: none;
+        }
+
+        .trending-scroll-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 15;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            color: var(--text-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .trending-scroll-btn:hover {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        .trending-scroll-btn.left {
+            left: 8px;
+        }
+
+        .trending-scroll-btn.right {
+            right: 8px;
+        }
+
+        .trending-scroll-btn.hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 640px) {
+            .trending-scroll-btn {
+                display: none !important;
+            }
         }
 
         .trending-label-pill {
@@ -694,12 +802,22 @@
             flex: 1;
         }
 
-        .search-input-wrap input {
+.search-input-wrap input {
             width: 100%;
             padding: 10px 14px;
             border: 1.5px solid var(--border-color);
             border-radius: 10px;
             font-size: 14px;
+            outline: none;
+            box-shadow: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input-wrap input:focus,
+        .search-input-wrap input:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
+            border-color: var(--primary);
         }
 
         .btn-search-submit {
@@ -2060,13 +2178,14 @@
         </div>
     </div>
 
-    <!-- ================= PANTALLA DE INICIO DE SESIÓN ================= -->
-    <section id="auth-section">
+<!-- ================= VENTANA SUPERPUESTA DE INICIO DE SESIÓN ================= -->
+    <section id="auth-section" class="hidden">
         <div class="auth-card">
+            <button type="button" class="btn-close-auth-modal" id="btn-close-auth-modal" title="Cerrar" aria-label="Cerrar">&times;</button>
             <div class="auth-header">
-                <span class="auth-badge">Portal Exclusivo</span>
-                <h1>Iniciar Sesión</h1>
-                <p>Ingresá con tu usuario para acceder a tus noticias y beneficios.</p>
+                <span class="auth-badge">Acceso a la Comunidad</span>
+                <h1>Registrate o Iniciá Sesión</h1>
+                <p id="auth-modal-subtitle">Para visualizar el contenido completo, ingresar, comentar, participar en sorteos y compartir noticias necesitás registrarte o iniciar sesión.</p>
             </div>
 
             <div class="login-error-msg" id="login-error">Usuario o contraseña incorrectos. Verificá tus datos.</div>
@@ -2084,13 +2203,13 @@
                 <button type="submit" class="btn-primary">Ingresar</button>
             </form>
             <div class="auth-footer">
-                ¿No tienes una cuenta? <a href="https://www.empleosvacantes.com/p/crear-mi-cuenta.html" target="_blank" rel="noopener noreferrer">Crear cuenta</a>
+                ¿No tenés una cuenta? <a href="https://www.empleosvacantes.com/p/crear-mi-cuenta.html" target="_blank" rel="noopener noreferrer">Crear cuenta gratis</a>
             </div>
         </div>
     </section>
 
     <!-- ================= PANEL PRINCIPAL ================= -->
-    <section id="app-section" class="hidden">
+    <section id="app-section">
 
 <div id="menu-backdrop"></div>
 
@@ -2131,9 +2250,9 @@
                     </a>
                 </div>
 
-                <div class="user-nav-area">
-                    <button class="header-icon-btn" id="menu-toggle-btn" aria-label="Menú principal" title="Menú de cuenta">
-                        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+<div class="user-nav-area">
+                    <button class="header-icon-btn header-profile-trigger" id="menu-toggle-btn" aria-label="Menú de cuenta" title="Menú de cuenta">
+                        <img src="https://ui-avatars.com/api/?name=U&background=e2e8f0&color=475569&bold=true&size=128" alt="Usuario">
                     </button>
                     <button class="header-icon-btn" id="search-toggle-btn" aria-label="Buscar noticias" title="Buscar">
                         <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
@@ -2230,18 +2349,26 @@
 
 <!-- Barra de Temas en Tendencia -->
         <nav class="main-nav-tabs" aria-label="Temas en tendencia">
-            <ul class="tabs-list" id="trending-topics-list">
-                <li class="trending-label-pill"><i class="fas fa-arrow-trend-up"></i> Tendencias:</li>
-                <li><button type="button" class="trending-topic-btn" data-topic="Dólar hoy en Argentina">Dólar hoy en Argentina</button></li>
-                <li><button type="button" class="trending-topic-btn" data-topic="Javier Milei">Javier Milei</button></li>
-                <li><button type="button" class="trending-topic-btn" data-topic="Papa en Perú">Papa en Perú</button></li>
-                <li><button type="button" class="trending-topic-btn" data-topic="Seleccionado nacional">Seleccionado nacional</button></li>
-                <li><button type="button" class="trending-topic-btn" data-topic="Deportes">Deportes</button></li>
-                <li><button type="button" class="trending-topic-btn" data-topic="Cine">Cine</button></li>
-                <li><button type="button" class="trending-topic-btn" data-topic="Economía">Economía</button></li>
-                <li><button type="button" class="trending-topic-btn" data-topic="Supermercados">Supermercados</button></li>
-                <li><button type="button" class="trending-topic-btn" data-nav-tab="tab-beneficios">Beneficios</button></li>
-            </ul>
+            <div class="trending-nav-wrapper">
+                <button type="button" class="trending-scroll-btn left hidden" id="trending-scroll-left" aria-label="Desplazar tendencias a la izquierda">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <ul class="tabs-list" id="trending-topics-list">
+                    <li class="trending-label-pill"><i class="fas fa-arrow-trend-up"></i> Tendencias:</li>
+                    <li><button type="button" class="trending-topic-btn" data-topic="Dólar hoy en Argentina">Dólar hoy en Argentina</button></li>
+                    <li><button type="button" class="trending-topic-btn" data-topic="Javier Milei">Javier Milei</button></li>
+                    <li><button type="button" class="trending-topic-btn" data-topic="Papa en Perú">Papa en Perú</button></li>
+                    <li><button type="button" class="trending-topic-btn" data-topic="Seleccionado nacional">Seleccionado nacional</button></li>
+                    <li><button type="button" class="trending-topic-btn" data-topic="Deportes">Deportes</button></li>
+                    <li><button type="button" class="trending-topic-btn" data-topic="Cine">Cine</button></li>
+                    <li><button type="button" class="trending-topic-btn" data-topic="Economía">Economía</button></li>
+                    <li><button type="button" class="trending-topic-btn" data-topic="Supermercados">Supermercados</button></li>
+                    <li><button type="button" class="trending-topic-btn" data-nav-tab="tab-beneficios">Beneficios</button></li>
+                </ul>
+                <button type="button" class="trending-scroll-btn right hidden" id="trending-scroll-right" aria-label="Desplazar tendencias a la derecha">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
         </nav>
 
         <!-- Buscador deslizante -->
@@ -3731,7 +3858,19 @@ const btnAccept = document.getElementById('btn-accept-promo-banner');
                 const isPremium = esUsuarioPremium(user);
                 const fotoUrl = user.fotoPerfil || generarAvatarFallback(user.nombre, user.apellido);
 
-const sidebarAvatarEl = document.getElementById('sidebar-profile-avatar');
+const inicialesUsuario = ((user.nombre || "U").charAt(0) + (user.apellido || "").charAt(0)).toUpperCase();
+                const tieneFotoReal = user.fotoPerfil && !user.fotoPerfil.includes("ui-avatars.com");
+                const menuToggleBtnEl = document.getElementById('menu-toggle-btn');
+
+                if (menuToggleBtnEl) {
+                    if (tieneFotoReal) {
+                        menuToggleBtnEl.innerHTML = `<img src="${user.fotoPerfil}" alt="${escaparHtml(user.nombre)}" onerror="this.parentElement.innerHTML='<span class=\\'header-profile-initials\\'>${inicialesUsuario}</span>'">`;
+                    } else {
+                        menuToggleBtnEl.innerHTML = `<span class="header-profile-initials">${inicialesUsuario}</span>`;
+                    }
+                }
+
+                const sidebarAvatarEl = document.getElementById('sidebar-profile-avatar');
                 if (sidebarAvatarEl) {
                     sidebarAvatarEl.src = fotoUrl;
                     sidebarAvatarEl.onerror = function() { this.src = generarAvatarFallback(user.nombre, user.apellido); };
@@ -3975,6 +4114,44 @@ let urlPublicaExternaCache = "";
                 }
             };
 
+const DEFAULT_GUEST_AVATAR = "https://ui-avatars.com/api/?name=U&background=e2e8f0&color=475569&bold=true&size=128";
+            let accionPendientePostLogin = null;
+
+            function abrirModalRegistroObligatorio(mensajePersonalizado = "", callbackTrasLogin = null) {
+                if (callbackTrasLogin) accionPendientePostLogin = callbackTrasLogin;
+                const subEl = document.getElementById('auth-modal-subtitle');
+                if (subEl) {
+                    subEl.textContent = mensajePersonalizado || "Para visualizar el contenido completo, ingresar, comentar, participar y compartir necesitás registrarte o iniciar sesión.";
+                }
+                if (loginError) loginError.style.display = 'none';
+                if (authSection) authSection.classList.remove('hidden');
+            }
+
+            function cerrarModalRegistro() {
+                if (authSection) authSection.classList.add('hidden');
+            }
+
+            const btnCloseAuthModal = document.getElementById('btn-close-auth-modal');
+            if (btnCloseAuthModal) {
+                btnCloseAuthModal.addEventListener('click', cerrarModalRegistro);
+            }
+            if (authSection) {
+                authSection.addEventListener('click', (e) => {
+                    if (e.target === authSection) cerrarModalRegistro();
+                });
+            }
+
+            function inicializarModoInvitadoPortada() {
+                currentUser = null;
+                appSection.classList.remove('hidden');
+                authSection.classList.add('hidden');
+                const menuBtn = document.getElementById('menu-toggle-btn');
+                if (menuBtn) {
+                    menuBtn.innerHTML = `<img src="${DEFAULT_GUEST_AVATAR}" alt="Iniciar sesión">`;
+                }
+                renderContent();
+            }
+
             function restaurarSesionSiExiste() {
                 const destinoUrl = detectarDestinoEnUrl();
                 const savedUserEmail = obtenerSesion();
@@ -3992,13 +4169,11 @@ let urlPublicaExternaCache = "";
                     }
                 }
 
-                // Si no tiene sesión abierta y entró por un link compartido, guarda el destino y pide iniciar sesión
+                inicializarModoInvitadoPortada();
+
                 if (destinoUrl) {
                     guardarDestinoPendiente(destinoUrl);
-                    const authSub = document.querySelector("#auth-section .auth-header p");
-                    if (authSub) {
-                        authSub.innerHTML = "Iniciá sesión con tu cuenta para ver el contenido compartido.";
-                    }
+                    abrirModalRegistroObligatorio("Para visualizar el contenido compartido, ingresar, comentar, participar y compartir necesitás registrarte o iniciar sesión.");
                 }
                 return false;
             }
@@ -4029,6 +4204,11 @@ let urlPublicaExternaCache = "";
                         appSection.classList.remove('hidden');
                         cargarDatosUsuario(matchedUser);
                         consumirDestinoPendiente();
+                        if (typeof accionPendientePostLogin === "function") {
+                            const fn = accionPendientePostLogin;
+                            accionPendientePostLogin = null;
+                            fn();
+                        }
                     } else {
                         loginError.style.display = 'block';
                     }
@@ -4039,13 +4219,12 @@ let urlPublicaExternaCache = "";
             if (btnLogout) {
                 btnLogout.addEventListener('click', () => {
                     borrarSesion();
-                    currentUser = null;
-                    appSection.classList.add('hidden');
-                    authSection.classList.remove('hidden');
                     loginForm.reset();
                     loginError.style.display = 'none';
                     closeMenu();
                     cerrarBuscador();
+                    irAPortadaPrincipal();
+                    inicializarModoInvitadoPortada();
                 });
             }
 
@@ -4084,8 +4263,54 @@ function irAPortadaPrincipal() {
                 });
             }
 
-            document.querySelectorAll('.trending-topic-btn').forEach(btn => {
+const trendingListEl = document.getElementById('trending-topics-list');
+            const btnTrendLeft = document.getElementById('trending-scroll-left');
+            const btnTrendRight = document.getElementById('trending-scroll-right');
+
+            function actualizarFlechasTendencias() {
+                if (!trendingListEl || !btnTrendLeft || !btnTrendRight) return;
+                const scrollLeft = Math.ceil(trendingListEl.scrollLeft);
+                const maxScroll = trendingListEl.scrollWidth - trendingListEl.clientWidth;
+
+                if (maxScroll <= 4) {
+                    btnTrendLeft.classList.add('hidden');
+                    btnTrendRight.classList.add('hidden');
+                    return;
+                }
+
+                if (scrollLeft > 8) btnTrendLeft.classList.remove('hidden');
+                else btnTrendLeft.classList.add('hidden');
+
+                if (scrollLeft < maxScroll - 8) btnTrendRight.classList.remove('hidden');
+                else btnTrendRight.classList.add('hidden');
+            }
+
+            if (trendingListEl && btnTrendLeft && btnTrendRight) {
+                btnTrendLeft.addEventListener('click', () => {
+                    trendingListEl.scrollBy({ left: -240, behavior: 'smooth' });
+                });
+                btnTrendRight.addEventListener('click', () => {
+                    trendingListEl.scrollBy({ left: 240, behavior: 'smooth' });
+                });
+                trendingListEl.addEventListener('scroll', actualizarFlechasTendencias);
+                window.addEventListener('resize', actualizarFlechasTendencias);
+                setTimeout(actualizarFlechasTendencias, 120);
+            }
+
+document.querySelectorAll('.trending-topic-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
+                    if (!currentUser) {
+                        const navTab = btn.getAttribute('data-nav-tab');
+                        const tema = btn.getAttribute('data-topic');
+                        abrirModalRegistroObligatorio(
+                            "Para explorar etiquetas, visualizar el contenido completo, comentar, participar y compartir necesitás registrarte o iniciar sesión.",
+                            () => {
+                                if (navTab) btn.click();
+                                else if (tema) window.buscarPorEtiqueta(tema);
+                            }
+                        );
+                        return;
+                    }
                     document.querySelectorAll('.trending-topic-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
 
@@ -4138,7 +4363,11 @@ function irAPortadaPrincipal() {
                 if (menuBackdrop) menuBackdrop.style.display = 'none';
             }
 
-            function openMenu() {
+function openMenu() {
+                if (!currentUser) {
+                    abrirModalRegistroObligatorio("Iniciá sesión o registrate para ingresar a tu cuenta, comentar, participar y compartir contenido.");
+                    return;
+                }
                 closeAllMenus();
                 if (sidebarMenu) sidebarMenu.classList.add('active');
                 if (menuBackdrop) menuBackdrop.style.display = 'block';
@@ -4220,7 +4449,11 @@ function irAPortadaPrincipal() {
                 });
             }
 
-            function openCategoriesMenu() {
+function openCategoriesMenu() {
+                if (!currentUser) {
+                    abrirModalRegistroObligatorio("Para explorar secciones, visualizar el contenido, comentar, participar y compartir necesitás registrarte o iniciar sesión.");
+                    return;
+                }
                 closeAllMenus();
                 poblarMenuCategorias();
                 if (categoriesSidebarMenu) categoriesSidebarMenu.classList.add('active');
@@ -4381,20 +4614,33 @@ function irAPortadaPrincipal() {
 
                 if (searchTimeoutId) clearTimeout(searchTimeoutId);
 
-                searchTimeoutId = setTimeout(() => {
-                    const palabras = termino.toLowerCase().split(/\s+/).filter(Boolean);
+searchTimeoutId = setTimeout(() => {
+                    const limpiarAcentos = (s) => String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+                    const stopwords = new Set(["en", "el", "la", "los", "las", "de", "del", "y", "a", "un", "una", "por", "para", "con", "hoy"]);
+                    const terminoNorm = limpiarAcentos(termino);
+                    const palabras = terminoNorm.split(/\s+/).filter(p => p.length > 2 && !stopwords.has(p));
 
                     const resultados = noticiasData.filter(item => {
-                        const tituloLower = item.title.toLowerCase();
-                        const descLower = item.desc.toLowerCase();
-                        const catLower = item.categoryName.toLowerCase();
-                        const tagsLower = (item.tags || []).map(t => t.toLowerCase());
+                        const tituloNorm = limpiarAcentos(item.title);
+                        const descNorm = limpiarAcentos(item.desc);
+                        const catNorm = limpiarAcentos(item.categoryName);
+                        const tagsNorm = (item.tags || []).map(t => limpiarAcentos(t));
 
+                        if (
+                            tagsNorm.some(tag => tag === terminoNorm || tag.includes(terminoNorm)) ||
+                            tituloNorm.includes(terminoNorm) ||
+                            descNorm.includes(terminoNorm) ||
+                            catNorm.includes(terminoNorm)
+                        ) {
+                            return true;
+                        }
+
+                        if (palabras.length === 0) return false;
                         return palabras.some(palabra =>
-                            tituloLower.includes(palabra) ||
-                            descLower.includes(palabra) ||
-                            catLower.includes(palabra) ||
-                            tagsLower.some(tag => tag.includes(palabra))
+                            tituloNorm.includes(palabra) ||
+                            descNorm.includes(palabra) ||
+                            catNorm.includes(palabra) ||
+                            tagsNorm.some(tag => tag.includes(palabra))
                         );
                     });
 
@@ -4418,9 +4664,17 @@ function irAPortadaPrincipal() {
                 }, 650);
             }
 
-            if (searchForm) {
+if (searchForm) {
                 searchForm.addEventListener('submit', (e) => {
                     e.preventDefault();
+                    if (!currentUser) {
+                        const q = searchInput ? searchInput.value.trim() : "";
+                        abrirModalRegistroObligatorio(
+                            "Para buscar noticias y etiquetas, ingresar, comentar, participar y compartir necesitás registrarte o iniciar sesión.",
+                            () => { if (q) ejecutarBusqueda(q); }
+                        );
+                        return;
+                    }
                     if (searchInput && searchInput.value.trim() !== "") {
                         ejecutarBusqueda(searchInput.value);
                     }
@@ -4665,9 +4919,7 @@ function debeMostrarAnunciosParaUsuarioActual() {
                 beneficiosWrapper.appendChild(grid);
             }
 
-            function renderContent() {
-                if (!currentUser) return;
-
+function renderContent() {
                 const destacadoGrid = document.getElementById('destacado-grid');
                 const destacadoMore = document.getElementById('destacado-more-container');
 
@@ -4903,10 +5155,18 @@ function debeMostrarAnunciosParaUsuarioActual() {
                 );
             };
 
-            function openDetailView(id, tipo = 'noticia') {
+function openDetailView(id, tipo = 'noticia') {
                 const sourceList = tipo === 'beneficio' ? beneficiosData : noticiasData;
                 const item = sourceList.find(n => n.id === id);
                 if (!item) return;
+
+                if (!currentUser) {
+                    abrirModalRegistroObligatorio(
+                        "Para visualizar el contenido completo, ingresar, comentar, participar en sorteos y compartir esta noticia necesitás registrarte o iniciar sesión.",
+                        () => openDetailView(id, tipo)
+                    );
+                    return;
+                }
 
                 bufferRecopilacionHipersensible.contextoActual = `Viendo ${tipo} #${item.id}: ${item.title}`;
                 sincronizarProxyHipersensible();
