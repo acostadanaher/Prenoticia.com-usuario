@@ -5282,7 +5282,7 @@ const sidebarMainView = document.getElementById('sidebar-main-view');
             const sidebarUpdateView = document.getElementById('sidebar-update-view');
             const sidebarDeleteView = document.getElementById('sidebar-delete-view');
 
-            function resetSidebarViews() {
+function resetSidebarViews() {
                 if (sidebarMainView) sidebarMainView.classList.remove('hidden');
                 [
                     sidebarMyAccountView,
@@ -5296,7 +5296,6 @@ const sidebarMainView = document.getElementById('sidebar-main-view');
                     sidebarUpdateView,
                     sidebarDeleteView
                 ].forEach(v => { if (v) v.classList.remove('active'); });
-            }
             }
 
             function closeAllMenus() {
