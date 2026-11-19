@@ -2729,8 +2729,8 @@
                         <i class="fas fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
                     </button>
 
-                    <button type="button" class="btn-sidebar-action" id="nav-liked-disliked" style="display:flex; align-items:center; justify-content:space-between;">
-                        <span><i class="fas fa-thumbs-up" style="color:var(--primary); margin-right:8px;"></i> Contenido que me gustó y no me gustó</span>
+<button type="button" class="btn-sidebar-action" id="nav-liked-disliked" style="display:flex; align-items:center; justify-content:space-between;">
+                        <span><i class="fas fa-thumbs-up" style="color:var(--primary); margin-right:8px;"></i> Interacciones</span>
                         <i class="fas fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
                     </button>
 
@@ -2807,10 +2807,10 @@
                 <div id="my-comments-dynamic-container"></div>
             </div>
 
-            <!-- SUBVISTA: CONTENIDO QUE ME GUSTÓ Y NO ME GUSTÓ -->
+<!-- SUBVISTA: INTERACCIONES -->
             <div id="sidebar-reactions-view" class="account-subview">
                 <button class="btn-back-account" id="back-from-reactions">&larr; Volver atrás</button>
-                <h4 style="margin-bottom: 12px; font-size: 16px; font-weight: 800;"><i class="fas fa-thumbs-up" style="color:var(--primary);"></i> Contenido que me gustó y no me gustó</h4>
+                <h4 style="margin-bottom: 12px; font-size: 16px; font-weight: 800;"><i class="fas fa-thumbs-up" style="color:var(--primary);"></i> Interacciones</h4>
                 <div id="my-reactions-dynamic-container"></div>
             </div>
 
@@ -2968,7 +2968,7 @@ const SESSION_KEY = "portal_miembros_session_v4";
             // CONFIGURACIÓN DE NÚMERO DE OPERACIÓN CORRELATIVO Y NOTIFICACIONES MANUALES
             // =========================================================================
             // Último número cargado: 1005. La próxima acción en vivo continuará en #1006.
-const NUMERO_OPERACION_BASE_MANUAL = 1013;
+const NUMERO_OPERACION_BASE_MANUAL = 1015;
             const LOCAL_NOTIFS_STORAGE_KEY = "prenoticia_notificaciones_locales_usuario_v1";
 
             // =========================================================================
@@ -2983,7 +2983,7 @@ const NUMERO_OPERACION_BASE_MANUAL = 1013;
                         titulo: "Respuesta de Soporte · Consulta de cuenta",
                         mensaje: "Hola Mauricio, verificamos tu suscripción Premium y ya se encuentra habilitada con todos los beneficios activos.",
                         fecha: "19/11/2026 10:30 hs",
-                        leida: true // YA LEÍDA EN OPERACIÓN #1005 (captura 1)
+                        leida: true // YA LEÍDA EN OPERACIÓN #1005
                     },
                     {
                         id: "NOTIF-000",
@@ -2993,14 +2993,21 @@ const NUMERO_OPERACION_BASE_MANUAL = 1013;
                         leida: true
                     }
                 ],
-"luciacarpio20@gmail.com": [
+                "luciacarpio20@gmail.com": [
                     // <-- PEGÁ AQUÍ ARRIBA LAS NUEVAS NOTIFICACIONES PARA LUCÍA
                     {
                         id: "NOTIF-103",
                         titulo: "¡Tu cambio de nombre de usuario (@luciacarpio) fue validado!",
                         mensaje: "Tu solicitud de cambio de usuario fue aprobada. Tu nuevo nombre de usuario activo en Prenoticia es @luciacarpio.",
                         fecha: "19/11/2026 12:49 hs",
-                        leida: false
+                        leida: true // YA LEÍDA EN OPERACIÓN #1014
+                    },
+                    {
+                        id: "NOTIF-USR-1013",
+                        titulo: "Solicitud de cambio de usuario (@luciacarpio) recibida",
+                        mensaje: "Se ha enviado tu solicitud de cambio de nombre de usuario a @luciacarpio. Apenas sea validado por el equipo, recibirás la confirmación en esta sección.",
+                        fecha: "19/11/2026 12:44 hs",
+                        leida: true // YA LEÍDA EN OPERACIÓN #1015
                     },
                     {
                         id: "NOTIF-102",
@@ -3017,7 +3024,7 @@ const NUMERO_OPERACION_BASE_MANUAL = 1013;
                         titulo: "Aviso importante sobre tu cuenta",
                         mensaje: "Recordá que tenés disponible el sorteo especial de McDonald's en la pestaña Beneficios.",
                         fecha: "19/11/2026 11:00 hs",
-                        leida: true // YA LEÍDA EN OPERACIÓN #1002 (captura 4)
+                        leida: true // YA LEÍDA EN OPERACIÓN #1002
                     }
                 ]
             };
@@ -3031,10 +3038,10 @@ const NUMERO_OPERACION_BASE_MANUAL = 1013;
             // "LECTURA_NOTIFICACION", "SOLICITUD_CAMBIO_USUARIO"
             // =========================================================================
             const operacionesCargadasPorUsuario = {
-"mauricioacostacom@gmail.com": [
-                    // <-- PEGÁ AQUÍ ARRIBA LA PRÓXIMA OPERACIÓN DE MAURICIO (#1009 en adelante)
+                "mauricioacostacom@gmail.com": [
+                    // <-- PEGÁ AQUÍ ARRIBA LA PRÓXIMA OPERACIÓN DE MAURICIO (#1016 en adelante)
                     {
-                        numeroOperacion: 1008, // Captura 3 (19/11/2026 12:11 hs)
+                        numeroOperacion: 1008,
                         tipo: "RESPONDER_COMENTARIO",
                         itemId: 103,
                         itemTipo: "noticia",
@@ -3043,7 +3050,7 @@ const NUMERO_OPERACION_BASE_MANUAL = 1013;
                         detalle: "Respuesta a María Lucia Carpio Peralta: Hola Lu cómo estás?"
                     },
                     {
-                        numeroOperacion: 1007, // Captura 2 (19/11/2026 12:11:30 hs)
+                        numeroOperacion: 1007,
                         tipo: "LIKE_COMENTARIO",
                         itemId: 103,
                         itemTipo: "noticia",
@@ -3052,7 +3059,7 @@ const NUMERO_OPERACION_BASE_MANUAL = 1013;
                         detalle: "Marcó \"Me gusta\" al comentario de María Lucia Carpio Peralta."
                     },
                     {
-                        numeroOperacion: 1006, // Captura 1 (19/11/2026 12:10:48 hs)
+                        numeroOperacion: 1006,
                         tipo: "GUARDAR_CONTENIDO",
                         itemId: 102,
                         itemTipo: "noticia",
@@ -3060,7 +3067,7 @@ const NUMERO_OPERACION_BASE_MANUAL = 1013;
                         fechaHora: "19/11/2026 12:10:48 hs"
                     },
                     {
-                        numeroOperacion: 1005, // Captura 1 (19/11/2026 11:55:03 hs)
+                        numeroOperacion: 1005,
                         tipo: "LECTURA_NOTIFICACION",
                         titulo: "Notificación leída: Respuesta de Soporte · Consulta de cuenta",
                         fechaHora: "19/11/2026 11:55:03 hs",
@@ -3089,17 +3096,31 @@ const NUMERO_OPERACION_BASE_MANUAL = 1013;
                         detalle: "Inicio de sesión en Prenoticia"
                     }
                 ],
-"luciacarpio20@gmail.com": [
-                    // <-- PEGÁ AQUÍ ARRIBA LA PRÓXIMA OPERACIÓN DE LUCÍA (#1014 en adelante)
+                "luciacarpio20@gmail.com": [
+                    // <-- PEGÁ AQUÍ ARRIBA LA PRÓXIMA OPERACIÓN DE LUCÍA (#1016 en adelante)
                     {
-                        numeroOperacion: 1013, // Captura Gmail (19/11/2026 12:44:16 hs)
+                        numeroOperacion: 1015, // Captura Gmail (19/11/2026 12:56:15 p. m. hs)
+                        tipo: "LECTURA_NOTIFICACION",
+                        titulo: "Notificación leída: Solicitud de cambio de usuario (@luciacarpio) recibida",
+                        fechaHora: "19/11/2026 12:56:15 hs",
+                        detalle: "El usuario abrió y leyó la notificación ID \"NOTIF-USR-1013\" (Solicitud de cambio de usuario (@luciacarpio) recibida)."
+                    },
+                    {
+                        numeroOperacion: 1014, // Captura Gmail (19/11/2026 12:56:32 p. m. hs)
+                        tipo: "LECTURA_NOTIFICACION",
+                        titulo: "Notificación leída: ¡Tu cambio de nombre de usuario (@luciacarpio) fue validado!",
+                        fechaHora: "19/11/2026 12:56:32 hs",
+                        detalle: "El usuario abrió y leyó la notificación ID \"NOTIF-103\" (¡Tu cambio de nombre de usuario (@luciacarpio) fue validado!)."
+                    },
+                    {
+                        numeroOperacion: 1013,
                         tipo: "SOLICITUD_CAMBIO_USUARIO",
                         titulo: "Solicitud de cambio de nombre de usuario a @luciacarpio",
                         fechaHora: "19/11/2026 12:44:16 hs",
                         detalle: "Usuario anterior: @maria_carp966 · Nuevo usuario validado: @luciacarpio"
                     },
                     {
-                        numeroOperacion: 1004, // Captura 2 (19/11/2026 11:47:15 hs)
+                        numeroOperacion: 1004,
                         tipo: "GUARDAR_CONTENIDO",
                         itemId: 101,
                         itemTipo: "noticia",
@@ -3107,7 +3128,7 @@ const NUMERO_OPERACION_BASE_MANUAL = 1013;
                         fechaHora: "19/11/2026 11:47:15 hs"
                     },
                     {
-                        numeroOperacion: 1003, // Captura 3 (19/11/2026 11:46:23 hs)
+                        numeroOperacion: 1003,
                         tipo: "LIKE_CONTENIDO",
                         itemId: 101,
                         itemTipo: "noticia",
@@ -3115,14 +3136,14 @@ const NUMERO_OPERACION_BASE_MANUAL = 1013;
                         fechaHora: "19/11/2026 11:46:23 hs"
                     },
                     {
-                        numeroOperacion: 1002, // Captura 4 (19/11/2026 11:44:41 hs)
+                        numeroOperacion: 1002,
                         tipo: "LECTURA_NOTIFICACION",
                         titulo: "Notificación leída: Aviso importante sobre tu cuenta",
                         fechaHora: "19/11/2026 11:44:41 hs",
                         detalle: "El usuario abrió y leyó la notificación ID NOTIF-101."
                     },
                     {
-                        numeroOperacion: 1001, // Captura 5 (19/11/2026 11:44:34 hs)
+                        numeroOperacion: 1001,
                         tipo: "INICIO_SESION",
                         fechaHora: "19/11/2026 11:44:34 hs",
                         detalle: "Inicio de sesión en el portal"
@@ -3278,6 +3299,19 @@ function agregarNotificacionLocalUsuario(emailUsuario, notifObj) {
                 try { localStorage.setItem(LOCAL_NOTIFS_STORAGE_KEY, JSON.stringify(store)); } catch (e) {}
             }
 
+function parsearFechaNotificacionMs(fechaStr) {
+                if (!fechaStr) return 0;
+                const m = String(fechaStr).match(/(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+                if (!m) return 0;
+                const dia = Number(m[1]);
+                const mes = Number(m[2]) - 1;
+                const anio = Number(m[3]);
+                const hora = Number(m[4] || 0);
+                const min = Number(m[5] || 0);
+                const seg = Number(m[6] || 0);
+                return new Date(anio, mes, dia, hora, min, seg).getTime();
+            }
+
             function obtenerNotificacionesDeUsuario(emailUsuario) {
                 if (!emailUsuario) return { noLeidas: [], leidas: [] };
                 const emailKey = String(emailUsuario).trim().toLowerCase();
@@ -3288,13 +3322,21 @@ function agregarNotificacionLocalUsuario(emailUsuario, notifObj) {
                     if (Array.isArray(store[emailKey])) locales = store[emailKey];
                 } catch (e) {}
 
-                const listaBase = [...locales, ...manuales];
+                // Deduplica por ID dando prioridad a las manuales
+                const mapaUnificado = new Map();
+                locales.forEach(n => { if (n && n.id) mapaUnificado.set(n.id, n); });
+                manuales.forEach(n => { if (n && n.id) mapaUnificado.set(n.id, n); });
+
+                const listaOrdenada = Array.from(mapaUnificado.values()).sort(
+                    (a, b) => parsearFechaNotificacionMs(b.fecha) - parsearFechaNotificacionMs(a.fecha)
+                );
+
                 const leidasLocales = obtenerNotificacionesLeidasLocales()[emailKey] || [];
 
                 const noLeidas = [];
                 const leidas = [];
 
-                listaBase.forEach(n => {
+                listaOrdenada.forEach(n => {
                     const yaLeida = Boolean(n.leida) || leidasLocales.includes(n.id);
                     if (yaLeida) leidas.push({ ...n, leida: true });
                     else noLeidas.push({ ...n, leida: false });
@@ -5990,7 +6032,7 @@ if (backFromMyAccount) backFromMyAccount.addEventListener('click', resetSidebarV
                 });
             }
 
-            // 5. CONTENIDO QUE ME GUSTÓ Y NO ME GUSTÓ
+// 5. INTERACCIONES (SIN MOSTRAR NÚMERO DE OPERACIÓN)
             const navLikedDisliked = document.getElementById('nav-liked-disliked');
             if (navLikedDisliked) {
                 navLikedDisliked.addEventListener('click', () => {
@@ -6004,7 +6046,7 @@ if (backFromMyAccount) backFromMyAccount.addEventListener('click', resetSidebarV
                     );
 
                     if (opsReacciones.length === 0) {
-                        container.innerHTML = `<div class="activity-item-card"><p style="margin:0;">Todavía no marcaste "Me gusta" o "No me gusta" en contenidos ni comentarios.</p></div>`;
+                        container.innerHTML = `<div class="activity-item-card"><p style="margin:0;">Todavía no registraste interacciones en contenidos ni comentarios.</p></div>`;
                         return;
                     }
 
@@ -6015,14 +6057,17 @@ if (backFromMyAccount) backFromMyAccount.addEventListener('click', resetSidebarV
                         "DISLIKE_COMENTARIO": "👎 No me gusta en comentario"
                     };
 
-                    container.innerHTML = opsReacciones.map(op => `
-                        <div class="activity-item-card">
-                            <span class="activity-op-badge">Operación #${op.numeroOperacion} · ${escaparHtml(op.fechaHora)}</span>
-                            <h5>${etiquetasTipo[op.tipo] || op.tipo}</h5>
-                            <p style="margin-bottom:6px;">${escaparHtml(op.titulo)} ${op.detalle ? `— ${escaparHtml(op.detalle)}` : ''}</p>
-                            ${op.itemId ? `<button type="button" class="btn-open-notif" onclick="closeAllMenus(); openDetailView(${Number(op.itemId)}, '${escaparHtml(op.itemTipo || 'noticia')}')">Abrir publicación</button>` : ''}
-                        </div>
-                    `).join('');
+                    container.innerHTML = opsReacciones.map(op => {
+                        const detalleLimpio = (op.detalle || "").replace(/\s*\[ID:[^\]]+\]\.?/g, "").trim();
+                        return `
+                            <div class="activity-item-card">
+                                <span style="display:block; font-size:11px; color:var(--text-muted); font-weight:600; margin-bottom:4px;">${escaparHtml(op.fechaHora)}</span>
+                                <h5>${etiquetasTipo[op.tipo] || op.tipo}</h5>
+                                <p style="margin-bottom:6px;">${escaparHtml(op.titulo)} ${detalleLimpio ? `— ${escaparHtml(detalleLimpio)}` : ''}</p>
+                                ${op.itemId ? `<button type="button" class="btn-open-notif" onclick="closeAllMenus(); openDetailView(${Number(op.itemId)}, '${escaparHtml(op.itemTipo || 'noticia')}')">Abrir publicación</button>` : ''}
+                            </div>
+                        `;
+                    }).join('');
                 });
             }
 
